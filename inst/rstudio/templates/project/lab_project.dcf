@@ -1,0 +1,20 @@
+# This file provides the metadata necessary for RStudio to
+# use the 'lab_project()' function when initializing a project. See
+# the documentation online at:
+#
+#   https://rstudio.github.io/rstudio-extensions/rstudio_project_templates.html
+#
+# for more details.
+
+Binding: lab_project
+Title: Create new OHDSI Lab project
+Subtitle: Create a new Create new OHDSI Lab project
+Caption: Create Create new OHDSI Lab project
+
+Parameter: git
+Widget: CheckboxInput
+Label: Create a git repository (recommended)
+
+Parameter: renv
+Widget: CheckboxInput
+Label: Manage packages with renv (recommended)

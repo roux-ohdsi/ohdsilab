@@ -30,7 +30,7 @@ str_insert <- function(x, pos, insert) {       # Create own function
 #' @export
 #'
 #' @examples
-icd9_periods <- function(data, icd_column, overwrite = TRUE){
+icd_periods <- function(data, icd_column, overwrite = TRUE){
 
 
   if(isTRUE(overwrite)){

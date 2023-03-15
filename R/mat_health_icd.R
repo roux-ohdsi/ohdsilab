@@ -35,7 +35,7 @@ mat_health_icd <- function(){
   mat_outcomes = tibble::tribble(
     ~label,                          ~icd,
     'Gestational diabetes',           '648.8x, 250.xx, 648.0x, 250.xx',
-    'Preeclampsia',                   '624.4x, 624.5x, 624.6x, 642.7x',
+    'Preeclampsia',                   '642.4x, 642.5x, 642.6x, 642.7x',
     'Gestational hypertension',       '642.3x'
   )|>
     tidytext::unnest_tokens(icd, icd, token = "regex", pattern = ",") |>

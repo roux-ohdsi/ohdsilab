@@ -14,7 +14,6 @@
 #' @param cdm_schema name of CDM schema
 #' @param translate_from ICD codes to start
 #' @param translate_to codes to transfer to to get to omop. usually SNOMED
-#' @param overwrite
 #' @param dbms_wildcard wildcard indicator for dbms SIMILAR TO function.
 #'
 #' @return a dataframe of icd, SNOMED, and OMOP concept codes

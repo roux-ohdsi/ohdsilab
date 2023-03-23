@@ -34,8 +34,9 @@ Simple wrapper for join functions to join an existing query
 to another table in the omop cdm (or any other of the same source). Include
 the following two lines at the top of your script after setting the schema and connection
 
-options(con.default.value = connection_variable_name)
-options(schema.default.value = cdm_schema_variable_name)
+\code{options(con.default.value = connection_variable_name)}
+
+\code{options(schema.default.value = cdm_schema_variable_name)}
 }
 \examples{
 options(con.default.value = con)

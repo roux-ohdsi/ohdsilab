@@ -42,9 +42,13 @@ cpt2omop <- function(db_con,
 
   # DBI::dbRemoveTable(db_con, temp_tbl)
 
+
+
   if(isTRUE(collect)){
+    if(nrow(out) != length(codes)){warning("Number of matched codes different from input codes")}
     return(out)
   } else {
+    if(tally(source_codes) != length(codes)){warning("Number of matched codes different from input codes")}
     return(source_codes)
   }
 

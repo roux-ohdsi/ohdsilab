@@ -1,9 +1,10 @@
 
 
 
-#' @title cpt2omop
+#' @title map2omop
 #'
-#' @description translates cpt codes to omop concept ID
+#' @description translates any codes to omop concept ID as long as there is a direct
+#' mapping in the concept table
 #'
 #' @param db_con database connection object
 #' @param cdm_schema name of CDM schema
@@ -13,7 +14,7 @@
 #'
 #' @return a dataframe of icd, SNOMED, and OMOP concept codes
 #' @export
-cpt2omop <- function(db_con,
+map2omop <- function(db_con,
                      codes,
                      cdm_schema = NULL,
                      collect = TRUE,
@@ -21,10 +22,8 @@ cpt2omop <- function(db_con,
 
   if(!is.null(cdm_schema)){
     concept = paste0(cdm_schema, ".concept")
-    concept_relationship = paste0(cdm_schema, ".concept_relationship")
   } else {
     concept = "concept"
-    concept_relationship = "concept_relationship"
   }
 
   source_codes <- dplyr::tbl(db_con, concept) %>%
@@ -49,7 +48,7 @@ cpt2omop <- function(db_con,
     if(nrow(out) != length(codes)){warning("Number of matched codes different from input codes")}
     return(out)
   } else {
-    if(tally(source_codes) != length(codes)){warning("Number of matched codes different from input codes")}
+    if(tally(source_codes) |> pull(n) != length(codes)){warning("Number of matched codes different from input codes")}
     return(source_codes)
   }
 

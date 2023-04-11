@@ -13,7 +13,6 @@ RoxygenNote: 7.2.3
 Imports: 
     keyring,
     DatabaseConnector,
-    ROhdsiWebApi,
     git2r,
     renv,
     dplyr,

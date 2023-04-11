@@ -3,6 +3,7 @@
 export("%>%")
 export(dbi_collect)
 export(icd2omop)
+export(icd2omop2)
 export(icd_periods)
 export(lab_authorize_atlas)
 export(lab_base_url)

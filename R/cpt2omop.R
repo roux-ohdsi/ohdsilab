@@ -9,6 +9,7 @@
 #' @param cdm_schema name of CDM schema
 #' @param codes vector of CPT4 codes
 #' @param collect whether to return a dataframe (default) or sql query (Set to FALSE)
+#' @param translate_from vocab to translate from. Can be a vector e.g., c("CPT4", "HCPCS")
 #'
 #' @return a dataframe of icd, SNOMED, and OMOP concept codes
 #' @export
@@ -27,7 +28,7 @@ cpt2omop <- function(db_con,
   }
 
   source_codes <- dplyr::tbl(db_con, concept) %>%
-    dplyr::filter(vocabulary_id == translate_from) %>%
+    dplyr::filter(vocabulary_id %in% translate_from) %>%
     dplyr::filter(concept_code %in% !!codes) %>%
     dplyr::select(concept_id, source_concept_name = concept_name, source_vocabulary_id = vocabulary_id,
                   source_code = concept_code)

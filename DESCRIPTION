@@ -20,4 +20,5 @@ Imports:
     stringr,
     tidyr,
     tibble,
-    tidytext
+    tidytext,
+    insight

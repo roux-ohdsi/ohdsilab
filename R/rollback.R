@@ -6,7 +6,7 @@
 #'
 #' @param con defaults to the default connection in the session. either set using options or supplied directly
 #'
-#' @return
+#' @return nothing
 #' @export
 rb <- function(con = getOption("con.default.value")){
     tryCatch(
@@ -26,24 +26,5 @@ rb <- function(con = getOption("con.default.value")){
 
       }
     )
-}
-
-options(con.default.value = con)
-
-rb <- function(con = getOption("con.default.value")){
-  tryCatch(
-    expr = {
-      executeSql(con, "ROLLBACK;", progressBar = FALSE, reportOverallTime = FALSE)
-      message("Rollback Successful")
-    },
-    error = function(e){
-      #message('Caught an error!')
-      message(e)
-    },
-    warning = function(w){
-      # message('Caught an warning!')
-      message(w)
-    }
-  )
 }
 

@@ -1,12 +1,13 @@
 
-# ohdsilab
+<br/>
 
+### ohdsilab: Useful R functions for the Roux ohdsilab at Northeastern University.
+
+<hr/>
 <!-- badges: start -->
 <!-- badges: end -->
 
-R package with useful functions for Roux OHDSI center ohdsi-lab database
-
-## Installation
+#### Installation
 
 You can install the development version of ohdsilab from [GitHub](https://github.com/) with:
 

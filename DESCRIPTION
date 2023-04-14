@@ -22,3 +22,7 @@ Imports:
     tibble,
     tidytext,
     insight
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

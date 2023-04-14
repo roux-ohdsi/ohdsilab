@@ -13,6 +13,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   eval = FALSE
 )
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 This package is intended to streamline working with the ohdsilab pharmetrics data
@@ -25,7 +26,7 @@ basic tools in ohdsilab
 
 Installation only needs to be done once, unless you are updating the package
 
-```{r, eval = FALSE}
+```{r}
 install.packages("remotes")
 remotes::install_github("roux-ohdsi/ohdsilab")
 ```

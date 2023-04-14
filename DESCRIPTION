@@ -1,12 +1,17 @@
 Package: ohdsilab
 Type: Package
-Title: What the Package Does (Title Case)
+Title: ohdsilab: useful R functions for the Roux ohdsilab at Northeastern University
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@R: c(
+  person("Louisa", "Smith", 
+    email = "louisa.smith@northeastern.edu",
+    role = c("aut", "cre")),
+  person("Rob", "Cavanaugh",
+    email = "r.cavanaugh@northeastern.edu",
+    role = c("aut"))
+    )
+Maintainer: Rob Cavanaugh <r.cavanaugh@northeastern.edu>
+Description: Useful R functions for the Roux ohdsilab at Northeastern University.
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3

@@ -26,3 +26,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+URL: https://roux-ohdsi.github.io/ohdsilab/

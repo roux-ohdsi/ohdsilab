@@ -1,5 +1,5 @@
 ---
-title: "intro-to-ohdsilab"
+title: "Introduction to ohdsilab"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{intro-to-ohdsilab}
@@ -14,8 +14,6 @@ knitr::opts_chunk$set(
   eval = FALSE
 )
 ```
-
-# Introduction to {ohdsilab}
 
 This package is intended to streamline working with the ohdsilab pharmetrics data
 at the Roux Institute. It contains some functions and template code using 
@@ -143,7 +141,109 @@ options(schema.default.value = cdm_schema)
 # ==============================================================================
 ```
 
-```{r}
+## Querying the database
 
+The ohdsilab pharmetrics database uses amazon redshift SQL and the OMOP CDM version 5.3. 
+
+You can see information in the 5.3 OMOP version here: https://ohdsi.github.io/CommonDataModel/cdm53.html. The
+database organization looks like this (this is a very similar OMOP CDM 5.4 - there are only very minor differences).
+
+<img src="https://ohdsi.github.io/CommonDataModel/images/cdm54.png"  width="100%">
+
+A more comprehensive diagram with information about the columns in each of the tables
+can be found here: http://ohdsi.github.io/CommonDataModel/cdm54erd.html
+
+The data help in the database is stored under the cdm schema You can think of a
+schema as kind of like a subfolder in the database. So the pharmetrics data is stored
+in ohdsilab/omop_cdm_53_pmtx_202203/... where the ... indicates what table you're interested in. 
+
+To query a table in pharmetrics you might write a line of code like this:
+
+```{r}
+dplyr::tbl(
+    con,
+    DatabaseConnector::inDatabaseSchema("omop_cdm_53_pmtx_202203", "concept")
+  )
 ```
+
+This code is looking for the concept table in the pharmetrics schema which is in 
+the ohdsilab database. You can also see the concept table in the orange box
+labelled "Standardized Vocabularies" in the picture above. 
+
+You also have your own schema where you can save information pertinent to your studies.
+If you were usr999, you could access a table (that you create) like this:
+
+```{r}
+  dplyr::tbl(
+      con,
+      DatabaseConnector::inDatabaseSchema("usr999", "myCohort")
+    )
+```
+
+Because these tables are in the database, we can connect them together. For example, 
+you might use {cohortGenerator} to generate a cohort table in your schema ("myCohort"). Your
+cohort table includes a column of person_id's (and some other information) that you
+can use to reduce the giant amount of data in pharmetrics - usually with an `inner_join`. 
+
+(See https://ohdsi.github.io/CohortGenerator/articles/GeneratingCohorts.html for a tutorial)
+
+```{r}
+dplyr::tbl(
+    con,
+    DatabaseConnector::inDatabaseSchema("usr999", "myCohort")
+  ) |> 
+  inner_join(
+    tbl(
+      con,
+      DatabaseConnector::inDatabaseSchema("omop_cdm_53_pmtx_202203", "person")
+    ),
+    by = "person_id"
+  )
+```
+
+Remembering the name of the database schema and your usr schema can be a bit annoying. That's
+why the ohdsi_new_script snipped also includes the following lines of code, so you can just
+reference these strings using the variables `cdm_schema` and `my_schema`. 
+
+```{r}
+cdm_schema = "omop_cdm_53_pmtx_202203"
+my_schema = paste0("work_", keyring::key_get("lab_user"))
+```
+
+It might look like this: 
+
+```{r}
+dplyr::tbl(
+    con,
+    DatabaseConnector::inDatabaseSchema(my_schema, "myCohort")
+  ) |> 
+  inner_join(
+    tbl(
+      con,
+      DatabaseConnector::inDatabaseSchema(cdm_schema, "person")
+    ),
+    by = "person_id"
+  )
+```
+
+That's still a lot right? This is where the `omop_join()` function can help streamline your code. 
+It's just a wrapper for the dplyr `join` functions. 
+
+```{r}
+dplyr::tbl(
+    con,
+    DatabaseConnector::inDatabaseSchema(my_schema, "myCohort")
+  ) |>
+  omop_join("person", type = "inner", by = "person_id")
+```
+
+It works because we set the default connection and cdm_schema using these lines of code from the
+ohdsi_new_script snippet. The `omop_join()` function will look for these defaults first, 
+and if it doesn't find them (because you didn't run these two lines), will let you know you need to provide them directly. 
+
+```{r}
+options(con.default.value = con)
+options(schema.default.value = cdm_schema)
+```
+
 

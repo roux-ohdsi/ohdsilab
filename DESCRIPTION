@@ -15,6 +15,7 @@ Description: Useful R functions for the Roux ohdsilab at Northeastern University
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
+issues: https://github.com/roux-ohdsi/ohdsilab/issues
 Imports: 
     keyring,
     DatabaseConnector,

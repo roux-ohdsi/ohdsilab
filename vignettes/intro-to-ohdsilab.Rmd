@@ -20,7 +20,7 @@ This package is intended to streamline working with the ohdsilab pharmetrics dat
 at the Roux Institute. It contains some functions and template code using 
 existing OHDSI R packages like {DatabaseConnector} as well as standard R packages
 like {dplyr}, {tidyr}, and {tibble}. This vignette will walk through some of the
-basic tools in ohdsilab
+basic tools in ohdsilab.
 
 ## Installation
 

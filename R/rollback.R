@@ -26,5 +26,24 @@ rb <- function(con = getOption("con.default.value")){
 
       }
     )
-  }
+}
+
+options(con.default.value = con)
+
+rb <- function(con = getOption("con.default.value")){
+  tryCatch(
+    expr = {
+      executeSql(con, "ROLLBACK;", progressBar = FALSE, reportOverallTime = FALSE)
+      message("Rollback Successful")
+    },
+    error = function(e){
+      #message('Caught an error!')
+      message(e)
+    },
+    warning = function(w){
+      # message('Caught an warning!')
+      message(w)
+    }
+  )
+}
 

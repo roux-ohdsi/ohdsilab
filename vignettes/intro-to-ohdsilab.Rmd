@@ -1,0 +1,249 @@
+---
+title: "Introduction to ohdsilab"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{intro-to-ohdsilab}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+This package is intended to streamline working with the ohdsilab pharmetrics data
+at the Roux Institute. It contains some functions and template code using 
+existing OHDSI R packages like {DatabaseConnector} as well as standard R packages
+like {dplyr}, {tidyr}, and {tibble}. This vignette will walk through some of the
+basic tools in ohdsilab
+
+## Installation
+
+Installation only needs to be done once, unless you are updating the package
+
+```{r, eval = FALSE}
+install.packages("remotes")
+remotes::install_github("roux-ohdsi/ohdsilab")
+```
+
+## Load the ohdsilab package
+
+- it should also load {DatabaseConnector}, {keyring}, and other dependencies,
+but you might want to explicitly load them for transparency.
+
+```{r setup}
+library(ohdsilab)
+library(tidyverse)
+library(DatabaseConnector)
+library(keyring)
+```
+
+## Snippets
+
+{ohdsilab} stores some basic [snippets](https://rstudio.github.io/rstudio-extensions/rstudio_snippets.html) for quick starting new scripts and projects. Follow the instructions in the link above to install
+the snippets. They are located in the /snippets folder in the package. The easiest way to copy
+them is copy text below the first line from the raw file on github: https://raw.githubusercontent.com/roux-ohdsi/ohdsilab/main/snippets/snippets. If you notice any
+mistakes or have any suggestions for the snippets, feel free to create a pull request or 
+start an issue on the github page. The snippet you'll find most useful to begin with is
+probably ohdsi_new_script.
+
+Current snippets:
+
+Polished:
+
+- ohdsi_new_script
+
+In the words:
+
+- ohdsi_new_project
+- ohdsi_creds
+- ohdsi_db
+- ohdsi_db_variables
+- ohdsi_db_connect
+- ohdsi_api_auth
+- ohdsi_api_cohort_definition
+
+## Functions
+
+These are in development and being updated frequently. 
+
+
+- `dbi_collect()` is a different version of the `collect()` function that uses DBI instead of dbplyr. There are
+occasional errors with the `collect()` function where not all rows of the query are returned because the query
+times out. In these cases, use the `dbi_collect()` function. 
+- `rb()` is a function to "ROLLBACK" in redshift SQL. This is necessary when there is a mistake in the dbplyr generated
+SQL code. You can use `rb()` instead of disconnecting and reconnecting to the database.
+
+- `omop_join()` is a shortcut for a join from an existing query (e.g., a dplyr pipe chunk) to an omop table without
+having to reference the connection and schema. 
+
+- `icd2omop()` and `icd2omop2()` map a dataframe or vector of icd 9 or 10 codes to OMOP concept codes
+- `cpt2omop()` maps a vector of cpt codes to omop concept codes. It can be used for any standardized vocabulary,
+not just CPT4. (ICD9/10 are not considered standardized)
+- `str_insert()` and `icd_periods()` help to insert periods into icd codes when they come without. This
+is typically a necessary step before mapping to OMOP codes. 
+
+## Connecting to the database
+
+If this is the first time connecting on your computer, you'll need to set your credientials before
+it will work. The snippet ohdsi_creds will create that code for you. When you
+run each line, it'll generate a pop up where you can enter your database/ohdsilab
+username (something like usr999) and your password (which is in your email). After
+setting the credentials, you shouldn't have to do it again very often. 
+
+```{r}
+# Credentials
+keyring::key_set("lab_user", prompt = "Username for this workspace")
+keyring::key_set("lab_password", prompt = "Password for this workspace")
+```
+
+
+The following code was generated using the ohdsi_new_script snippet. It creates
+a template for the basic code needed to connect to the database. Now that you've 
+set up your credentials, see if it'll run without errors. Note that you'll also 
+need to be using RStudio within the Amazon workspace box or you need to use the 
+global connect VPN. 
+
+```{r}
+# ==============================================================================
+# Packages =====================================================================
+library(keyring)
+library(DatabaseConnector)
+library(tidyverse)
+library(ohdsilab)
+
+# Credentials ==================================================================
+usr = keyring::key_get("lab_user")
+pw  = keyring::key_get("lab_password")
+
+# DB Connections ===============================================================
+base_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+cdm_schema = "omop_cdm_53_pmtx_202203"
+my_schema = paste0("work_", keyring::key_get("lab_user"))
+# Create the connection
+con =  DatabaseConnector::connect(
+  dbms = "redshift",
+  server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+  port = 5439,
+  user = keyring::key_get("lab_user"),
+  password = keyring::key_get("lab_password")
+)
+class(con)
+# make it easier for some r functions to find the database
+options(con.default.value = con)
+options(schema.default.value = cdm_schema)
+
+# End Setup ====================================================================
+# ==============================================================================
+```
+
+## Querying the database
+
+The ohdsilab pharmetrics database uses amazon redshift SQL and the OMOP CDM version 5.3. 
+
+You can see information in the 5.3 OMOP version here: https://ohdsi.github.io/CommonDataModel/cdm53.html. The
+database organization looks like this (this is a very similar OMOP CDM 5.4 - there are only very minor differences).
+
+<img src="https://ohdsi.github.io/CommonDataModel/images/cdm54.png"  width="100%">
+
+A more comprehensive diagram with information about the columns in each of the tables
+can be found here: http://ohdsi.github.io/CommonDataModel/cdm54erd.html
+
+The data help in the database is stored under the cdm schema You can think of a
+schema as kind of like a subfolder in the database. So the pharmetrics data is stored
+in ohdsilab/omop_cdm_53_pmtx_202203/... where the ... indicates what table you're interested in. 
+
+To query a table in pharmetrics you might write a line of code like this:
+
+```{r}
+dplyr::tbl(
+    con,
+    DatabaseConnector::inDatabaseSchema("omop_cdm_53_pmtx_202203", "concept")
+  )
+```
+
+This code is looking for the concept table in the pharmetrics schema which is in 
+the ohdsilab database. You can also see the concept table in the orange box
+labelled "Standardized Vocabularies" in the picture above. 
+
+You also have your own schema where you can save information pertinent to your studies.
+If you were usr999, you could access a table (that you create) like this:
+
+```{r}
+  dplyr::tbl(
+      con,
+      DatabaseConnector::inDatabaseSchema("usr999", "myCohort")
+    )
+```
+
+Because these tables are in the database, we can connect them together. For example, 
+you might use {cohortGenerator} to generate a cohort table in your schema ("myCohort"). Your
+cohort table includes a column of person_id's (and some other information) that you
+can use to reduce the giant amount of data in pharmetrics - usually with an `inner_join`. 
+
+(See https://ohdsi.github.io/CohortGenerator/articles/GeneratingCohorts.html for a tutorial)
+
+```{r}
+dplyr::tbl(
+    con,
+    DatabaseConnector::inDatabaseSchema("usr999", "myCohort")
+  ) |> 
+  inner_join(
+    tbl(
+      con,
+      DatabaseConnector::inDatabaseSchema("omop_cdm_53_pmtx_202203", "person")
+    ),
+    by = "person_id"
+  )
+```
+
+Remembering the name of the database schema and your usr schema can be a bit annoying. That's
+why the ohdsi_new_script snipped also includes the following lines of code, so you can just
+reference these strings using the variables `cdm_schema` and `my_schema`. 
+
+```{r}
+cdm_schema = "omop_cdm_53_pmtx_202203"
+my_schema = paste0("work_", keyring::key_get("lab_user"))
+```
+
+It might look like this: 
+
+```{r}
+dplyr::tbl(
+    con,
+    DatabaseConnector::inDatabaseSchema(my_schema, "myCohort")
+  ) |> 
+  inner_join(
+    tbl(
+      con,
+      DatabaseConnector::inDatabaseSchema(cdm_schema, "person")
+    ),
+    by = "person_id"
+  )
+```
+
+That's still a lot right? This is where the `omop_join()` function can help streamline your code. 
+It's just a wrapper for the dplyr `join` functions. 
+
+```{r}
+dplyr::tbl(
+    con,
+    DatabaseConnector::inDatabaseSchema(my_schema, "myCohort")
+  ) |>
+  omop_join("person", type = "inner", by = "person_id")
+```
+
+It works because we set the default connection and cdm_schema using these lines of code from the
+ohdsi_new_script snippet. The `omop_join()` function will look for these defaults first, 
+and if it doesn't find them (because you didn't run these two lines), will let you know you need to provide them directly. 
+
+```{r}
+options(con.default.value = con)
+options(schema.default.value = cdm_schema)
+```
+
+

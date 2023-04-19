@@ -1,0 +1,128 @@
+---
+title: "Generating-a-cohort"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Generating-a-cohort}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+This will be a quick tutorial on using a cohort created using ATLAS and saving
+cohort IDs and entry/exit in your user schema. This tutorial will use a cohort
+created from the SynPuf synthetic dataset, using the cohort definition
+"[RC] CVA Ischemic or Hemorrhagic with admission - synpuf". This cohort definition
+imported a phenotype for CVA from stroke ischemic or Hemorrhagic with admission from 
+Phenotype library (https://data.ohdsi.org/PhenotypeLibrary/). The steps for doing this
+will be recorded elsewhere. 
+
+We'll need to install two new packages: the OHDSI Web Api and cohortGenerator
+
+```{r setup, eval = FALSE}
+remotes::install_github("OHDSI/ROhdsiWebApi")
+remotes::install_github("OHDSI/CohortGenerator")
+```
+
+We'll use the same set up code as the intro vignette. 
+
+```{r}
+# ==============================================================================
+# Packages =====================================================================
+library(keyring)
+library(DatabaseConnector)
+library(tidyverse)
+library(ohdsilab)
+library(ROhdsiWebApi)
+library(CohortGenerator)
+
+# DB Connections ===============================================================
+base_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+cdm_schema = "omop_cdm_53_pmtx_202203"
+synpuf_schema = "omop_cdm_synpuf_110k_531"
+my_schema = paste0("work_", keyring::key_get("lab_user"))
+```
+
+Instead of creating a database connection, we're just going to create a set of connection
+details. Some of the OHDSI R packages use this connectionDetails method instead of
+using a connection. 
+
+```{r}
+# Create connection details
+connectionDetails <- createConnectionDetails(dbms = "redshift",
+                                             server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+                                             port = 5439,
+                                             user = keyring::key_get("lab_user"),
+                                             password = keyring::key_get("lab_password"))
+
+```
+
+We're also going to authorize the api for accessing ATLAS from R. This uses the
+base_url information, and your username/password which you set using `keyring::key_set()`
+to know that its ok for you to access ATLAS. 
+
+```{r}
+ROhdsiWebApi::authorizeWebApi(base_url, 
+                              authMethod = "db", 
+                              webApiUsername = keyring::key_get("lab_user"), 
+                              webApiPassword = keyring::key_get("lab_password"))
+```
+
+
+Ok now we need to do two things. First - pick which cohort to use to generate 
+a data set. This is the number for the cohort that you (or someone else) creates
+in ATLAS. 
+
+```{r}
+cohortId <- 1124
+```
+
+Then we're going to create a cohortDefinitionSet object using that ID and the baseUrl.
+
+```{r}
+cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(baseUrl = base_url,
+                                                               cohortIds = cohortId)
+
+cohortDefinitionSet
+```
+
+We'll create a name for this cohort - this is the name that's used for the tables
+in your user schema.
+
+```{r}
+cohortTableNames <- getCohortTableNames(cohortTable = "synPuf_CVA")
+cohortTableNames
+```
+
+We'll create empty tables to receive this data. We're using the connectionDetails
+object, the cohortTableName object, and the mySchema object from above. 
+
+```{r, eval = FALSE}
+# create empty tables in the {mySchema}.cohort table
+createCohortTables(connectionDetails = connectionDetails,
+                   cohortTableNames = cohortTableNames,
+                   cohortDatabaseSchema = my_schema)
+```
+
+*This function doesn't actually currently work in Rmarkdown, see https://github.com/OHDSI/CohortGenerator/issues/97 
+for details. If you need to use it in RMarkdown supposedly you can wrap it in 
+`purrr:quietly()`*
+
+Finally, we'll add everyone from the database to our cohort. Notice that this code
+references the synpuf schema. If you were working with the pharmetrics data, you'd
+reference `cdm_schema` or `"omop_cdm_53_pmtx_202203"`.
+
+```{r}
+cohortsGenerated <- generateCohortSet(connectionDetails = connectionDetails,
+                                      cdmDatabaseSchema = synpuf_schema,
+                                      cohortDatabaseSchema = my_schema,
+                                      cohortTableNames = cohortTableNames,
+                                      cohortDefinitionSet = cohortDefinitionSet)
+```
+

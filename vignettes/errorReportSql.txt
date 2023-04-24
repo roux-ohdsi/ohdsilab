@@ -5,28 +5,9 @@ Error:
 com.amazon.redshift.util.RedshiftException: ERROR: permission denied for schema omop_cdm_synpuf_110k_531
 
 SQL:
-INSERT INTO #Codesets (codeset_id, concept_id)
-SELECT 2 as codeset_id, c.concept_id FROM (select distinct I.concept_id FROM
-( 
-  select concept_id from omop_cdm_synpuf_110k_531.CONCEPT where concept_id in (262,9203,9201)
-UNION  select c.concept_id
-  from omop_cdm_synpuf_110k_531.CONCEPT c
-  join omop_cdm_synpuf_110k_531.CONCEPT_ANCESTOR ca on c.concept_id = ca.descendant_concept_id
-  and ca.ancestor_concept_id in (262,9203,9201)
-  and c.invalid_reason is null
-) I
-) C UNION ALL 
-SELECT 3 as codeset_id, c.concept_id FROM (select distinct I.concept_id FROM
-( 
-  select concept_id from omop_cdm_synpuf_110k_531.CONCEPT where concept_id in (372924,375557,376713,443454,441874,439847,432923)
-UNION  select c.concept_id
-  from omop_cdm_synpuf_110k_531.CONCEPT c
-  join omop_cdm_synpuf_110k_531.CONCEPT_ANCESTOR ca on c.concept_id = ca.descendant_concept_id
-  and ca.ancestor_concept_id in (443454)
-  and c.invalid_reason is null
-) I
-) C
-
+SELECT *
+FROM omop_cdm_synpuf_110k_531.concept AS q01
+WHERE (0 = 1);
 
 R version:
 R version 4.2.2 (2022-10-31)
@@ -44,10 +25,8 @@ Attached base packages:
 - base
 
 Other attached packages:
-- CohortGenerator (0.8.0)
-- R6 (2.5.1)
-- ROhdsiWebApi (1.3.3)
-- ohdsilab (0.1.0)
+- keyring (1.3.1)
+- DatabaseConnector (6.1.0)
 - forcats (1.0.0)
 - stringr (1.5.0)
 - dplyr (1.1.0)
@@ -57,5 +36,4 @@ Other attached packages:
 - tibble (3.2.0)
 - ggplot2 (3.4.1)
 - tidyverse (1.3.2)
-- DatabaseConnector (6.1.0)
-- keyring (1.3.1)
+- ohdsilab (0.1.0)

@@ -20,7 +20,16 @@ See the vignette "Introduction to ohdsilab" for help getting started.
 
 Future Vignettes: 
 
-- building concepts in ATLAS
+- building concepts in ATLAS - link to video for using ATLAS
+  - link to several ATLAS videos
+  - 
 - building cohort definitions in ATLAS
+- feature extraction vignette
 - Pulling cohorts from ATLAS to R/Rstudio
 - Data wrangling with OMOP/Pharmetrics
+
+
+- Pharmetrics ohdsilab R package introduction
+- allofus intro
+- code from causal inference class
+

@@ -2,9 +2,9 @@ pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
-  Generating-a-cohort: Generating-a-cohort.html
-  feature-extraction-covariates: feature-extraction-covariates.html
-  intro-to-ohdsilab: intro-to-ohdsilab.html
-  working-with-omop-cdm: working-with-omop-cdm.html
-last_built: 2023-05-08T20:09Z
+  01-intro-to-ohdsilab: 01-intro-to-ohdsilab.html
+  02-Generating-a-cohort: 02-Generating-a-cohort.html
+  03-feature-extraction-covariates: 03-feature-extraction-covariates.html
+  04-working-with-omop-cdm: 04-working-with-omop-cdm.html
+last_built: 2023-05-08T20:17Z
 

@@ -4,6 +4,21 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/articles/01-intro-to-ohdsilab.html</loc>
+  </url>
+  <url>
+    <loc>/articles/02-Generating-a-cohort.html</loc>
+  </url>
+  <url>
+    <loc>/articles/03-.html</loc>
+  </url>
+  <url>
+    <loc>/articles/03-feature-extraction-covariates.html</loc>
+  </url>
+  <url>
+    <loc>/articles/04-working-with-omop-cdm.html</loc>
+  </url>
+  <url>
     <loc>/articles/Generating-a-cohort.html</loc>
   </url>
   <url>

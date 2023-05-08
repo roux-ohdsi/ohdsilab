@@ -6,31 +6,33 @@
 \usage{
 icd2omop(
   db_con,
-  schema = FALSE,
   codes,
-  schema.name = NA,
+  cdm_schema = NULL,
+  write_schema = NULL,
   icd_wildcard = "x",
   dbms_wildcard = "\%",
-  icd_version = "ICD9CM"
+  translate_from = "ICD9CM",
+  translate_to = "SNOMED",
+  overwrite = FALSE
 )
 }
 \arguments{
 \item{db_con}{database connection object}
 
-\item{schema}{if there is a database schema, TRUE. defaults of FALSE}
-
 \item{codes}{vector of ICD codes with or without wildcards}
-
-\item{schema.name}{name of databsae schema. only required if schema is TRUE}
 
 \item{icd_wildcard}{wordcard indicator in icd codes. for example if code is R47.x, put "x"}
 
 \item{dbms_wildcard}{wildcard indicator for dbms SIMILAR TO function.}
 
+\item{schema}{if there is a database schema, TRUE. defaults of FALSE}
+
+\item{schema.name}{name of databsae schema. only required if schema is TRUE}
+
 \item{icd_version}{ICD9CM or ICD10CM. Make sure to enter the same way it is included in the concept table}
 }
 \value{
-a dataframe of icd, SNOMED, and OMOP concept codes
+a dataframe of icd, SNOMED, OMOP concept codes, and the original codes to be matched (`orig_code`)
 }
 \description{
 icd2omop

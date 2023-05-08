@@ -4,10 +4,19 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/articles/Generating-a-cohort.html</loc>
+  </url>
+  <url>
+    <loc>/articles/feature-extraction-covariates.html</loc>
+  </url>
+  <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
     <loc>/articles/intro-to-ohdsilab.html</loc>
+  </url>
+  <url>
+    <loc>/articles/working-with-omop-cdm.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>

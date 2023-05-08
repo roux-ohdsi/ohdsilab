@@ -1,8 +1,8 @@
 ---
-title: "Generating-a-cohort"
+title: "Generating a cohort"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Generating-a-cohort}
+  %\VignetteIndexEntry{Generating a cohort}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -126,3 +126,33 @@ cohortsGenerated <- generateCohortSet(connectionDetails = connectionDetails,
                                       cohortDefinitionSet = cohortDefinitionSet)
 ```
 
+If you want to visually see this new table in your schema, you can connect to the database and use the **Connections** pane
+in the top right of RStudio. 
+
+```{r}
+con =  DatabaseConnector::connect(
+  dbms = "redshift",
+  server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+  port = 5439,
+  user = keyring::key_get("lab_user"),
+  password = keyring::key_get("lab_password")
+)
+```
+
+How would you use this new table? Remember in the first Vignette, when we joined the "rc_aphasia" table? 
+
+```{r}
+# pull data from the cohort table
+cohort <- tbl(con, paste(my_schema, "rc_aphasia", sep = ".")) |>
+  select(person_id = subject_id, cohort_start_date, cohort_end_date)
+
+# join to the person table to get information about demographics, calculate age at cohrt entry
+demographics <- cohort |> 
+  omop_join("person", type = "left", by = "person_id") |> 
+  select(person_id, cohort_start_date, cohort_end_date, year_of_birth, gender = gender_source_value) |> 
+  mutate(age_at_entry = year(cohort_start_date) - year_of_birth)
+
+```
+
+This code starts with a table made with CohortGenerator and uses it to limit the OMOP person table
+to just the people that we're interested in, as defined by our cohort. 

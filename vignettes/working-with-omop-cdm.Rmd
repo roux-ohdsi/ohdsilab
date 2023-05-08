@@ -1,0 +1,187 @@
+---
+title: "Working with Data from the ohdsilab database"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Working with Data from the ohdsilab database}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+```{r setup}
+library(ohdsilab)
+```
+
+The code in this vignette will provide a brief example of working with data in the 
+ohdsilab database. The goal is to estimate outpatient speech-language pathology
+treatment utilization for individuals with post-stroke aphasia (aphasia is a disorder
+of *language* that most typically occurs after left-hemisphere stroke and has a profound
+impact on communication as well as overall quality of life. there are about 2.5 million people
+currently in the U.S. with aphasia) 
+
+Start by setting the credientials, like previous vignettes. I'm also setting the defaults
+for the connection so that I can use the `omop_join()` and other similar functions
+from the ohdsilab package.
+
+```{r}
+usr = keyring::key_get("lab_user")
+pw  = keyring::key_get("lab_password")
+
+# DB Connections
+
+base_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+cdm_schema = "omop_cdm_53_pmtx_202203"
+my_schema = paste0("work_", keyring::key_get("lab_user"))
+
+# Create the connection
+con =  DatabaseConnector::connect(dbms = "redshift",
+                                  server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+                                  port = 5439,
+                                  user = keyring::key_get("lab_user"),
+                                  password = keyring::key_get("lab_password"))
+
+options(con.default.value = con)
+options(schema.default.value = cdm_schema)
+```
+
+
+We'll use a cohort generated in ATLAS, #860: 
+[RC] CVA Ischemic or Hemorrhagic with admission. This is a cohort based on the phenotype 
+library defintion for stroke with inpatient admission. The cohort requires a lookback of 180 days
+without a similar event and 365 days of continuous observation after the index date. There is also
+a cohort exit date of 365 days past the index date - I'm not interested in events past 365 days and this will
+be helpful for filtering the data later. 
+
+We could also add a concept set for aphasia in ATLAS and use this concept
+set to define the cohort, but I was (at the time) thinking about calculating
+utilization for stroke survivors without aphasia as well, so the cohort
+definition is relatively simple and includes stroke survivors with and without aphasia. This returns a SQL
+query (not a dataframe yet!), but I'm going to go ahead and select the columns that I want. I also had named
+the patient ID column "subject_id" in CohortGenerator and I need to fix that so it matches the rest of the 
+OMOP data. (Next time I will call it person_id from the get go).
+
+```{r}
+# Get cohort that has an entry date prior to 2018
+cohort = tbl(con, inDatabaseSchema(my_schema, "rc_aphasia")) |>
+  select(person_id = subject_id, cohort_start_date, cohort_end_date)
+```
+
+Now I need concepts that are used for aphasia. There are actually quite a few of them, and I've already
+gone ahead and used ATHENA to limit the codes to just the ones I really care about. Based on ATLAS though, 
+2-3 of these codes make up the vast majority of those present in pharmetrics. 
+
+```{r}
+aphasia_concepts = c(4049150,4312097,4320483,763039,4299183,46272980,440084,
+                    4012864,4215589,4217159,4031157,4256743,40484101,42535427,
+                    4240405,4063072,4082040,4252416,4146672,4046084,4047125,
+                    4131821,42535429,3181357,37396532,440424,4043379,4062431,
+                    40480002,4147666,4304820,4225746,4269227,4044923,4060092,
+                    35621734,4245018,4278687,4184473,35610281,765610,4327962,
+                    36685003,4046219,36685012,4185285,4084825,4173098,4077061,
+                    4036512,4287230,4232189,4045421,4232482,4207412,37396465,
+                    4203167,4263333,4287839,4148072)
+```
+
+And I'm going to use these concept IDs to filter the concept table to get the human
+readable concept name. We'll save this table for use later. 
+
+```{r}
+concepts = tbl(con, inDatabaseSchema(cdm_schema, "concept")) |> 
+  filter(concept_id %in% !!aphasia_concepts)
+```
+
+Next, I'm going to use my cohort table to limit the data from the condition occurrence
+table to just rows for the individuals AND timeframe that I care about. This code chunk
+first joins the cohort table with the fixed person_id column name (from above) to the
+condition occurrence table, which holds instances of the conditions tagged to people
+in the data set. Second, it filteres for only the conditions that occured within the
+timeframe of interest (within 365 days of the index date). Third, it joins the concepts
+table from above to get human readable concept names on the conditions that were found. 
+Finally, I select only the columns I'm interested in. 
+
+We can use the `tally()` function to check how many rows would be returned by the query
+(this can take a hot second). If its not too many rows for my local system (and this one isn't)
+, we can go ahead and "collect" the data, which means bringing it into our local R session. The
+number of rows you can collect will vary based on your computer's RAM/CPU but I wouldn't recommend
+trying to collect more than 1,000,000 rows generally if you can help it. 
+
+```{r}
+cond = cohort |> 
+  omop_join("condition_occurrence", type = "inner", by = "person_id") |> 
+  filter(condition_start_date > cohort_start_date & condition_start_date < cohort_end_date) |> 
+  inner_join(concepts, by = c("condition_concept_id" = "concept_id")) |> 
+  select(person_id, cohort_start_date, cohort_end_date, condition_concept_id,
+         condition_start_date, provider_id, visit_occurrence_id, visit_detail_id,
+         condition_source_value, condition_source_concept_id, concept_name, domain_id)
+
+tally(cond)
+
+cond = cond |> dbi_collect()
+```
+
+I decided that I wanted there to be two separate occurances of the aphasia code present to increase
+the odds that I really want identifying people with aphasia. I don't necessarily trust that the Dx codes
+are used accurately, so having two separate occurrences increases seems safer. Perhaps the risk is that
+I will tend to get a more severe cohort, but I'm ok with that risk for now. Here, I'm using the 
+count function to count condition occurrences of aphasia and then only keeping the person_id's that
+have more than one. This one-column query will hold my final cohort of interest. 
+
+```{r}
+pwa_table = cohort |> 
+  omop_join("condition_occurrence", type = "inner", by = "person_id") |> 
+  filter(condition_start_date > cohort_start_date & condition_start_date < cohort_end_date) |> 
+  inner_join(concepts, by = c("condition_concept_id" = "concept_id")) |> 
+  count(person_id) |> 
+  filter(n > 1) |> 
+  select(person_id)
+```
+
+For this cohort, I'm interested in how many outpatient treatment sessions they receive within
+the first year post stroke. Since I have some domain expertise here, it was easy for me to look
+up the CPT codes associated with these procedures in ATHENA and get their omop concept IDs. I also
+looked at the concept names for the facility types that I'm interested in, and I'll use these
+to limit to visits that are just in outpatient settings. 
+
+```{r}
+slp_tx = 2313701
+slp_eval = 44816446
+aphasia_eval = 2314188
+old_eval = 2313700
+
+OP = c("Outpatient Hospital", "Office Visit", "Comprehensive Outpatient Rehabilitation Facility", "Outpatient Visit", "Independent Clinic")                      
+```
+
+Starting with the pwa_table (which is just one column of the unique person_id's that I'm interested in), 
+we can join to get only procedures for these individuals, then further filter for the evaluation and
+treatment procedure codes that we care about. After filtering, just the relevant columns are selected. Then, I joined
+these procedures to the visit occurences and concept table to get more information about where these procedures were
+done. Finally, I collected the data. I did some other things not noted here, like join with the 
+payer_plan_period to get data on what types of insurers these individuals had. I could also join with the 
+cost table if I wanted information about the cost of SLP services within 1 year post stroke. 
+
+```{r}
+pwa_visits <- pwa_table |> 
+  omop_join("procedure_occurrence", type = "left", by = "person_id") |> 
+  filter(procedure_concept_id %in% c(slp_tx, slp_eval, aphasia_eval, old_eval)) |> 
+  select(person_id, procedure_concept_id, procedure_date, visit_occurrence_id, visit_detail_id, procedure_source_value) |> 
+  omop_join("visit_occurrence", type = "left", by = c("visit_occurrence_id", "person_id")) |> 
+  omop_join("concept", type = "inner", by = c("visit_concept_id" = "concept_id")) |> 
+  inner_join(cohort, by = "person_id") |> 
+  dbi_collect()
+```
+
+There was quite a bit of wrangling that occurred after this to synthesize the visits within
+episodes of care and incorporate information about facilities to define episodes of care that I'll leave out - 
+but all of that wrangling was done locally (so not on the database end) - just like you would for any normal
+dataset you read into R. 
+
+Hopefully this was a helpful example to see how you can combine information across the
+different OMOP tables to filter and drill down to exactly the data you're interested in. 
+exactly the data you're interested in

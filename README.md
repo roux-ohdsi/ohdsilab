@@ -1,11 +1,14 @@
 
 <br/>
 
-### ohdsilab: Useful R functions for the Roux ohdsilab at Northeastern University.
+### ohdsilab: Tools for using the Roux ohdsilab at Northeastern University.
 
 <hr/>
 <!-- badges: start -->
 <!-- badges: end -->
+
+The ohdsilab package includes useful functions and basic tutorials for working with
+ohdsilab data at Northeastern University's OHDSI center. 
 
 #### Installation
 
@@ -16,20 +19,9 @@ You can install the development version of ohdsilab from [GitHub](https://github
 devtools::install_github("roux-ohdsi/ohdsilab")
 ```
 
-See the vignette "Introduction to ohdsilab" for help getting started. 
+See the vignette "Introduction to ohdsilab" for help getting started. There are
+other additional vignettes on using CohortGenerator, FeatureExtraction, and some
+example datawrangling using the OMOP tables and Ohdsilab. 
 
-Future Vignettes: 
-
-- building concepts in ATLAS - link to video for using ATLAS
-  - link to several ATLAS videos
-  - 
-- building cohort definitions in ATLAS
-- feature extraction vignette
-- Pulling cohorts from ATLAS to R/Rstudio
-- Data wrangling with OMOP/Pharmetrics
-
-
-- Pharmetrics ohdsilab R package introduction
-- allofus intro
-- code from causal inference class
-
+Future Vignettes will include using ATHENA, using ATLAS, and examples of using
+the All of Us Researcher Workbench. 

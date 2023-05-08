@@ -32,7 +32,16 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/Generating-a-cohort.html">Generating a cohort</a>
+    </li>
+    <li>
+      <a href="../articles/feature-extraction-covariates.html">Generating Covariates and Table 1</a>
+    </li>
+    <li>
       <a href="../articles/intro-to-ohdsilab.html">Introduction to ohdsilab</a>
+    </li>
+    <li>
+      <a href="../articles/working-with-omop-cdm.html">Working with Data from the ohdsilab database</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
@@ -56,12 +65,14 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">icd2omop</span><span class="op">(</span></span>
 <span>  <span class="va">db_con</span>,</span>
-<span>  schema <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">codes</span>,</span>
-<span>  schema.name <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  cdm_schema <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  write_schema <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  icd_wildcard <span class="op">=</span> <span class="st">"x"</span>,</span>
 <span>  dbms_wildcard <span class="op">=</span> <span class="st">"%"</span>,</span>
-<span>  icd_version <span class="op">=</span> <span class="st">"ICD9CM"</span></span>
+<span>  translate_from <span class="op">=</span> <span class="st">"ICD9CM"</span>,</span>
+<span>  translate_to <span class="op">=</span> <span class="st">"SNOMED"</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -71,16 +82,8 @@
 <dd><p>database connection object</p></dd>
 
 
-<dt>schema</dt>
-<dd><p>if there is a database schema, TRUE. defaults of FALSE</p></dd>
-
-
 <dt>codes</dt>
 <dd><p>vector of ICD codes with or without wildcards</p></dd>
-
-
-<dt>schema.name</dt>
-<dd><p>name of databsae schema. only required if schema is TRUE</p></dd>
 
 
 <dt>icd_wildcard</dt>
@@ -91,6 +94,14 @@
 <dd><p>wildcard indicator for dbms SIMILAR TO function.</p></dd>
 
 
+<dt>schema</dt>
+<dd><p>if there is a database schema, TRUE. defaults of FALSE</p></dd>
+
+
+<dt>schema.name</dt>
+<dd><p>name of databsae schema. only required if schema is TRUE</p></dd>
+
+
 <dt>icd_version</dt>
 <dd><p>ICD9CM or ICD10CM. Make sure to enter the same way it is included in the concept table</p></dd>
 
@@ -99,7 +110,7 @@
     <h2>Value</h2>
     
 
-<p>a dataframe of icd, SNOMED, and OMOP concept codes</p>
+<p>a dataframe of icd, SNOMED, OMOP concept codes, and the original codes to be matched (`orig_code`)</p>
     </div>
 
   </div>

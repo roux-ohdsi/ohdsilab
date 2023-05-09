@@ -40,6 +40,18 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/aou_connect.html</loc>
+  </url>
+  <url>
+    <loc>/reference/aou_ls.html</loc>
+  </url>
+  <url>
+    <loc>/reference/aou_retrieve_from_bucket.html</loc>
+  </url>
+  <url>
+    <loc>/reference/aou_save_to_bucket.html</loc>
+  </url>
+  <url>
     <loc>/reference/dbi_collect.html</loc>
   </url>
   <url>

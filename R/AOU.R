@@ -3,7 +3,9 @@
 #' Connect to big query database in All of Us
 #'
 #' @param bucket_name variable name for your bucket. Recommend leaving the default.
-#'
+#' @param description To use, simply run the function without any arguments. It will
+#' print a message if you connect successfully. It will also assign your bucket
+#' to an object in your R environment.
 #' @export
 aou_connect <- function(bucket_name = "bucket"){
   dataset <- str_split_fixed(Sys.getenv('WORKSPACE_CDR'),'\\.',n=2)

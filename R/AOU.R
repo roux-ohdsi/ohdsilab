@@ -12,17 +12,17 @@ aou_connect <- function(bucket_name = "bucket"){
   release <- dataset[2]
   prefix <- dataset[1]
 
-  con <- dbConnect(
+  connection <- dbConnect(
     bigrquery::bigquery(),
     billing = Sys.getenv('GOOGLE_PROJECT'),
     project = prefix,
     dataset = release
   )
 
-  assign(bucket_name, Sys.getenv('WORKSPACE_BUCKET'))
+  assign("con", connection, envir = .GlobalEnv)
+  assign(bucket_name, Sys.getenv('WORKSPACE_BUCKET'), envir = .GlobalEnv)
 
   cat("Connected Successfully")
-
 }
 
 #' Retrieve a file from a bucket to your workspace
@@ -70,7 +70,7 @@ aou_save_to_bucket <- function(file_name, bucket_name = "bucket"){
 #'
 #' @param pattern pattern like *.csv or a single file name e.g., mydata.csv
 #' @export
-aou_ls <- function(pattern = ".csv"){
+aou_ls <- function(pattern = "*.csv"){
   # Check if file is in the bucket
   system(paste0("gsutil ls ", bucket, "/data/", pattern), intern=T)
 }

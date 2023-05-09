@@ -4,7 +4,7 @@
 \alias{aou_ls}
 \title{List the current files in your bucket.}
 \usage{
-aou_ls(pattern = ".csv")
+aou_ls(pattern = "*.csv")
 }
 \arguments{
 \item{pattern}{pattern like *.csv or a single file name e.g., mydata.csv}

@@ -18,7 +18,6 @@ RoxygenNote: 7.2.3
 issues: https://github.com/roux-ohdsi/ohdsilab/issues
 Imports: 
     keyring,
-    DatabaseConnector,
     git2r,
     renv,
     dplyr,
@@ -30,6 +29,7 @@ Imports:
     insight
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    DatabaseConnector
 VignetteBuilder: knitr
 URL: https://roux-ohdsi.github.io/ohdsilab/

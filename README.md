@@ -15,8 +15,11 @@ ohdsilab data at Northeastern University's OHDSI center.
 You can install the development version of ohdsilab from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("roux-ohdsi/ohdsilab")
+# only need to run once
+# install.packages("remotes")
+
+# install ohdsilab
+remotes::install_github("roux-ohdsi/ohdsilab")
 ```
 
 See the vignette "Introduction to ohdsilab" for help getting started. There are

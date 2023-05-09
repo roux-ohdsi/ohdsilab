@@ -52,7 +52,7 @@ bookstore <- function(package_names){
 
     for(package_name in package_names){
       library(package_name,character.only=TRUE,quietly=TRUE)
-      cat("Loaded", package_name)
+      cat("Loaded", package_name, "\n")
     }
 
   }

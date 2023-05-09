@@ -35,13 +35,13 @@ bookstore <- function(package_names){
     }
 
     if(length(cran_packages>0)){
-      cat("CRAN Packages to install:", length(remaining_packages), "\n")
+      cat("CRAN Packages to install:", length(cran_packages), "\n")
     } else {
       cat("All CRAN packages already installed", "\n")
     }
 
     if(length(github_packages>0)){
-      cat("Github Packages to install:", length(remaining_packages), "\n")
+      cat("Github Packages to install:", length(github_packages), "\n")
     } else {
       cat("All Github packages already installed", "\n")
     }

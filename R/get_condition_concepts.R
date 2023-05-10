@@ -1,17 +1,17 @@
 #' Get occcurances of of a concept set from ATLAS for a given cohort
 #'
 #'
-#' @param cohort reference to a table created in a user schema with a column called "person_id", and columns for start_date and end_date
+#' @param cohort tbl; reference to a table created in a user schema with a column called "person_id", and columns for start_date and end_date
 #' @param concept_set_id num; the number associated with the concept_set_id in ATLAS
 #' @param start_date the name of the start_date column in the cohort table (unquoted)
 #' @param end_date the name of the end_date column in the cohort table (unquoted)
-#' @param name Name of column for indicator variable returned by function
-#' @param min_n the minimum number of occurrences per person to consider the indicator true
-#' @param n count the number of occurrences per person (will not include zeros)
-#' @param keep_all keep columns with information about the concept (e.g., concept name, id, etc.)
+#' @param name chr; Name of column for indicator variable returned by function
+#' @param min_n dbl; the minimum number of occurrences per person to consider the indicator true
+#' @param n dbl; count the number of occurrences per person (will not include zeros)
+#' @param keep_all lgl; keep columns with information about the concept (e.g., concept name, id, etc.)
 #' @param con the connection object to ohdsilab
-#' @param base_url the base url for ATLAS (not ohdsilab)
-#' @param my_schema schema for the user
+#' @param base_url chr; the base url for ATLAS (not ohdsilab)
+#' @param my_schema chr; schema for the user
 #'
 #' @return a dataframe
 #' @export
@@ -40,10 +40,13 @@ pull_concept_set <- function(cohort,
   if (!is.null(min_n) & !is.numeric(min_n)) stop("Provide a number to `min_n` to restrict to observations with at least that number of rows")
   if (n && keep_all) warning("The `keep_all` argument takes precedence; all data will be returned instead of counts.")
 
+  # consider abstracting into own function
   concept_table_local <- getConceptSetDefinition(concept_set_id, baseUrl = base_url) |>
     convertConceptSetDefinitionToTable() |>
     select(conceptId, conceptName, domainId) |>
     filter(domainId %in% c("Condition", "Drug", "Measurement", "Observation", "Procedure"))
+
+  # insertTable_chunk()
 
   if (nrow(concept_table_local) > 100) {
     ## rob to write a function!

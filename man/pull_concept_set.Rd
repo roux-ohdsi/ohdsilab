@@ -19,7 +19,7 @@ pull_concept_set(
 )
 }
 \arguments{
-\item{cohort}{reference to a table created in a user schema with a column called "person_id", and columns for start_date and end_date}
+\item{cohort}{tbl; reference to a table created in a user schema with a column called "person_id", and columns for start_date and end_date}
 
 \item{concept_set_id}{num; the number associated with the concept_set_id in ATLAS}
 
@@ -27,19 +27,19 @@ pull_concept_set(
 
 \item{end_date}{the name of the end_date column in the cohort table (unquoted)}
 
-\item{name}{Name of column for indicator variable returned by function}
+\item{name}{chr; Name of column for indicator variable returned by function}
 
-\item{min_n}{the minimum number of occurrences per person to consider the indicator true}
+\item{min_n}{dbl; the minimum number of occurrences per person to consider the indicator true}
 
-\item{n}{count the number of occurrences per person (will not include zeros)}
+\item{n}{dbl; count the number of occurrences per person (will not include zeros)}
 
-\item{keep_all}{keep columns with information about the concept (e.g., concept name, id, etc.)}
+\item{keep_all}{lgl; keep columns with information about the concept (e.g., concept name, id, etc.)}
 
 \item{con}{the connection object to ohdsilab}
 
-\item{base_url}{the base url for ATLAS (not ohdsilab)}
+\item{base_url}{chr; the base url for ATLAS (not ohdsilab)}
 
-\item{my_schema}{schema for the user}
+\item{my_schema}{chr; schema for the user}
 }
 \value{
 a dataframe

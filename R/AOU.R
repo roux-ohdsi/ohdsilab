@@ -72,5 +72,5 @@ aou_save_to_bucket <- function(file_name, bucket_name = "bucket"){
 #' @export
 aou_ls <- function(pattern = "*.csv", bucket_name = "bucket"){
   # Check if file is in the bucket
-  system(paste0("gsutil ls ", get(bucket), "/data/", pattern), intern=T)
+  system(paste0("gsutil ls ", get(bucket_name), "/data/", pattern), intern=T)
 }

@@ -43,6 +43,9 @@
     <li>
       <a href="../articles/04-working-with-omop-cdm.html">Working with Data from the ohdsilab database</a>
     </li>
+    <li>
+      <a href="../articles/working-in-allofus.html">Intro to the AllofUs Workbench</a>
+    </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -81,7 +84,7 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>cohort</dt>
-<dd><p>reference to a table created in a user schema with a column called "person_id", and columns for start_date and end_date</p></dd>
+<dd><p>tbl; reference to a table created in a user schema with a column called "person_id", and columns for start_date and end_date</p></dd>
 
 
 <dt>concept_set_id</dt>
@@ -97,19 +100,19 @@
 
 
 <dt>name</dt>
-<dd><p>Name of column for indicator variable returned by function</p></dd>
+<dd><p>chr; Name of column for indicator variable returned by function</p></dd>
 
 
 <dt>min_n</dt>
-<dd><p>the minimum number of occurrences per person to consider the indicator true</p></dd>
+<dd><p>dbl; the minimum number of occurrences per person to consider the indicator true</p></dd>
 
 
 <dt>n</dt>
-<dd><p>count the number of occurrences per person (will not include zeros)</p></dd>
+<dd><p>dbl; count the number of occurrences per person (will not include zeros)</p></dd>
 
 
 <dt>keep_all</dt>
-<dd><p>keep columns with information about the concept (e.g., concept name, id, etc.)</p></dd>
+<dd><p>lgl; keep columns with information about the concept (e.g., concept name, id, etc.)</p></dd>
 
 
 <dt>con</dt>
@@ -117,11 +120,11 @@
 
 
 <dt>base_url</dt>
-<dd><p>the base url for ATLAS (not ohdsilab)</p></dd>
+<dd><p>chr; the base url for ATLAS (not ohdsilab)</p></dd>
 
 
 <dt>my_schema</dt>
-<dd><p>schema for the user</p></dd>
+<dd><p>chr; schema for the user</p></dd>
 
 </dl></div>
     <div id="value">

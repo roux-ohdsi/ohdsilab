@@ -26,12 +26,12 @@ Imports:
     tidyr,
     tibble,
     tidytext,
-    purrr,
     insight,
     remotes
 Suggests: 
     knitr,
     rmarkdown,
-    DatabaseConnector
+    DatabaseConnector,
+    ROhdsiWebApi
 VignetteBuilder: knitr
 URL: https://roux-ohdsi.github.io/ohdsilab/

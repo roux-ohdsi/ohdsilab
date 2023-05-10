@@ -26,6 +26,7 @@ Imports:
     tidyr,
     tibble,
     tidytext,
+    purrr,
     insight,
     remotes
 Suggests: 

@@ -12,7 +12,7 @@ ohdsilab data at Northeastern University's OHDSI center.
 
 #### Installation
 
-You can install the development version of ohdsilab from [GitHub](https://github.com/) with:
+You can install the development version of ohdsilab from [GitHub](https://github.com/roux-ohdsi/ohdsilab) with:
 
 ``` r
 # only need to run once
@@ -28,3 +28,5 @@ example datawrangling using the OMOP tables and Ohdsilab.
 
 Future Vignettes will include using ATHENA, using ATLAS, and examples of using
 the All of Us Researcher Workbench. 
+
+

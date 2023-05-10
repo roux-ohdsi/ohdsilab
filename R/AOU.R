@@ -36,7 +36,7 @@ aou_retrieve_from_bucket <- function(file_name, bucket_name = "bucket"){
   # # Copy the file from current workspace to the bucket
   n = 0
   for(i in 1:length(file_name)){
-    system(paste0("gsutil cp ", bucket_name, "/data/", file_name[i], " ."), intern=T)
+    system(paste0("gsutil cp ", get(bucket_name), "/data/", file_name[i], " ."), intern=T)
     n = n + 1
   }
 
@@ -57,7 +57,7 @@ aou_save_to_bucket <- function(file_name, bucket_name = "bucket"){
   # Copy the file from current workspace to the bucket
   n = 0
   for(i in 1:length(file_name)){
-    system(paste0("gsutil cp ./", filename, " ", bucket_name, "/data/"), intern=T)
+    system(paste0("gsutil cp ./", filename, " ", get(bucket_name), "/data/"), intern=T)
     n = n + 1
   }
 
@@ -70,7 +70,7 @@ aou_save_to_bucket <- function(file_name, bucket_name = "bucket"){
 #'
 #' @param pattern pattern like *.csv or a single file name e.g., mydata.csv
 #' @export
-aou_ls <- function(pattern = "*.csv"){
+aou_ls <- function(pattern = "*.csv", bucket_name = "bucket"){
   # Check if file is in the bucket
-  system(paste0("gsutil ls ", bucket, "/data/", pattern), intern=T)
+  system(paste0("gsutil ls ", get(bucket), "/data/", pattern), intern=T)
 }

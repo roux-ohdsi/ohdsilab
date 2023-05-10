@@ -38,9 +38,10 @@ aou_retrieve_from_bucket <- function(file_name, bucket_name = "bucket"){
   for(i in 1:length(file_name)){
     system(paste0("gsutil cp ", get(bucket_name), "/data/", file_name[i], " ."), intern=T)
     n = n + 1
+    cat("Retrievevd ", file_name[i], "\n")
   }
 
-  cat("Retrieved ", n, " files")
+  cat("Retrieved ", n, "total files")
 
 }
 
@@ -59,9 +60,10 @@ aou_save_to_bucket <- function(file_name, bucket_name = "bucket"){
   for(i in 1:length(file_name)){
     system(paste0("gsutil cp ./", filename, " ", get(bucket_name), "/data/"), intern=T)
     n = n + 1
+    cat("Saved ", file_name[i], "\n")
   }
 
-  cat("Saved ", n, " files")
+  cat("Saved ", n, "total files")
 }
 
 #' List the current files in your bucket.

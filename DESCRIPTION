@@ -30,6 +30,7 @@ Suggests:
     keyring,
     DatabaseConnector,
     ROhdsiWebApi,
+    DBI,
     git2r,
     renv,
     bigrquery

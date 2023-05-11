@@ -8,7 +8,7 @@
 #' to an object in your R environment.
 #' @export
 aou_connect <- function(bucket_name = "bucket"){
-  dataset <- str_split_fixed(Sys.getenv('WORKSPACE_CDR'),'\\.',n=2)
+  dataset <- str_split_fixed(Sys.getenv('WORKSPACE_CDR'),'\\.', n = 2)
   release <- dataset[2]
   prefix <- dataset[1]
 
@@ -22,7 +22,9 @@ aou_connect <- function(bucket_name = "bucket"){
   assign("con", connection, envir = .GlobalEnv)
   assign(bucket_name, Sys.getenv('WORKSPACE_BUCKET'), envir = .GlobalEnv)
 
-  cat("Connected Successfully")
+  cat(cli::col_green("Connected successfully!"),
+      cli::col_blue("Use `con` to access the connection and `", bucket_name,
+           "` to retrieve the name of your bucket"), sep = "\n")
 }
 
 #' Retrieve a file from a bucket to your workspace
@@ -34,9 +36,9 @@ aou_connect <- function(bucket_name = "bucket"){
 #' @export
 aou_retrieve_from_bucket <- function(file_name, bucket_name = "bucket"){
   # # Copy the file from current workspace to the bucket
-  for(i in 1:length(file_name)){
+  for (i in 1:length(file_name)){
     system(paste0("gsutil cp ", get(bucket_name), "/data/", file_name[i], " ."), intern=T)
-    cat("Retrievevd ", file_name[i], "\n")
+    cat("Retrieved ", file_name[i], "\n")
   }
 
 }
@@ -64,6 +66,7 @@ aou_save_to_bucket <- function(file_name, bucket_name = "bucket"){
 #' @param description Quick function to list files matching a pattern in your bucket
 #'
 #' @param pattern pattern like *.csv or a single file name e.g., mydata.csv
+#' @param bucket_name name of your bucket. Recommend leaving the default
 #' @export
 aou_ls <- function(pattern = "*.csv", bucket_name = "bucket"){
   # Check if file is in the bucket

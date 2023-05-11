@@ -2,7 +2,7 @@
 % Please edit documentation in R/rollback.R
 \name{rb}
 \alias{rb}
-\title{shortcut to rollback in teh case of a redshift error}
+\title{Shortcut to rollback in the case of a redshift error}
 \usage{
 rb(con = getOption("con.default.value"))
 }
@@ -13,5 +13,10 @@ rb(con = getOption("con.default.value"))
 nothing
 }
 \description{
-shortcut to rollback in teh case of a redshift error
+Shortcut to rollback in the case of a redshift error
+}
+\examples{
+\dontrun {
+  rb()
+}
 }

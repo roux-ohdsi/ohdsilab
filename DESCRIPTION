@@ -17,21 +17,21 @@ LazyData: true
 RoxygenNote: 7.2.3
 issues: https://github.com/roux-ohdsi/ohdsilab/issues
 Imports: 
-    keyring,
-    git2r,
-    renv,
     dplyr,
     magrittr,
     stringr,
     tidyr,
     tibble,
-    tidytext,
-    insight,
+    cli,
     remotes
 Suggests: 
     knitr,
     rmarkdown,
+    keyring,
     DatabaseConnector,
-    ROhdsiWebApi
+    ROhdsiWebApi,
+    git2r,
+    renv,
+    bigrquery
 VignetteBuilder: knitr
 URL: https://roux-ohdsi.github.io/ohdsilab/

@@ -41,7 +41,7 @@ lab_base_url <- function() {
 lab_cdm_schema <- function() {
   return("omop_cdm_53_pmtx_202203")
 }
-#' @export
+
 #' @export
 lab_my_schema <- function() {
   paste0("work_", keyring::key_get("lab_user"))

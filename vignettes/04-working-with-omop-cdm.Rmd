@@ -20,14 +20,17 @@ library(ohdsilab)
 ```
 
 The code in this vignette will provide a brief example of working with data in the 
-ohdsilab database. The goal is to estimate outpatient speech-language pathology
-treatment utilization for individuals with post-stroke aphasia (aphasia is a disorder
-of *language* that most typically occurs after left-hemisphere stroke and has a profound
-impact on communication as well as overall quality of life. there are about 2.5 million people
-currently in the U.S. with aphasia) 
+ohdsilab database. It provides a brief clinical context and explanation for what each
+chunk of code does and why.
 
-Start by setting the credientials, like previous vignettes. I'm also setting the defaults
-for the connection so that I can use the `omop_join()` and other similar functions
+The goal of the analysis is to estimate outpatient speech-language pathology
+treatment utilization for individuals with post-stroke aphasia in the first year after stroke.
+Aphasia is a *language* disorder that most typically occurs after left-hemisphere stroke and has a profound
+impact on communication as well as overall quality of life. There are about 2.5 million people
+currently in the U.S. with aphasia.
+
+Start by setting the credientials, like previous vignettes, we'll also set the defaults
+for the connection so that we can use the `omop_join()` and other similar functions
 from the ohdsilab package.
 
 ```{r}
@@ -54,9 +57,9 @@ options(schema.default.value = cdm_schema)
 
 We'll use a cohort generated in ATLAS, #860: 
 [RC] CVA Ischemic or Hemorrhagic with admission. This is a cohort based on the phenotype 
-library defintion for stroke with inpatient admission. The cohort requires a lookback of 180 days
+library defintion for stroke with inpatient admission. The cohort requires a look-back of 180 days
 without a similar event and 365 days of continuous observation after the index date. There is also
-a cohort exit date of 365 days past the index date - I'm not interested in events past 365 days and this will
+a cohort exit date of 365 days past the index date - We're not interested in events past 365 days and this will
 be helpful for filtering the data later. 
 
 We could also add a concept set for aphasia in ATLAS and use this concept

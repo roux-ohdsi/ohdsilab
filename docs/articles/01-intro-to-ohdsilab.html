@@ -62,7 +62,7 @@
       <a href="../articles/04-working-with-omop-cdm.html">Working with Data from the ohdsilab database</a>
     </li>
     <li>
-      <a href="../articles/working-in-allofus.html">Intro to the AllofUs Workbench</a>
+      <a href="../articles/05-working-in-allofus.html">Intro to the AllofUs Workbench</a>
     </li>
   </ul>
 </li>
@@ -90,19 +90,26 @@
 
     
     
-<p>This package is intended to streamline working with the ohdsilab
-pharmetrics data at the Roux Institute. It contains some functions and
-template code using existing OHDSI R packages like {DatabaseConnector}
-as well as standard R packages like {dplyr}, {tidyr}, and {tibble}. This
-vignette will walk through some of the basic tools in ohdsilab.</p>
+<p>This package is intended to streamline working with the Ohdsilab
+pharmetrics data at the Roux Institute and other OMOP CDM databases
+(e.g., AllofUs). It contains some functions and template code using
+existing OHDSI R packages like {DatabaseConnector} as well as standard R
+packages like {dplyr} and {tidyr}. This vignette will walk through some
+of the basic tools in ohdsilab.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>Installation only needs to be done once, unless you are updating the
-package</p>
+package.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"roux-ohdsi/ohdsilab"</span><span class="op">)</span></span></code></pre></div>
+<p>If you want to also install OHDSI packages (e.g., DatabaseConnector),
+set dependencies = “Suggests”. This is not recommended if you’re on the
+AllofUs workbench as these packages take a while to install and are not
+as useful with the AllofUs data.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"roux-ohdsi/ohdsilab"</span>, dependencies <span class="op">=</span> <span class="st">"Suggests"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="load-the-ohdsilab-package">Load the ohdsilab package<a class="anchor" aria-label="anchor" href="#load-the-ohdsilab-package"></a>
@@ -112,7 +119,7 @@ package</p>
 dependencies, but you might want to explicitly load them for
 transparency.</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://roux-ohdsi.github.io/ohdsilab/" class="external-link">ohdsilab</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/DatabaseConnector/" class="external-link">DatabaseConnector</a></span><span class="op">)</span></span>
@@ -160,6 +167,8 @@ cases, use the <code><a href="../reference/dbi_collect.html">dbi_collect()</a></
 This is necessary when there is a mistake in the dbplyr generated SQL
 code. You can use <code><a href="../reference/rb.html">rb()</a></code> instead of disconnecting and
 reconnecting to the database.</p></li>
+<li><p><code>insertTable_chunks()</code> writes a table to your user
+schema in chunks to reduce writing time.</p></li>
 <li><p><code><a href="../reference/omop_join.html">omop_join()</a></code> is a shortcut for a join from an
 existing query (e.g., a dplyr pipe chunk) to an omop table without
 having to reference the connection and schema.</p></li>
@@ -171,18 +180,27 @@ CPT4. (ICD9/10 are not considered standardized)</p></li>
 <li><p><code><a href="../reference/str_insert.html">str_insert()</a></code> and <code><a href="../reference/icd_periods.html">icd_periods()</a></code> help to
 insert periods into icd codes when they come without. This is typically
 a necessary step before mapping to OMOP codes.</p></li>
+<li><p><code><a href="../reference/aou_connect.html">aou_connect()</a></code>, <code><a href="../reference/aou_ls.html">aou_ls()</a></code>,
+<code><a href="../reference/aou_retrieve_from_bucket.html">aou_retrieve_from_bucket()</a></code>, and
+<code><a href="../reference/aou_save_to_bucket.html">aou_save_to_bucket()</a></code> are useful for streamlining common
+code in the AllofUs workbench.</p></li>
+<li><p><code><a href="../reference/bookstore.html">bookstore()</a></code> checks to see if packages are installed
+before loading them via <code><a href="https://rdrr.io/r/base/library.html" class="external-link">library()</a></code>. This is experimental and
+could be used in place of <code><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages()</a></code> +
+<code><a href="https://rdrr.io/r/base/library.html" class="external-link">library()</a></code>.</p></li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="connecting-to-the-database">Connecting to the database<a class="anchor" aria-label="anchor" href="#connecting-to-the-database"></a>
 </h2>
-<p>If this is the first time connecting on your computer, you’ll need to
-set your credientials before it will work. The snippet ohdsi_creds will
+<p>If this is the first time connecting on your computer (your local
+machine with the VPN on or using the Amazon Box), you’ll need to set
+your credientials before it will work. The snippet ohdsi_creds will
 create that code for you. When you run each line, it’ll generate a pop
 up where you can enter your database/ohdsilab username (something like
 usr999) and your password (which is in your email). After setting the
 credentials, you shouldn’t have to do it again very often.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Credentials</span></span>
 <span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_set</a></span><span class="op">(</span><span class="st">"lab_user"</span>, prompt <span class="op">=</span> <span class="st">"Username for this workspace"</span><span class="op">)</span></span>
 <span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_set</a></span><span class="op">(</span><span class="st">"lab_password"</span>, prompt <span class="op">=</span> <span class="st">"Password for this workspace"</span><span class="op">)</span></span></code></pre></div>
@@ -191,7 +209,7 @@ It creates a template for the basic code needed to connect to the
 database. Now that you’ve set up your credentials, see if it’ll run
 without errors. Note that you’ll also need to be using RStudio within
 the Amazon workspace box or you need to use the global connect VPN.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ==============================================================================</span></span>
 <span><span class="co"># Packages =====================================================================</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-lib.github.io/keyring/index.html" class="external-link">keyring</a></span><span class="op">)</span></span>
@@ -240,7 +258,7 @@ pharmetrics data is stored in ohdsilab/omop_cdm_53_pmtx_202203/… where
 the … indicates what table you’re interested in.</p>
 <p>To query a table in pharmetrics you might write a line of code like
 this:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
 <span>    <span class="va">con</span>,</span>
 <span>    <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="st">"omop_cdm_53_pmtx_202203"</span>, <span class="st">"concept"</span><span class="op">)</span></span>
@@ -252,7 +270,7 @@ above.</p>
 <p>You also have your own schema where you can save information
 pertinent to your studies. If you were usr999, you could access a table
 (that you create) like this:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
 <span>      <span class="va">con</span>,</span>
 <span>      <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="st">"usr999"</span>, <span class="st">"myCohort"</span><span class="op">)</span></span>
@@ -265,7 +283,7 @@ reduce the giant amount of data in pharmetrics - usually with an
 <code>inner_join</code>.</p>
 <p>(See <a href="https://ohdsi.github.io/CohortGenerator/articles/GeneratingCohorts.html" class="external-link uri">https://ohdsi.github.io/CohortGenerator/articles/GeneratingCohorts.html</a>
 for a tutorial)</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
 <span>    <span class="va">con</span>,</span>
 <span>    <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="st">"usr999"</span>, <span class="st">"myCohort"</span><span class="op">)</span></span>
@@ -282,11 +300,11 @@ be a bit annoying. That’s why the ohdsi_new_script snipped also includes
 the following lines of code, so you can just reference these strings
 using the variables <code>cdm_schema</code> and
 <code>my_schema</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cdm_schema</span> <span class="op">=</span> <span class="st">"omop_cdm_53_pmtx_202203"</span></span>
 <span><span class="va">my_schema</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"work_"</span>, <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_user"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>It might look like this:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
 <span>    <span class="va">con</span>,</span>
 <span>    <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="va">my_schema</span>, <span class="st">"myCohort"</span><span class="op">)</span></span>
@@ -301,7 +319,7 @@ using the variables <code>cdm_schema</code> and
 <p>That’s still a lot right? This is where the <code><a href="../reference/omop_join.html">omop_join()</a></code>
 function can help streamline your code. It’s just a wrapper for the
 dplyr <code>join</code> functions.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
 <span>    <span class="va">con</span>,</span>
 <span>    <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="va">my_schema</span>, <span class="st">"myCohort"</span><span class="op">)</span></span>
@@ -312,12 +330,12 @@ these lines of code from the ohdsi_new_script snippet. The
 <code><a href="../reference/omop_join.html">omop_join()</a></code> function will look for these defaults first,
 and if it doesn’t find them (because you didn’t run these two lines),
 will let you know you need to provide them directly.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>con.default.value <span class="op">=</span> <span class="va">con</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>schema.default.value <span class="op">=</span> <span class="va">cdm_schema</span><span class="op">)</span></span></code></pre></div>
 <p>Here’s an example of how we can put all this information together.
 Try to run these chunks to make sure everything is working.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># pull data from the cohort table</span></span>
 <span><span class="va">cohort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">my_schema</span>, <span class="st">"rc_aphasia"</span>, sep <span class="op">=</span> <span class="st">"."</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span>person_id <span class="op">=</span> <span class="va">subject_id</span>, <span class="va">cohort_start_date</span>, <span class="va">cohort_end_date</span><span class="op">)</span></span>
@@ -327,20 +345,20 @@ Try to run these chunks to make sure everything is working.</p>
 <span>  <span class="fu"><a href="../reference/omop_join.html">omop_join</a></span><span class="op">(</span><span class="st">"person"</span>, type <span class="op">=</span> <span class="st">"left"</span>, by <span class="op">=</span> <span class="st">"person_id"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">person_id</span>, <span class="va">cohort_start_date</span>, <span class="va">cohort_end_date</span>, <span class="va">year_of_birth</span>, gender <span class="op">=</span> <span class="va">gender_source_value</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>age_at_entry <span class="op">=</span> <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">cohort_start_date</span><span class="op">)</span> <span class="op">-</span> <span class="va">year_of_birth</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># run to see a preview of the top 10 rows</span></span>
 <span><span class="va">demographics</span></span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># how many rows are in our data?</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally</a></span><span class="op">(</span><span class="va">demographics</span><span class="op">)</span></span></code></pre></div>
 <p>If you get an error from the database, you may have to “rollback”
 before running a new command. This is a redshift dbms feature (or
 annoyance). You can easily do this using ohdsilab provided you’ve set
 the connection and schema default values above.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rb.html">rb</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>This is synonymous with running.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/executeSql.html" class="external-link">executeSql</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"ROLLBACK;"</span><span class="op">)</span></span></code></pre></div>
 </div>
   </div>

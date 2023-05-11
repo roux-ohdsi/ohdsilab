@@ -16,19 +16,25 @@ knitr::opts_chunk$set(
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
-This package is intended to streamline working with the ohdsilab pharmetrics data
-at the Roux Institute. It contains some functions and template code using 
+This package is intended to streamline working with the Ohdsilab pharmetrics data
+at the Roux Institute and other OMOP CDM databases (e.g., AllofUs). It contains some functions and template code using 
 existing OHDSI R packages like {DatabaseConnector} as well as standard R packages
-like {dplyr}, {tidyr}, and {tibble}. This vignette will walk through some of the
+like {dplyr} and {tidyr}. This vignette will walk through some of the
 basic tools in ohdsilab.
 
 ## Installation
 
-Installation only needs to be done once, unless you are updating the package
+Installation only needs to be done once, unless you are updating the package. 
 
 ```{r}
 install.packages("remotes")
 remotes::install_github("roux-ohdsi/ohdsilab")
+```
+
+If you want to also install OHDSI packages (e.g., DatabaseConnector), set dependencies = "Suggests". This is not recommended if you're on the AllofUs workbench as these packages take a while to install and are not as useful with the AllofUs data. 
+
+```{r}
+remotes::install_github("roux-ohdsi/ohdsilab", dependencies = "Suggests")
 ```
 
 ## Load the ohdsilab package
@@ -78,6 +84,7 @@ occasional errors with the `collect()` function where not all rows of the query 
 times out. In these cases, use the `dbi_collect()` function. 
 - `rb()` is a function to "ROLLBACK" in redshift SQL. This is necessary when there is a mistake in the dbplyr generated
 SQL code. You can use `rb()` instead of disconnecting and reconnecting to the database.
+- `insertTable_chunks()` writes a table to your user schema in chunks to reduce writing time.
 
 - `omop_join()` is a shortcut for a join from an existing query (e.g., a dplyr pipe chunk) to an omop table without
 having to reference the connection and schema. 
@@ -88,9 +95,14 @@ not just CPT4. (ICD9/10 are not considered standardized)
 - `str_insert()` and `icd_periods()` help to insert periods into icd codes when they come without. This
 is typically a necessary step before mapping to OMOP codes. 
 
+- `aou_connect()`, `aou_ls()`, `aou_retrieve_from_bucket()`, and `aou_save_to_bucket()` are useful for
+streamlining common code in the AllofUs workbench.
+- `bookstore()` checks to see if packages are installed before loading them via `library()`. This is experimental
+and could be used in place of `install.packages()` + `library()`. 
+
 ## Connecting to the database
 
-If this is the first time connecting on your computer, you'll need to set your credientials before
+If this is the first time connecting on your computer (your local machine with the VPN on or using the Amazon Box), you'll need to set your credientials before
 it will work. The snippet ohdsi_creds will create that code for you. When you
 run each line, it'll generate a pop up where you can enter your database/ohdsilab
 username (something like usr999) and your password (which is in your email). After
@@ -101,7 +113,6 @@ setting the credentials, you shouldn't have to do it again very often.
 keyring::key_set("lab_user", prompt = "Username for this workspace")
 keyring::key_set("lab_password", prompt = "Password for this workspace")
 ```
-
 
 The following code was generated using the ohdsi_new_script snippet. It creates
 a template for the basic code needed to connect to the database. Now that you've 

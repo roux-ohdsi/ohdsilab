@@ -62,7 +62,7 @@
       <a href="../articles/04-working-with-omop-cdm.html">Working with Data from the ohdsilab database</a>
     </li>
     <li>
-      <a href="../articles/working-in-allofus.html">Intro to the AllofUs Workbench</a>
+      <a href="../articles/05-working-in-allofus.html">Intro to the AllofUs Workbench</a>
     </li>
   </ul>
 </li>
@@ -94,14 +94,17 @@ database</h1>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://roux-ohdsi.github.io/ohdsilab/" class="external-link">ohdsilab</a></span><span class="op">)</span></span></code></pre></div>
 <p>The code in this vignette will provide a brief example of working
-with data in the ohdsilab database. The goal is to estimate outpatient
-speech-language pathology treatment utilization for individuals with
-post-stroke aphasia (aphasia is a disorder of <em>language</em> that
-most typically occurs after left-hemisphere stroke and has a profound
-impact on communication as well as overall quality of life. there are
-about 2.5 million people currently in the U.S. with aphasia)</p>
-<p>Start by setting the credientials, like previous vignettes. I’m also
-setting the defaults for the connection so that I can use the
+with data in the ohdsilab database. It provides a brief clinical context
+and explanation for what each chunk of code does and why.</p>
+<p>The goal of the analysis is to estimate outpatient speech-language
+pathology treatment utilization for individuals with post-stroke aphasia
+in the first year after stroke. Aphasia is a <em>language</em> disorder
+that most typically occurs after left-hemisphere stroke and has a
+profound impact on communication as well as overall quality of life.
+There are about 2.5 million people currently in the U.S. with
+aphasia.</p>
+<p>Start by setting the credientials, like previous vignettes, we’ll
+also set the defaults for the connection so that we can use the
 <code><a href="../reference/omop_join.html">omop_join()</a></code> and other similar functions from the ohdsilab
 package.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -126,10 +129,10 @@ package.</p>
 <p>We’ll use a cohort generated in ATLAS, #860: [RC] CVA Ischemic or
 Hemorrhagic with admission. This is a cohort based on the phenotype
 library defintion for stroke with inpatient admission. The cohort
-requires a lookback of 180 days without a similar event and 365 days of
+requires a look-back of 180 days without a similar event and 365 days of
 continuous observation after the index date. There is also a cohort exit
-date of 365 days past the index date - I’m not interested in events past
-365 days and this will be helpful for filtering the data later.</p>
+date of 365 days past the index date - We’re not interested in events
+past 365 days and this will be helpful for filtering the data later.</p>
 <p>We could also add a concept set for aphasia in ATLAS and use this
 concept set to define the cohort, but I was (at the time) thinking about
 calculating utilization for stroke survivors without aphasia as well, so

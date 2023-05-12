@@ -51,7 +51,8 @@ pull_concept_set <- function(cohort,
   # insertTable_chunk()
 
   if (nrow(concept_table_local) > 100) {
-    insertTable_chunk(concept_table_local, n = 100, temp_covs, con = con, write_schema = write_schema)
+    insertTable_chunk(concept_table_local, n = 100, tableName = "temp_covs",
+                      con = con, write_schema = write_schema)
   } else {
     DatabaseConnector::insertTable(connection = con, databaseSchema = write_schema, tableName = "temp_covs",
                                    data = concept_table_local, dropTableIfExists = TRUE, tempTable = FALSE, createTable = TRUE)

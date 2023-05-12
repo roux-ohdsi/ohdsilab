@@ -124,6 +124,8 @@ snippet ohdsi_defaults
 
 
 snippet ohdsi_api_cohort_definition
+	library(CohortGenerator)
+
 	# export definition from Atlas
 	cohort_definition <- exportCohortDefinitionSet(
 		baseUrl = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI",

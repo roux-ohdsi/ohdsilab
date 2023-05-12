@@ -37,8 +37,8 @@ aou_connect <- function(bucket_name = "bucket"){
 aou_bucket_to_workspace <- function(files, bucket_name = Sys.getenv('WORKSPACE_BUCKET')){
   # # Copy the file from current workspace to the bucket
   for (i in 1:length(files)) {
-    # system(paste0("gsutil cp ", bucket_name, "/data/", files[i], " ."), intern = TRUE)
-    cat(cli::col_green("Retrieved ", files[i], "\n"))
+    system(paste0("gsutil cp ", bucket_name, "/data/", files[i], " ."), intern = TRUE)
+    cat(cli::col_green("Retrieved ", files[i], " from bucket\n"))
   }
 
 }
@@ -56,7 +56,7 @@ aou_workspace_to_bucket <- function(files, bucket_name = Sys.getenv('WORKSPACE_B
   # Copy the file from current workspace to the bucket
   for(i in 1:length(files)){
     system(paste0("gsutil cp ./", files[i], " ", bucket_name, "/data/"), intern = TRUE)
-    cat(cli::col_green("Saved ", files[i], "\n"))
+    cat(cli::col_green("Saved ", files[i], " to bucket\n"))
   }
 
 }

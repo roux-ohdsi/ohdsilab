@@ -8,7 +8,6 @@ INSTRUCTIONS!!!!
 
 ---------------------------------------------------------------
 
-
 snippet ohdsi_new_project
 	# ${1:Title}
 

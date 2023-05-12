@@ -20,9 +20,9 @@ omop_join(
 
 \item{type}{the type of join. use types available in dplyr: left, right, inner, anti, full etc.}
 
-\item{con}{defaults to the connection you set with options(). does not need to be specified}
+\item{con}{defaults to the connection you set with options()}
 
-\item{schema}{defaults to the schema you set with options(). does not need to be specified.}
+\item{schema}{defaults to the schema you set with options()}
 
 \item{...}{arguments passed on to the join function. e.g., by = "person_id"}
 }

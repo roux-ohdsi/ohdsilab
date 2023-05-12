@@ -10,7 +10,7 @@ insertTable_chunk(
   table_name,
   overwrite = TRUE,
   con = getOption("con.default.value"),
-  user_schema,
+  write_schema = getOption("write_schema.default.value"),
   ...
 )
 }
@@ -25,9 +25,9 @@ insertTable_chunk(
 
 \item{con}{connection. defaults to the set option if done.}
 
-\item{user_schema}{your user schema. defaults to the set option if done}
-
 \item{...}{additional arguments to be passed along to DatabaseConnector::insertTable}
+
+\item{user_schema}{your user schema. defaults to the set option if done}
 }
 \description{
 Insert a table to your user schema in chunks because speed and bugs
@@ -35,7 +35,7 @@ Insert a table to your user schema in chunks because speed and bugs
 \examples{
 \dontrun{
 options(con.default.value = con)
-my_schema = paste0("work_", keyring::key_get("lab_user"))
-insertTable_chunk(data = data, n = 50, table_name = "table1", overwrite = TRUE, user_schema = my_schema)
+write_schema = paste0("work_", keyring::key_get("lab_user"))
+insertTable_chunk(data = data, n = 50, table_name = "table1", overwrite = TRUE, user_schema = write_schema)
 }
 }

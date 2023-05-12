@@ -43,10 +43,10 @@ library(ROhdsiWebApi)
 library(CohortGenerator)
 
 # DB Connections ===============================================================
-base_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
 cdm_schema = "omop_cdm_53_pmtx_202203"
 synpuf_schema = "omop_cdm_synpuf_110k_531"
-my_schema = paste0("work_", keyring::key_get("lab_user"))
+write_schema = paste0("work_", keyring::key_get("lab_user"))
 ```
 
 Instead of creating a database connection, we're just going to create a set of connection
@@ -64,11 +64,11 @@ connectionDetails <- createConnectionDetails(dbms = "redshift",
 ```
 
 We're also going to authorize the api for accessing ATLAS from R. This uses the
-base_url information, and your username/password which you set using `keyring::key_set()`
+atlas_url information, and your username/password which you set using `keyring::key_set()`
 to know that its ok for you to access ATLAS. 
 
 ```{r}
-ROhdsiWebApi::authorizeWebApi(base_url, 
+ROhdsiWebApi::authorizeWebApi(atlas_url, 
                               authMethod = "db", 
                               webApiUsername = keyring::key_get("lab_user"), 
                               webApiPassword = keyring::key_get("lab_password"))
@@ -86,7 +86,7 @@ cohortId <- 1124
 Then we're going to create a cohortDefinitionSet object using that ID and the baseUrl.
 
 ```{r}
-cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(baseUrl = base_url,
+cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(baseUrl = atlas_url,
                                                                cohortIds = cohortId)
 
 cohortDefinitionSet
@@ -107,7 +107,7 @@ object, the cohortTableName object, and the mySchema object from above.
 # create empty tables in the {mySchema}.cohort table
 createCohortTables(connectionDetails = connectionDetails,
                    cohortTableNames = cohortTableNames,
-                   cohortDatabaseSchema = my_schema)
+                   cohortDatabaseSchema = write_schema)
 ```
 
 *This function doesn't actually currently work in Rmarkdown, see https://github.com/OHDSI/CohortGenerator/issues/97 
@@ -121,7 +121,7 @@ reference `cdm_schema` or `"omop_cdm_53_pmtx_202203"`.
 ```{r}
 cohortsGenerated <- generateCohortSet(connectionDetails = connectionDetails,
                                       cdmDatabaseSchema = synpuf_schema,
-                                      cohortDatabaseSchema = my_schema,
+                                      cohortDatabaseSchema = write_schema,
                                       cohortTableNames = cohortTableNames,
                                       cohortDefinitionSet = cohortDefinitionSet)
 ```
@@ -143,7 +143,7 @@ How would you use this new table? Remember in the first Vignette, when we joined
 
 ```{r}
 # pull data from the cohort table
-cohort <- tbl(con, paste(my_schema, "rc_aphasia", sep = ".")) |>
+cohort <- tbl(con, paste(write_schema, "rc_aphasia", sep = ".")) |>
   select(person_id = subject_id, cohort_start_date, cohort_end_date)
 
 # join to the person table to get information about demographics, calculate age at cohrt entry

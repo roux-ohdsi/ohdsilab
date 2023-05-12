@@ -16,7 +16,5 @@ nothing
 Shortcut to rollback in the case of a redshift error
 }
 \examples{
-\dontrun {
-  rb()
-}
+\dontrun{rb()}
 }

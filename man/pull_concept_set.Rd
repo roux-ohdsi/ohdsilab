@@ -2,20 +2,20 @@
 % Please edit documentation in R/get_condition_concepts.R
 \name{pull_concept_set}
 \alias{pull_concept_set}
-\title{Get occcurances of of a concept set from ATLAS for a given cohort}
+\title{Get occurrences of of a concept set from ATLAS for a given cohort}
 \usage{
 pull_concept_set(
   cohort,
   concept_set_id,
   start_date,
   end_date,
-  name = "has_concept",
+  concept_name = NULL,
   min_n = NULL,
   n = FALSE,
   keep_all = FALSE,
-  con,
-  base_url,
-  my_schema
+  con = getOption("con.default.value"),
+  atlas_url = getOption("atlas_url.default.value"),
+  write_schema = getOption("write_schema.default.value")
 )
 }
 \arguments{
@@ -27,7 +27,7 @@ pull_concept_set(
 
 \item{end_date}{the name of the end_date column in the cohort table (unquoted)}
 
-\item{name}{chr; Name of column for indicator variable returned by function}
+\item{concept_name}{chr; Name to describe the concept set, used to create an indicator variable}
 
 \item{min_n}{dbl; the minimum number of occurrences per person to consider the indicator true}
 
@@ -37,20 +37,20 @@ pull_concept_set(
 
 \item{con}{the connection object to ohdsilab}
 
-\item{base_url}{chr; the base url for ATLAS (not ohdsilab)}
+\item{atlas_url}{chr; the base url for ATLAS (not ohdsilab)}
 
-\item{my_schema}{chr; schema for the user}
+\item{write_schema}{chr; schema for the user}
 }
 \value{
 a dataframe
 }
 \description{
-Get occcurances of of a concept set from ATLAS for a given cohort
+Get occurrences of of a concept set from ATLAS for a given cohort
 }
 \examples{
 \dontrun{
-tobacco <- pull_concepts(con, cohort, concept_set_id = 1157, start_date = covariate_start_date,
- end_date = cohort_start_date, base_url = base_url, name = "tobacco", my_schema = my_schema
+tobacco <- pull_concepts(cohort, concept_set_id = 1157, start_date = covariate_start_date,
+ end_date = cohort_start_date, name = "tobacco"
  )}
 
 }

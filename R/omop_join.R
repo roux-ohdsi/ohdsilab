@@ -11,8 +11,8 @@
 #' @param data sql query from dbplyr/dplyr. this function works in pipes!
 #' @param table the omop table (or other table in your schema) you wish to join
 #' @param type the type of join. use types available in dplyr: left, right, inner, anti, full etc.
-#' @param con defaults to the connection you set with options(). does not need to be specified
-#' @param schema defaults to the schema you set with options(). does not need to be specified.
+#' @param con defaults to the connection you set with options()
+#' @param schema defaults to the schema you set with options()
 #' @param ... arguments passed on to the join function. e.g., by = "person_id"
 #'
 #' @return more sql query info stuff
@@ -31,6 +31,11 @@ omop_join <- function(data,
                       con = getOption("con.default.value"),
                       schema = getOption("schema.default.value"),
                       ...){
-  if(is.null(con) | is.null(schema)){stop("Remember to set the connection and schema defaults. see ?omop_join for details")}
-  get(paste(type, "join", sep = "_"))(data, tbl(con, paste(schema, table, sep = ".")), ...)
+
+  if (is.null(con)) stop("Provide `con` as an argument or default with `options(con.default.value = ...)`")
+  if (is.null(schema)) stop("Provide `schema` as an argument or default with `options(schema.default.value = ...)`")
+
+  get(paste(type, "join", sep = "_"))(data, tbl(con, paste(schema, table, sep = ".")),
+                                      x_as = paste(sample(letters, 10, TRUE), collapse = ""),
+                                      y_as = paste(sample(letters, 10, TRUE), collapse = ""), ...)
 }

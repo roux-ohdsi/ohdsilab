@@ -8,10 +8,7 @@
 #'
 #' @return nothing
 #' @export
-#' @examples
-#' \dontrun {
-#'   rb()
-#' }
+#' @examples \dontrun{rb()}
 rb <- function(con = getOption("con.default.value")){
     tryCatch(
       expr = {

@@ -133,9 +133,9 @@ usr = keyring::key_get("lab_user")
 pw  = keyring::key_get("lab_password")
 
 # DB Connections ===============================================================
-base_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
 cdm_schema = "omop_cdm_53_pmtx_202203"
-my_schema = paste0("work_", keyring::key_get("lab_user"))
+write_schema = paste0("work_", keyring::key_get("lab_user"))
 # Create the connection
 con =  DatabaseConnector::connect(
   dbms = "redshift",
@@ -215,11 +215,11 @@ dplyr::tbl(
 
 Remembering the name of the database schema and your usr schema can be a bit annoying. That's
 why the ohdsi_new_script snipped also includes the following lines of code, so you can just
-reference these strings using the variables `cdm_schema` and `my_schema`. 
+reference these strings using the variables `cdm_schema` and `write_schema`. 
 
 ```{r}
 cdm_schema = "omop_cdm_53_pmtx_202203"
-my_schema = paste0("work_", keyring::key_get("lab_user"))
+write_schema = paste0("work_", keyring::key_get("lab_user"))
 ```
 
 It might look like this: 
@@ -227,7 +227,7 @@ It might look like this:
 ```{r}
 dplyr::tbl(
     con,
-    DatabaseConnector::inDatabaseSchema(my_schema, "myCohort")
+    DatabaseConnector::inDatabaseSchema(write_schema, "myCohort")
   ) |> 
   inner_join(
     tbl(
@@ -244,7 +244,7 @@ It's just a wrapper for the dplyr `join` functions.
 ```{r}
 dplyr::tbl(
     con,
-    DatabaseConnector::inDatabaseSchema(my_schema, "myCohort")
+    DatabaseConnector::inDatabaseSchema(write_schema, "myCohort")
   ) |>
   omop_join("person", type = "inner", by = "person_id")
 ```
@@ -263,7 +263,7 @@ chunks to make sure everything is working.
 
 ```{r}
 # pull data from the cohort table
-cohort <- tbl(con, paste(my_schema, "rc_aphasia", sep = ".")) |>
+cohort <- tbl(con, paste(write_schema, "rc_aphasia", sep = ".")) |>
   select(person_id = subject_id, cohort_start_date, cohort_end_date)
 
 # join to the person table to get information about demographics, calculate age at cohrt entry

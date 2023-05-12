@@ -13,13 +13,13 @@
 #' @examples
 #' \dontrun{
 #' options(con.default.value = con)
-#' my_schema = paste0("work_", keyring::key_get("lab_user"))
-#' insertTable_chunk(data = data, n = 50, table_name = "table1", overwrite = TRUE, user_schema = my_schema)
+#' write_schema = paste0("work_", keyring::key_get("lab_user"))
+#' insertTable_chunk(data = data, n = 50, table_name = "table1", overwrite = TRUE, user_schema = write_schema)
 #' }
-insertTable_chunk <- function(data, n = 100,  table_name,
+insertTable_chunk <- function(data, n = 100, table_name,
                               overwrite = TRUE,
                               con = getOption("con.default.value"),
-                              user_schema,
+                              write_schema = getOption("write_schema.default.value"),
                               ...){
 
   df_head = head(data, 1)
@@ -29,7 +29,8 @@ insertTable_chunk <- function(data, n = 100,  table_name,
 
   df_nest <- df_tail |>
       dplyr::group_by((dplyr::row_number()-1) %/% (n()/num_groups)) |>
-      tidyr::nest() |>  dplyr::pull(data)
+      tidyr::nest() |>
+      dplyr::pull(data)
 
   if(isTRUE(overwrite)){
     drop = TRUE
@@ -38,7 +39,7 @@ insertTable_chunk <- function(data, n = 100,  table_name,
 
   suppressMessages(
     DatabaseConnector::insertTable(connection = con,
-                                       databaseSchema = user_schema,
+                                       databaseSchema = write_schema,
                                        data = df_head,
                                        tableName = table_name,
                                        dropTableIfExists = drop,
@@ -53,7 +54,7 @@ insertTable_chunk <- function(data, n = 100,  table_name,
       for(i in 1:length(df_nest)){
         suppressMessages(
           DatabaseConnector::insertTable(connection = con,
-                                         databaseSchema = user_schema,
+                                         databaseSchema = write_schema,
                                          tableName = table_name,
                                          dropTableIfExists = FALSE,
                                          createTable = FALSE,

@@ -1,7 +1,7 @@
 INSTRUCTIONS!!!!
 
 1. Copy all text below the line
-2. In your RStudio, enter usethis::edit_rstudio_snippets() in the console
+2. In your RStudio, go to Tools -> Edit Code Snippets or enter usethis::edit_rstudio_snippets() in the console
 3. Scroll to the bottom of the r.snippets file and paste the text
 4. Make sure there are no red spaces (replace them with normal spaces)
 
@@ -18,83 +18,64 @@ snippet ohdsi_new_project
 	# Date Created: `r Sys.Date()`
 
 	# Packages
-
-	# Install if needed
-	# install.packages(c("keyring",
-	#                    "DatabaseConnector",
-	#                    "ROhdsiWebApi",
-	#                    "CohortGenerator",
-	#                    "CohortDiagnostics"
-	#                    )
-
-	library(keyring)
-	library(DatabaseConnector)
-	library(ROhdsiWebApi)
-	library(CohortGenerator)
-	library(CohortDiagnostics)
-
+	library(ohdsilab)
 
 	# ============================================================================
 
 	# Credentials
-
-	keyring::key_set("lab_user", prompt = "Username for this workspace")
-	keyring::key_set("lab_password", prompt = "Password for this workspace")
-
-	usr = keyring::key_get("lab_user")
-	pw  = keyring::key_get("lab_password")
+	usr <- keyring::key_get("lab_user")
+	pw <- keyring::key_get("lab_password")
 
 	# DB Connections
+	atlas_url <- "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+	cdm_schema <- "omop_cdm_53_pmtx_202203"
+	my_schema <- paste0("work_", usr)
 
-	base_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
-	cdm_schema = "omop_cdm_53_pmtx_202203"
-	my_schema = paste0("work_", keyring::key_get("lab_user"))
+	con <- DatabaseConnector::connect(dbms = "redshift",
+	                                  server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+	                                  port = 5439,
+	                                  user = usr,
+	                                  password = pw)
 
-	DatabaseConnector::createConnectionDetails(dbms = "redshift",
-	                                         server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
-	                                         port = 5439,
-	                                         user = keyring::key_get("lab_user"),
-	                                         password = keyring::key_get("lab_password"))
-
-	DatabaseConnector::connect(dbms = "redshift",
-	                           server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
-	                           port = 5439,
-	                           user = keyring::key_get("lab_user"),
-	                           password = keyring::key_get("lab_password"))
-
-	ROhdsiWebApi::authorizeWebApi(base_url,
+	ROhdsiWebApi::authorizeWebApi(atlas_url,
 	                              authMethod = "db",
-	                              webApiUsername = keyring::key_get("lab_user"),
-	                              webApiPassword = keyring::key_get("lab_password"))
+	                              webApiUsername = usr,
+	                              webApiPassword = pw)
+
+	options(con.default.value = con)
+	options(schema.default.value = cdm_schema)
+	options(write_schema.default.value = my_schema)
+	options(atlas_url.default.value = my_schema)
 
 snippet ohdsi_new_script
 	# ==============================================================================
 	# Packages =====================================================================
-	library(keyring)
-	library(DatabaseConnector)
-	library(tidyverse)
 	library(ohdsilab)
 
 	# Credentials ==================================================================
-	usr = keyring::key_get("lab_user")
-	pw  = keyring::key_get("lab_password")
+	usr <- keyring::key_get("lab_user")
+	pw <- keyring::key_get("lab_password")
 
 	# DB Connections ===============================================================
-	base_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
-	cdm_schema = "omop_cdm_53_pmtx_202203"
-	my_schema = paste0("work_", keyring::key_get("lab_user"))
-	# Create the connection
-	con =  DatabaseConnector::connect(
-		dbms = "redshift",
-		server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
-		port = 5439,
-		user = keyring::key_get("lab_user"),
-		password = keyring::key_get("lab_password")
-	)
-	class(con)
-	# make it easier for some r functions to find the database
+	atlas_url <- "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+	cdm_schema <- "omop_cdm_53_pmtx_202203"
+	my_schema <- paste0("work_", usr)
+
+	con <- DatabaseConnector::connect(dbms = "redshift",
+	                                  server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+	                                  port = 5439,
+	                                  user = usr,
+	                                  password = pw)
+
+	ROhdsiWebApi::authorizeWebApi(atlas_url,
+	                              authMethod = "db",
+	                              webApiUsername = usr,
+	                              webApiPassword = pw)
+
 	options(con.default.value = con)
 	options(schema.default.value = cdm_schema)
+	options(write_schema.default.value = my_schema)
+	options(atlas_url.default.value = my_schema)
 
 	# End Setup ====================================================================
 	# ==============================================================================
@@ -105,8 +86,6 @@ snippet ohdsi_creds
 	# Credentials
 	keyring::key_set("lab_user", prompt = "Username for this workspace")
 	keyring::key_set("lab_password", prompt = "Password for this workspace")
-
-
 
 
 snippet ohdsi_db
@@ -127,7 +106,7 @@ snippet ohdsi_db
 	                           password = keyring::key_get("lab_password"))
 
 snippet ohdsi_db_variables
-	base_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+	atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
 	cdm_schema = "omop_cdm_53_pmtx_202203"
 	my_schema = paste0("work_", keyring::key_get("lab_user"))
 
@@ -155,8 +134,8 @@ snippet ohdsi_api_auth
 
 
 snippet ohdsi_api_cohort_definition
-	cohortIds <- 2 # cohort ids from atlas
-	cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(baseUrl = baseUrl,
-	                                                               cohortIds = cohortIds)
+	cohort_id <- {$1} # cohort ids from atlas
+	cohort_definition_set <- ROhdsiWebApi::exportCohortDefinitionSet(baseUrl = baseUrl,
+	                                                                 cohortIds = cohortIds)
 
 

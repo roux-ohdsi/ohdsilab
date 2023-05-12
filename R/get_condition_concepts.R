@@ -65,7 +65,7 @@ pull_concept_set <- function(cohort,
                    domain = tolower(.x))
   ) |>
     reduce(union_all) |>
-    mutate(concept_set_id = concept_set_name) |>
+    mutate(concept_set = concept_set_name) |>
     distinct()
 
   if (!is.null(min_n)) {
@@ -80,7 +80,7 @@ pull_concept_set <- function(cohort,
   }
 
   if (n) {
-    return(dbi_collect(count(all_concepts, concept_set_id, person_id)))
+    return(dbi_collect(count(all_concepts, concept_set, person_id)))
   }
 
   all_concepts |>

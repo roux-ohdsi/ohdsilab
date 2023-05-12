@@ -3,9 +3,9 @@
 #'
 #' @param cohort tbl; reference to a table created in a user schema with a column called "person_id", and columns for start_date and end_date
 #' @param concept_set_id num; the number associated with the concept_set_id in ATLAS
+#' @param concept_set_name chr; Name to describe the concept set, used to create an indicator variable
 #' @param start_date the name of the start_date column in the cohort table (unquoted)
 #' @param end_date the name of the end_date column in the cohort table (unquoted)
-#' @param concept_name chr; Name to describe the concept set, used to create an indicator variable
 #' @param min_n dbl; the minimum number of occurrences per person to consider the indicator true
 #' @param n dbl; count the number of occurrences per person (will not include zeros)
 #' @param keep_all lgl; keep columns with information about the concept (e.g., concept name, id, etc.)
@@ -26,7 +26,7 @@ pull_concept_set <- function(cohort,
                              concept_set_id,
                              start_date,
                              end_date,
-                             concept_name = NULL,
+                             concept_set_name = NULL,
                              min_n = NULL,
                              n = FALSE,
                              keep_all = FALSE,
@@ -34,7 +34,7 @@ pull_concept_set <- function(cohort,
                              atlas_url = getOption("atlas_url.default.value"),
                              write_schema = getOption("write_schema.default.value")){
 
-  if (is.null(concept_name)) concept_name <- paste0("concept_set_", concept_set_id)
+  if (is.null(concept_set_name)) concept_set_name <- paste0("concept_set_", concept_set_id)
   if (!is.null(min_n) & !is.numeric(min_n)) stop("Provide a number to `min_n` to restrict to observations with at least that number of rows")
   if (n && keep_all) warning("The `keep_all` argument takes precedence; all data will be returned instead of counts.")
 
@@ -65,7 +65,7 @@ pull_concept_set <- function(cohort,
                    domain = tolower(.x))
   ) |>
     reduce(union_all) |>
-    mutate(concept_set_id = concept_name) |>
+    mutate(concept_set_id = concept_set_name) |>
     distinct()
 
   if (!is.null(min_n)) {
@@ -85,7 +85,7 @@ pull_concept_set <- function(cohort,
 
   all_concepts |>
     distinct(person_id) |>
-    mutate(!!concept_name := 1) |>
+    mutate(!!concept_set_name := 1) |>
     dbi_collect()
   # must collect within function since next time it runs it will write over the temp_covs table...
 }

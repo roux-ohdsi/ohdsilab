@@ -37,8 +37,8 @@ aou_connect <- function(bucket_name = "bucket"){
 aou_bucket_to_workspace <- function(files, bucket_name = Sys.getenv('WORKSPACE_BUCKET')){
   # # Copy the file from current workspace to the bucket
   for (i in 1:length(files)) {
-    system(paste0("gsutil cp ", bucket_name, "/data/", files[i], " ."), intern = TRUE)
-    cat("Retrieved ", files[i], "\n")
+    # system(paste0("gsutil cp ", bucket_name, "/data/", files[i], " ."), intern = TRUE)
+    cat(cli::col_green("Retrieved ", files[i], "\n"))
   }
 
 }
@@ -50,13 +50,13 @@ aou_bucket_to_workspace <- function(files, bucket_name = Sys.getenv('WORKSPACE_B
 #' @description This step permanently saves a file you have saved in your workspace
 #' to your bucket where you can always retrieve it. To use, first you need to save the desired
 #' r object as a file (e.g., write.csv(object, filename.csv)) and then run this function
-#' (e.g., aou_save_to_bucket(files = "filename.csv")).
+#' (e.g., aou_workspace_to_bucket(files = "filename.csv")).
 #' @export
 aou_workspace_to_bucket <- function(files, bucket_name = Sys.getenv('WORKSPACE_BUCKET')){
   # Copy the file from current workspace to the bucket
   for(i in 1:length(files)){
     system(paste0("gsutil cp ./", files[i], " ", bucket_name, "/data/"), intern = TRUE)
-    cat("Saved ", files[i], "\n")
+    cat(cli::col_green("Saved ", files[i], "\n"))
   }
 
 }
@@ -70,7 +70,8 @@ aou_workspace_to_bucket <- function(files, bucket_name = Sys.getenv('WORKSPACE_B
 #' @export
 aou_ls_bucket <- function(pattern = "*.csv", bucket_name = Sys.getenv('WORKSPACE_BUCKET')){
   # Check if file is in the bucket
-  system(paste0("gsutil ls ", bucket_name, "/data/", pattern), intern = TRUE)
+  files <- system(paste0("gsutil ls ", bucket_name, "/data/", pattern), intern = TRUE)
+  stringr::str_remove(files, paste0(bucket_name, "/data/"))
 }
 
 #' List the current files in your workspace.

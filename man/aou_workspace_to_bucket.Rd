@@ -15,5 +15,5 @@ aou_workspace_to_bucket(files, bucket_name = Sys.getenv("WORKSPACE_BUCKET"))
 This step permanently saves a file you have saved in your workspace
 to your bucket where you can always retrieve it. To use, first you need to save the desired
 r object as a file (e.g., write.csv(object, filename.csv)) and then run this function
-(e.g., aou_save_to_bucket(files = "filename.csv")).
+(e.g., aou_workspace_to_bucket(files = "filename.csv")).
 }

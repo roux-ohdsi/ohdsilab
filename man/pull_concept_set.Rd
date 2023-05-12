@@ -9,7 +9,7 @@ pull_concept_set(
   concept_set_id,
   start_date,
   end_date,
-  concept_name = NULL,
+  concept_set_name = NULL,
   min_n = NULL,
   n = FALSE,
   keep_all = FALSE,
@@ -27,7 +27,7 @@ pull_concept_set(
 
 \item{end_date}{the name of the end_date column in the cohort table (unquoted)}
 
-\item{concept_name}{chr; Name to describe the concept set, used to create an indicator variable}
+\item{concept_set_name}{chr; Name to describe the concept set, used to create an indicator variable}
 
 \item{min_n}{dbl; the minimum number of occurrences per person to consider the indicator true}
 

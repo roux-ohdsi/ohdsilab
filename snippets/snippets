@@ -128,11 +128,11 @@ snippet ohdsi_api_cohort_definition
 	# export definition from Atlas
 	cohort_definition <- exportCohortDefinitionSet(
 		baseUrl = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI",
-		cohortIds = {$1}
+		cohortIds = ${1:Cohort ID from Atlas}
 	)
 
 	# choose what the table names should be called that hold the cohort
-	cohort_table_names <- getCohortTableNames(cohortTable = "{$2}")
+	cohort_table_names <- getCohortTableNames(cohortTable = "${2:Name of cohort}")
 
 	# create empty tables in the usr_xx.cohort table
 	createCohortTables(

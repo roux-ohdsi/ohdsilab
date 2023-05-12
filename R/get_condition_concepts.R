@@ -113,8 +113,7 @@ get_condition_concepts <- function(cohort, start_date, end_date, write_schema) {
       condition_status_source_value, condition_status_concept_id
     )) |>
     omop_join(table = "temp_covs", type = "inner", schema = write_schema,
-              by = join_by(condition_concept_id == conceptid),
-              x_as = "AAA", y_as = "BBB"
+              by = join_by(condition_concept_id == conceptid)
     ) |>
     filter(between(condition_start_date, {{ start_date }}, {{ end_date }})) |>
     select(person_id,
@@ -133,8 +132,7 @@ get_measurement_concepts <- function(cohort, start_date, end_date, write_schema)
       measurement_source_concept_id, unit_source_value, value_source_value
     )) |>
     omop_join(table = "temp_covs", type = "inner", schema = write_schema,
-              by = join_by(measurement_concept_id == conceptid),
-              x_as = "AAA", y_as = "BBB"
+              by = join_by(measurement_concept_id == conceptid)
     ) |>
     filter(between(measurement_date, {{ start_date }}, {{ end_date }})) |>
     select(person_id,
@@ -152,8 +150,7 @@ get_procedure_concepts <- function(cohort, start_date, end_date, write_schema) {
       procedure_source_value, procedure_source_concept_id, modifier_source_value
     )) |>
     omop_join(table = "temp_covs", type = "inner", schema = write_schema,
-              by = join_by(procedure_concept_id == conceptid),
-              x_as = "AAA", y_as = "BBB"
+              by = join_by(procedure_concept_id == conceptid)
     ) |>
     filter(between(procedure_date, {{ start_date }}, {{ end_date }})) |>
     select(person_id,
@@ -173,8 +170,7 @@ get_observation_concepts <- function(cohort, start_date, end_date, write_schema)
       unit_source_value, qualifier_source_value
     )) |>
     omop_join(table = "temp_covs", type = "inner", schema = write_schema,
-              by = join_by(observation_concept_id == conceptid),
-              x_as = "AAA", y_as = "BBB"
+              by = join_by(observation_concept_id == conceptid)
     ) |>
     filter(between(observation_date, {{ start_date }}, {{ end_date }})) |>
     select(person_id,
@@ -195,8 +191,7 @@ get_drug_concepts <- function(cohort, start_date, end_date, write_schema) {
       dose_unit_source_value
     )) |>
     omop_join(table = "temp_covs", type = "inner", schema = write_schema,
-              by = join_by(drug_concept_id == conceptid),
-              x_as = "AAA", y_as = "BBB"
+              by = join_by(drug_concept_id == conceptid)
     ) |>
     filter(between(drug_exposure_start_date, {{ start_date }}, {{ end_date }})) |>
     select(person_id,
@@ -215,8 +210,7 @@ get_device_concepts <- function(cohort, start_date, end_date, write_schema) {
       visit_detail_id, device_source_value, device_source_concept_id
     )) |>
     omop_join(table = "temp_covs", type = "inner", schema = write_schema,
-              by = join_by(device_concept_id == conceptid),
-              x_as = "AAA", y_as = "BBB"
+              by = join_by(device_concept_id == conceptid)
     ) |>
     filter(between(device_exposure_start_date, {{ start_date }}, {{ end_date }})) |>
     select(person_id,

@@ -36,9 +36,15 @@ aou_connect <- function(bucket_name = "bucket"){
 #' @export
 aou_bucket_to_workspace <- function(files, bucket_name = Sys.getenv('WORKSPACE_BUCKET')){
   # # Copy the file from current workspace to the bucket
+	bucket_files = aou_ls_bucket()
+
   for (i in 1:length(files)) {
-    system(paste0("gsutil cp ", bucket_name, "/data/", files[i], " ."), intern = TRUE)
-    cat(cli::col_green("Retrieved ", files[i], " from bucket\n"))
+  	if(!(files[i] %in% bucket_files)){
+  		cat(cli::col_orange("Warning: ", files[i], " not found in bucket\n"))
+  	} else {
+	    system(paste0("gsutil cp ", bucket_name, "/data/", files[i], " ."), intern = TRUE)
+	    cat(cli::col_green("Retrieved ", files[i], " from bucket\n"))
+  	}
   }
 
 }

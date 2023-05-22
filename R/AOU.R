@@ -38,10 +38,13 @@ aou_bucket_to_workspace <- function(files, bucket_name = Sys.getenv('WORKSPACE_B
   # # Copy the file from current workspace to the bucket
 	bucket_files = aou_ls_bucket()
 
+	missing_files = list()
+
   for (i in 1:length(files)) {
   	if(!(files[i] %in% bucket_files)){
   		cat(cli::col_red("Oops! ", files[i], " not found in bucket\n"))
   		error_at_end = TRUE
+  		missing_files = append(missing_files, files[i])
   	} else {
 	    system(paste0("gsutil cp ", bucket_name, "/data/", files[i], " ."), intern = TRUE)
 	    cat(cli::col_green("Retrieved ", files[i], " from bucket\n"))
@@ -49,7 +52,8 @@ aou_bucket_to_workspace <- function(files, bucket_name = Sys.getenv('WORKSPACE_B
   }
 
 	if(isTRUE(error_at_end)){
-		stop(paste0(files[i], " not found in bucket\n"))
+		missing = paste0(unlist(missing_files), collapse = ", ")
+		stop(paste0(missing, " not found in bucket\n"))
 	}
 
 }

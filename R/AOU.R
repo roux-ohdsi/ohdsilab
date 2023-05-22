@@ -40,13 +40,17 @@ aou_bucket_to_workspace <- function(files, bucket_name = Sys.getenv('WORKSPACE_B
 
   for (i in 1:length(files)) {
   	if(!(files[i] %in% bucket_files)){
-  		#cat(cli::col_red())
-  		stop(paste0(files[i], " not found in bucket\n"))
+  		cat(cli::col_red("Oops! ", files[i], " not found in bucket\n"))
+  		error_at_end = TRUE
   	} else {
 	    system(paste0("gsutil cp ", bucket_name, "/data/", files[i], " ."), intern = TRUE)
 	    cat(cli::col_green("Retrieved ", files[i], " from bucket\n"))
   	}
   }
+
+	if(isTRUE(error_at_end)){
+		stop(paste0(files[i], " not found in bucket\n"))
+	}
 
 }
 

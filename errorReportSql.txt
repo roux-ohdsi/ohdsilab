@@ -2,11 +2,11 @@ DBMS:
 redshift
 
 Error:
-com.amazon.redshift.util.RedshiftException: ERROR: current transaction is aborted, commands ignored until end of transaction block
+com.amazon.redshift.util.RedshiftException: ERROR: permission denied for schema omop_cdm_synpuf_110k_531
 
 SQL:
 SELECT *
-FROM omop_cdm_53_pmtx_202203.procedure_occurrence AS q02
+FROM omop_cdm_synpuf_110k_531.condition_occurrence AS q01
 WHERE (0 = 1);
 
 R version:

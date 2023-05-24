@@ -12,7 +12,7 @@
 #' \dontrun{
 #' bookstore(c("aouFI", "CohortGenerator", "tidyr"))
 #' }
-bookstore <- function(package_names){
+bookstore <- function(package_names, quietly = TRUE){
 
     remaining_packages <- package_names[!(package_names %in% installed.packages()[,"Package"])]
 
@@ -55,7 +55,11 @@ bookstore <- function(package_names){
     }
 
     for(package_name in package_names){
-      library(package_name,character.only=TRUE,quietly=TRUE)
+    	if(isTRUE(quietly)){
+    		suppressPackageStartupMessages(library(package_name, character.only=TRUE, quietly=TRUE))
+    	} else {
+    		library(package_name,character.only=TRUE)
+    	}
       cat("Loaded", package_name, "\n")
     }
 

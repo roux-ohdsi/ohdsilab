@@ -4,18 +4,20 @@
 \alias{aou_get_survey_concepts}
 \title{Get survey questions from AoU for a given cohort}
 \usage{
-aou_get_survey_concepts(cohort, concepts, combine = FALSE, ...)
+aou_get_survey_concepts(cohort, concepts, collect = TRUE, reshape = FALSE, ...)
 }
 \arguments{
 \item{cohort}{tbl; reference to a table with a column called "person_id"}
 
 \item{concepts}{num; a vector of concept ids for questions in the survey table}
 
-\item{combine}{lgl; whether to combine the question and answer into a single variable (used when pulling concepts across domains)}
+\item{collect}{lgl; whether to collect from the database}
+
+\item{reshape}{lgl; whether to turn the long data into wide data with clean variable names}
 }
 \value{
 a remote tbl with columns person_id, date (survey_datetime),
- concept_id (question_concept_id), question, answer. If combine = TRUE, concept_name (paste0(question, ":::", answer)), domain (= "Survey")
+ concept_id (question_concept_id), question, answer.
 }
 \description{
 Get survey questions from AoU for a given cohort

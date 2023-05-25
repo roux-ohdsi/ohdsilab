@@ -21,6 +21,7 @@ aou_connect <- function(bucket_name = "bucket"){
 
   assign("con", connection, envir = .GlobalEnv)
   assign(bucket_name, Sys.getenv('WORKSPACE_BUCKET'), envir = .GlobalEnv)
+  options(con.default.value = con)
 
   cat(cli::col_green("Connected successfully!"),
       cli::col_blue("Use `con` to access the connection and `", bucket_name,
@@ -127,7 +128,7 @@ aou_pull_concepts <- function(cohort,
 														 start_date,
 														 end_date,
 														 concept_set_name = "concepts",
-														 domains = c("condition", "measurement", "observation", "procedure", "drug", "device", "survey"),
+														 domains = c("condition", "measurement", "observation", "procedure", "drug", "device"),
 														 min_n = NULL,
 														 n = FALSE,
 														 keep_all = FALSE,
@@ -286,42 +287,55 @@ aou_get_device_concepts <- function(cohort, concepts, start_date, end_date, ...)
 					 concept_name, domain = domain_id
 		)
 }
+
+
+aou_get_concepts <- function(..., domain = c("condition", "measurement", "observation", "procedure", "drug", "device")) {
+	if (length(domain) != 1) stop("Provide one domain only")
+	if (!domain %in% c("condition", "measurement", "observation", "procedure", "drug", "device")) {
+		stop(
+			'`domain` must be one of: "condition", "measurement", "observation", "procedure", "drug", "device"'
+		)
+	}
+	get(paste("aou_get", domain, "concepts", sep = "_"))(..., combine = FALSE)
+}
+
 #' Get survey questions from AoU for a given cohort
 #'
 #'
 #' @param cohort tbl; reference to a table with a column called "person_id"
 #' @param concepts num; a vector of concept ids for questions in the survey table
-#' @param combine lgl; whether to combine the question and answer into a single variable (used when pulling concepts across domains)
-#'
+#' @param collect lgl; whether to collect from the database
+#' @param reshape lgl; whether to turn the long data into wide data with clean variable names
+
 #' @return a remote tbl with columns person_id, date (survey_datetime),
-#'  concept_id (question_concept_id), question, answer. If combine = TRUE, concept_name (paste0(question, ":::", answer)), domain (= "Survey")
-#' @export
+#'  concept_id (question_concept_id), question, answer.
 #'
 #' @examples
 #' \dontrun{
 #' survey_data <- aou_get_survey_concepts(cohort, concepts = c(1157, 124839))
 #'  )}
 #'
-aou_get_survey_concepts <- function(cohort, concepts, combine = FALSE, ...) {
-	cohort |>
+aou_get_survey_concepts <- function(cohort, concepts, collect = TRUE, reshape = FALSE, ...) {
+	dat <- cohort |>
 		omop_join("ds_survey", type = "left", by = "person_id") |>
-		select(person_id, question, question_concept_id, answer, survey,
+		select(person_id, question, question_concept_id, answer, answer_concept_id, survey,
 					 survey_datetime) |>
-		filter(question_concept_id %in% concepts) |>
-		mutate(domain = "Survey", concept_name = paste0(question, ":::", answer)) |>
-		select(person_id,
-					 date = survey_datetime, concept_id = question_concept_id,
-					 concept_name, domain
-		)
-}
+		filter(question_concept_id %in% concepts)
 
-aou_get_concepts <- function(..., domain = c("condition", "measurement", "observation", "procedure", "drug", "device", "survey")) {
-	if (length(domain) != 1) stop("Provide one domain only")
-	if (!domain %in% c("condition", "measurement", "observation", "procedure", "drug", "device", "survey")) {
-		stop(
-			'`domain` must be one of: "condition", "measurement", "observation", "procedure", "drug", "device", "survey"'
-		)
+
+	if (reshape) {
+		if (!collect) warning("survey data must be collected to be reshaped")
+		# reshape the questions/answers so that there's one column for every question
+		dat %>%
+			select(person_id, question, answer) %>%
+			# since there are multiple answers for some questions (the "conditions" questions), put all in a list
+			pivot_wider(names_from = question, values_from = answer, values_fn = list) %>%
+			janitor::clean_names() %>%
+		# don't need answers in a list if there is only one per question
+		# for some reason some people have multiple answers to the employment question too
+		# unnest(c(where(is.list), -contains("condition"), -contains("employment")), keep_empty = TRUE)
+			dbi_collect()
 	}
-	get(paste("aou_get", domain, "concepts", sep = "_"))(..., combine = FALSE)
+	if (!collect) return(dat)
+	dbi_collect(dat)
 }
-

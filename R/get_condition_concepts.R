@@ -32,7 +32,7 @@ pull_concept_set <- function(cohort,
                              keep_all = FALSE,
                              con = getOption("con.default.value"),
                              atlas_url = getOption("atlas_url.default.value"),
-                             write_schema = getOption("write_schema.default.value")){
+                             write_schema = getOption("write_schema.default.value"), ...){
 
   if (is.null(concept_set_name)) concept_set_name <- paste0("concept_set_", concept_set_id)
   if (!is.null(min_n) & !is.numeric(min_n)) stop("Provide a number to `min_n` to restrict to observations with at least that number of rows")
@@ -92,19 +92,7 @@ pull_concept_set <- function(cohort,
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-get_condition_concepts <- function(cohort, start_date, end_date, write_schema) {
+get_condition_concepts <- function(cohort, start_date, end_date, write_schema, ...) {
   cohort |>
     omop_join("condition_occurrence", type = "left", by = "person_id") |>
     select(-c(
@@ -123,7 +111,7 @@ get_condition_concepts <- function(cohort, start_date, end_date, write_schema) {
     )
 }
 
-get_measurement_concepts <- function(cohort, start_date, end_date, write_schema) {
+get_measurement_concepts <- function(cohort, start_date, end_date, write_schema, ...) {
   cohort |>
     omop_join("measurement", type = "left", by = "person_id") |>
     select(-c(
@@ -142,7 +130,7 @@ get_measurement_concepts <- function(cohort, start_date, end_date, write_schema)
     )
 }
 
-get_procedure_concepts <- function(cohort, start_date, end_date, write_schema) {
+get_procedure_concepts <- function(cohort, start_date, end_date, write_schema, ...) {
   cohort |>
     omop_join("procedure_occurrence", type = "left", by = "person_id") |>
     select(-c(
@@ -160,7 +148,7 @@ get_procedure_concepts <- function(cohort, start_date, end_date, write_schema) {
     )
 }
 
-get_observation_concepts <- function(cohort, start_date, end_date, write_schema) {
+get_observation_concepts <- function(cohort, start_date, end_date, write_schema, ...) {
   cohort |>
     omop_join("observation", type = "left", by = "person_id") |>
     select(-c(
@@ -180,7 +168,7 @@ get_observation_concepts <- function(cohort, start_date, end_date, write_schema)
     )
 }
 
-get_drug_concepts <- function(cohort, start_date, end_date, write_schema) {
+get_drug_concepts <- function(cohort, start_date, end_date, write_schema, ...) {
   cohort |>
     omop_join("drug_exposure", type = "left", by = "person_id") |>
     select(-c(
@@ -201,7 +189,7 @@ get_drug_concepts <- function(cohort, start_date, end_date, write_schema) {
     )
 }
 
-get_device_concepts <- function(cohort, start_date, end_date, write_schema) {
+get_device_concepts <- function(cohort, start_date, end_date, write_schema, ...) {
   cohort |>
     omop_join("device_exposure", type = "left", by = "person_id") |>
     select(-c(

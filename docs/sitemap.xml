@@ -46,16 +46,34 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/aou_bucket_to_workspace.html</loc>
+  </url>
+  <url>
     <loc>/reference/aou_connect.html</loc>
   </url>
   <url>
     <loc>/reference/aou_ls.html</loc>
   </url>
   <url>
+    <loc>/reference/aou_ls_bucket.html</loc>
+  </url>
+  <url>
+    <loc>/reference/aou_ls_workspace.html</loc>
+  </url>
+  <url>
+    <loc>/reference/aou_pull_concepts.html</loc>
+  </url>
+  <url>
+    <loc>/reference/aou_pull_survey_concepts.html</loc>
+  </url>
+  <url>
     <loc>/reference/aou_retrieve_from_bucket.html</loc>
   </url>
   <url>
     <loc>/reference/aou_save_to_bucket.html</loc>
+  </url>
+  <url>
+    <loc>/reference/aou_workspace_to_bucket.html</loc>
   </url>
   <url>
     <loc>/reference/bookstore.html</loc>

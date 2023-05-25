@@ -123,7 +123,7 @@ unlike the persistent disk, we can’t just run
 <code>read.csv("data.csv")</code> from the bucket. We have to move data
 from the bucket into the current environment first (more on how to do
 this later).</p>
-<p><img src="images/image-169521206.png" width="600"></p>
+<p><img src="../../../R%20Packages/ohdsilab/articles/images/image-169521206.png" width="600"></p>
 </li>
 <li><p>You are (currently) required to work in jupyter notebooks instead
 of RStudio (though RStudio is coming)</p></li>
@@ -132,7 +132,7 @@ of RStudio (though RStudio is coming)</p></li>
 frequent tasks, like moving data between the environment, persistent
 disk, and bucket, or accessing certain tables. You can find these
 snippets in the “Snippets” dropdown in the Jupyter Notebook.</p>
-<p><img src="images/image-1643830709.png" width="600"></p>
+<p><img src="../../../R%20Packages/ohdsilab/articles/images/image-1643830709.png" width="600"></p>
 </li>
 </ul>
 </div>
@@ -146,21 +146,21 @@ bucket, called <code>bucket</code>. You should run this after loading
 your packages. It’ll tell you if you’ve connected successfully.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/aou_connect.html">aou_connect</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>The <code><a href="../reference/aou_ls.html">aou_ls()</a></code> function lists files in the bucket
+<p>The <code>aou_ls()</code> function lists files in the bucket
 following a pattern. It defaults to <code>*csv</code> to list all .csv
 files, but can be changed to anything.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/aou_ls.html">aou_ls</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>The <code><a href="../reference/aou_save_to_bucket.html">aou_save_to_bucket()</a></code> function saves a file from your
+<code class="sourceCode R"><span><span class="fu">aou_ls</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>The <code>aou_save_to_bucket()</code> function saves a file from your
 current disk to the bucket. You can use it after writing the object to a
 file. It can work for more than .csv files too.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">myData</span>, <span class="st">"data.csv"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/aou_save_to_bucket.html">aou_save_to_bucket</a></span><span class="op">(</span><span class="st">"data.csv"</span><span class="op">)</span></span></code></pre></div>
-<p>The <code><a href="../reference/aou_retrieve_from_bucket.html">aou_retrieve_from_bucket()</a></code> function will retrieve a
+<span><span class="fu">aou_save_to_bucket</span><span class="op">(</span><span class="st">"data.csv"</span><span class="op">)</span></span></code></pre></div>
+<p>The <code>aou_retrieve_from_bucket()</code> function will retrieve a
 file from the bucket, so that you can read it into your notebook.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/aou_retrieve_from_bucket.html">aou_retrieve_from_bucket</a></span><span class="op">(</span><span class="st">"data.csv"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">aou_retrieve_from_bucket</span><span class="op">(</span><span class="st">"data.csv"</span><span class="op">)</span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"data.csv"</span><span class="op">)</span></span></code></pre></div>
 <p>After this, working with AllofUs is pretty similar to
 ohdsilab/pharmetrics.</p>
@@ -198,10 +198,10 @@ local session:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">demo_collected</span> <span class="op">&lt;-</span> <span class="va">demo</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html" class="external-link">collect</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>If I wanted to save this data to my bucket, I would use
-<code><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv()</a></code> and then <code><a href="../reference/aou_save_to_bucket.html">aou_save_to_bucket()</a></code></p>
+<code><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv()</a></code> and then <code>aou_save_to_bucket()</code></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">demo_collected</span>, <span class="st">"demo.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/aou_save_to_bucket.html">aou_save_to_bucket</a></span><span class="op">(</span><span class="st">"demo.csv"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">aou_save_to_bucket</span><span class="op">(</span><span class="st">"demo.csv"</span><span class="op">)</span></span></code></pre></div>
 <p>If you want to know more about the tables available in AllofUs - read
 through the data dictionaries linked above.</p>
 </div>

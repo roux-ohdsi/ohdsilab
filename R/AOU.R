@@ -8,24 +8,24 @@
 #' to an object in your R environment.
 #' @export
 aou_connect <- function(bucket_name = "bucket"){
-  dataset <- stringr::str_split_fixed(Sys.getenv('WORKSPACE_CDR'),'\\.', n = 2)
-  release <- dataset[2]
-  prefix <- dataset[1]
+	dataset <- stringr::str_split_fixed(Sys.getenv('WORKSPACE_CDR'),'\\.', n = 2)
+	release <- dataset[2]
+	prefix <- dataset[1]
 
-  connection <- DBI::dbConnect(
-    bigrquery::bigquery(),
-    billing = Sys.getenv('GOOGLE_PROJECT'),
-    project = prefix,
-    dataset = release
-  )
+	connection <- DBI::dbConnect(
+		bigrquery::bigquery(),
+		billing = Sys.getenv('GOOGLE_PROJECT'),
+		project = prefix,
+		dataset = release
+	)
 
-  assign("con", connection, envir = .GlobalEnv)
-  assign(bucket_name, Sys.getenv('WORKSPACE_BUCKET'), envir = .GlobalEnv)
-  options(con.default.value = con)
+	assign("con", connection, envir = .GlobalEnv)
+	assign(bucket_name, Sys.getenv('WORKSPACE_BUCKET'), envir = .GlobalEnv)
+	options(con.default.value = con)
 
-  cat(cli::col_green("Connected successfully!"),
-      cli::col_blue("Use `con` to access the connection and `", bucket_name,
-           "` to retrieve the name of your bucket"), sep = "\n")
+	cat(cli::col_green("Connected successfully!"),
+			cli::col_blue("Use `con` to access the connection and `", bucket_name,
+										"` to retrieve the name of your bucket"), sep = "\n")
 }
 
 #' Move files from a bucket to your workspace
@@ -36,20 +36,20 @@ aou_connect <- function(bucket_name = "bucket"){
 #' into your workspace where you can read it into R using a function like write.csv().
 #' @export
 aou_bucket_to_workspace <- function(files, bucket_name = Sys.getenv('WORKSPACE_BUCKET')){
-  # # Copy the file from current workspace to the bucket
+	# # Copy the file from current workspace to the bucket
 	bucket_files = aou_ls_bucket()
 
 	missing_files = list()
 
-  for (i in 1:length(files)) {
-  	if(!(files[i] %in% bucket_files)){
-  		cat(cli::col_red("Oops! ", files[i], " not found in bucket\n"))
-  		missing_files = append(missing_files, files[i])
-  	} else {
-	    system(paste0("gsutil cp ", bucket_name, "/data/", files[i], " ."), intern = TRUE)
-	    cat(cli::col_green("Retrieved ", files[i], " from bucket\n"))
-  	}
-  }
+	for (i in 1:length(files)) {
+		if(!(files[i] %in% bucket_files)){
+			cat(cli::col_red("Oops! ", files[i], " not found in bucket\n"))
+			missing_files = append(missing_files, files[i])
+		} else {
+			system(paste0("gsutil cp ", bucket_name, "/data/", files[i], " ."), intern = TRUE)
+			cat(cli::col_green("Retrieved ", files[i], " from bucket\n"))
+		}
+	}
 
 	if(length(missing_files)>0){
 		missing = paste0(unlist(missing_files), collapse = ", ")
@@ -68,11 +68,11 @@ aou_bucket_to_workspace <- function(files, bucket_name = Sys.getenv('WORKSPACE_B
 #' (e.g., aou_workspace_to_bucket(files = "filename.csv")).
 #' @export
 aou_workspace_to_bucket <- function(files, bucket_name = Sys.getenv('WORKSPACE_BUCKET')){
-  # Copy the file from current workspace to the bucket
-  for(i in 1:length(files)){
-    system(paste0("gsutil cp ./", files[i], " ", bucket_name, "/data/"), intern = TRUE)
-    cat(cli::col_green("Saved ", files[i], " to bucket\n"))
-  }
+	# Copy the file from current workspace to the bucket
+	for(i in 1:length(files)){
+		system(paste0("gsutil cp ./", files[i], " ", bucket_name, "/data/"), intern = TRUE)
+		cat(cli::col_green("Saved ", files[i], " to bucket\n"))
+	}
 
 }
 
@@ -84,9 +84,9 @@ aou_workspace_to_bucket <- function(files, bucket_name = Sys.getenv('WORKSPACE_B
 #' @param bucket_name name of your bucket. Recommend leaving the default
 #' @export
 aou_ls_bucket <- function(pattern = "*.csv", bucket_name = Sys.getenv('WORKSPACE_BUCKET')){
-  # Check if file is in the bucket
-  files <- system(paste0("gsutil ls ", bucket_name, "/data/", pattern), intern = TRUE)
-  stringr::str_remove(files, paste0(bucket_name, "/data/"))
+	# Check if file is in the bucket
+	files <- system(paste0("gsutil ls ", bucket_name, "/data/", pattern), intern = TRUE)
+	stringr::str_remove(files, paste0(bucket_name, "/data/"))
 }
 
 #' List the current files in your workspace.
@@ -96,8 +96,8 @@ aou_ls_bucket <- function(pattern = "*.csv", bucket_name = Sys.getenv('WORKSPACE
 #' @param pattern pattern like *.csv or a single file name e.g., mydata.csv
 #' @export
 aou_ls_workspace <- function(pattern = "*.csv"){
-  files <- list.files(pattern = pattern)
-  files[!grepl("*.ipynb", files)]
+	files <- list.files(pattern = pattern)
+	files[!grepl("*.ipynb", files)]
 }
 
 #' Get occurrences of a concepts from AoU for a given cohort
@@ -124,16 +124,16 @@ aou_ls_workspace <- function(pattern = "*.csv"){
 #'  )}
 #'
 aou_pull_concepts <- function(cohort,
-														 concepts,
-														 start_date,
-														 end_date,
-														 concept_set_name = "concepts",
-														 domains = c("condition", "measurement", "observation", "procedure", "drug", "device"),
-														 min_n = NULL,
-														 n = FALSE,
-														 keep_all = FALSE,
-														 con = getOption("con.default.value"),
-														 collect = TRUE, ...){
+															concepts,
+															start_date,
+															end_date,
+															concept_set_name = "concepts",
+															domains = c("condition", "measurement", "observation", "procedure", "drug", "device"),
+															min_n = NULL,
+															n = FALSE,
+															keep_all = FALSE,
+															con = getOption("con.default.value"),
+															collect = TRUE, ...){
 
 	if (is.null(concept_set_name)) concept_set_name <- paste0("concept_set_", concept_set_id)
 	if (!is.null(min_n) & !is.numeric(min_n)) stop("Provide a number to `min_n` to restrict to observations with at least that number of rows")
@@ -144,8 +144,8 @@ aou_pull_concepts <- function(cohort,
 	all_concepts <- map(
 		domains,
 		~ aou_get_concepts(cohort, concepts,
-									 {{ start_date }}, {{ end_date }},
-									 domain = tolower(.x))
+											 {{ start_date }}, {{ end_date }},
+											 domain = tolower(.x))
 	) |>
 		reduce(union_all) |>
 		mutate(concept_set = concept_set_name) |>
@@ -312,10 +312,10 @@ aou_get_concepts <- function(..., domain = c("condition", "measurement", "observ
 #'
 #' @examples
 #' \dontrun{
-#' survey_data <- aou_get_survey_concepts(cohort, concepts = c(1157, 124839))
+#' survey_data <- aou_pull_survey_concepts(cohort, concepts = c(1157, 124839))
 #'  )}
 #'
-aou_get_survey_concepts <- function(cohort, concepts, collect = TRUE, reshape = FALSE, ...) {
+aou_pull_survey_concepts <- function(cohort, concepts, collect = TRUE, reshape = FALSE, ...) {
 	dat <- cohort |>
 		omop_join("ds_survey", type = "left", by = "person_id") |>
 		select(person_id, question, question_concept_id, answer, answer_concept_id, survey,
@@ -331,9 +331,9 @@ aou_get_survey_concepts <- function(cohort, concepts, collect = TRUE, reshape = 
 			# since there are multiple answers for some questions (the "conditions" questions), put all in a list
 			pivot_wider(names_from = question, values_from = answer, values_fn = list) %>%
 			janitor::clean_names() %>%
-		# don't need answers in a list if there is only one per question
-		# for some reason some people have multiple answers to the employment question too
-		# unnest(c(where(is.list), -contains("condition"), -contains("employment")), keep_empty = TRUE)
+			# don't need answers in a list if there is only one per question
+			# for some reason some people have multiple answers to the employment question too
+			# unnest(c(where(is.list), -contains("condition"), -contains("employment")), keep_empty = TRUE)
 			dbi_collect()
 	}
 	if (!collect) return(dat)

@@ -22,15 +22,16 @@ aou_pull_survey_concepts(
 \item{reshape}{lgl; whether to turn the long data into wide data with clean variable names}
 }
 \value{
-a remote tbl with columns person_id, date (survey_datetime),
- concept_id (question_concept_id), question, answer.
+if reshape = FALSE, a dataframe or remote tbl with columns person_id, date (survey_datetime),
+ concept_id (question_concept_id), question, answer. If reshape = TRUE, a dataframe with
+ questions as columns. Those with multiple answers per person ("checkbox" questions) are list-columns.
 }
 \description{
 Get survey questions from AoU for a given cohort
 }
 \examples{
 \dontrun{
-survey_data <- aou_pull_survey_concepts(cohort, concepts = c(1157, 124839))
+survey_data <- aou_pull_survey_concepts(cohort, concepts = c(1157, 124839), reshape = TRUE)
  )}
 
 }

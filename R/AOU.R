@@ -307,12 +307,13 @@ aou_get_concepts <- function(..., domain = c("condition", "measurement", "observ
 #' @param collect lgl; whether to collect from the database
 #' @param reshape lgl; whether to turn the long data into wide data with clean variable names
 
-#' @return a remote tbl with columns person_id, date (survey_datetime),
-#'  concept_id (question_concept_id), question, answer.
-#'
+#' @return if reshape = FALSE, a dataframe or remote tbl with columns person_id, date (survey_datetime),
+#'  concept_id (question_concept_id), question, answer. If reshape = TRUE, a dataframe with
+#'  questions as columns. Those with multiple answers per person ("checkbox" questions) are list-columns.
+#' @export
 #' @examples
 #' \dontrun{
-#' survey_data <- aou_pull_survey_concepts(cohort, concepts = c(1157, 124839))
+#' survey_data <- aou_pull_survey_concepts(cohort, concepts = c(1157, 124839), reshape = TRUE)
 #'  )}
 #'
 aou_pull_survey_concepts <- function(cohort, concepts, collect = TRUE, reshape = FALSE, ...) {
@@ -326,15 +327,27 @@ aou_pull_survey_concepts <- function(cohort, concepts, collect = TRUE, reshape =
 	if (reshape) {
 		if (!collect) warning("survey data must be collected to be reshaped")
 		# reshape the questions/answers so that there's one column for every question
-		dat %>%
+
+		wide_lists <- dat %>%
 			select(person_id, question, answer) %>%
-			# since there are multiple answers for some questions (the "conditions" questions), put all in a list
+			dbi_collect() %>%
+			# since there are multiple answers for some questions (eg the 'conditions' questions), put all in a list
 			pivot_wider(names_from = question, values_from = answer, values_fn = list) %>%
-			janitor::clean_names() %>%
-			# don't need answers in a list if there is only one per question
-			# for some reason some people have multiple answers to the employment question too
-			# unnest(c(where(is.list), -contains("condition"), -contains("employment")), keep_empty = TRUE)
-			dbi_collect()
+			janitor::clean_names()
+
+		gt1 <- wide_lists %>%
+			rowwise() %>%
+			mutate(across(where(is.list), length)) %>%
+			ungroup %>%
+			summarise(across(-person_id, ~max(.x))) %>%
+			select(where(~any(.x > 1))) %>%
+			names()
+
+		# don't need answers in a list if there is only one per question
+		wide <- wide_lists %>%
+			unnest(c(where(is.list), -all_of(gt1)), keep_empty = TRUE)
+
+		return(wide)
 	}
 	if (!collect) return(dat)
 	dbi_collect(dat)

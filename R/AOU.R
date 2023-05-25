@@ -1,4 +1,4 @@
-# Aou helpers
+# AoU helpers
 
 #' Connect to big query database in All of Us
 #'
@@ -118,7 +118,7 @@ aou_ls_workspace <- function(pattern = "*.csv"){
 #'
 #' @examples
 #' \dontrun{
-#' tobacco <- pull_concepts(cohort, concept_set_id = 1157, start_date = covariate_start_date,
+#' tobacco <- pull_concepts(cohort, concepts = 1157, start_date = covariate_start_date,
 #'  end_date = cohort_start_date, name = "tobacco"
 #'  )}
 #'
@@ -132,7 +132,7 @@ aou_pull_concepts <- function(cohort,
 														 n = FALSE,
 														 keep_all = FALSE,
 														 con = getOption("con.default.value"),
-														 collect = TRUE){
+														 collect = TRUE, ...){
 
 	if (is.null(concept_set_name)) concept_set_name <- paste0("concept_set_", concept_set_id)
 	if (!is.null(min_n) & !is.numeric(min_n)) stop("Provide a number to `min_n` to restrict to observations with at least that number of rows")
@@ -177,7 +177,7 @@ aou_pull_concepts <- function(cohort,
 
 }
 
-aou_get_condition_concepts <- function(cohort, concepts, start_date, end_date) {
+aou_get_condition_concepts <- function(cohort, concepts, start_date, end_date, ...) {
 	cohort |>
 		omop_join("condition_occurrence", type = "left", by = "person_id") |>
 		select(-c(
@@ -195,7 +195,7 @@ aou_get_condition_concepts <- function(cohort, concepts, start_date, end_date) {
 		)
 }
 
-aou_get_measurement_concepts <- function(cohort, concepts, start_date, end_date) {
+aou_get_measurement_concepts <- function(cohort, concepts, start_date, end_date, ...) {
 	cohort |>
 		omop_join("measurement", type = "left", by = "person_id") |>
 		select(-c(
@@ -213,7 +213,7 @@ aou_get_measurement_concepts <- function(cohort, concepts, start_date, end_date)
 		)
 }
 
-aou_get_procedure_concepts <- function(cohort, concepts, start_date, end_date) {
+aou_get_procedure_concepts <- function(cohort, concepts, start_date, end_date, ...) {
 	cohort |>
 		omop_join("procedure_occurrence", type = "left", by = "person_id") |>
 		select(-c(
@@ -230,7 +230,7 @@ aou_get_procedure_concepts <- function(cohort, concepts, start_date, end_date) {
 		)
 }
 
-aou_get_observation_concepts <- function(cohort, concepts, start_date, end_date) {
+aou_get_observation_concepts <- function(cohort, concepts, start_date, end_date, ...) {
 	cohort |>
 		omop_join("observation", type = "left", by = "person_id") |>
 		select(-c(
@@ -249,7 +249,7 @@ aou_get_observation_concepts <- function(cohort, concepts, start_date, end_date)
 		)
 }
 
-aou_get_drug_concepts <- function(cohort, concepts, start_date, end_date) {
+aou_get_drug_concepts <- function(cohort, concepts, start_date, end_date, ...) {
 	cohort |>
 		omop_join("drug_exposure", type = "left", by = "person_id") |>
 		select(-c(
@@ -269,7 +269,7 @@ aou_get_drug_concepts <- function(cohort, concepts, start_date, end_date) {
 		)
 }
 
-aou_get_device_concepts <- function(cohort, concepts, start_date, end_date) {
+aou_get_device_concepts <- function(cohort, concepts, start_date, end_date, ...) {
 	cohort |>
 		omop_join("device_exposure", type = "left", by = "person_id") |>
 		select(-c(
@@ -286,18 +286,33 @@ aou_get_device_concepts <- function(cohort, concepts, start_date, end_date) {
 					 concept_name, domain = domain_id
 		)
 }
-
-aou_get_survey_concepts <- function(cohort, concepts, start_date, end_date) {
+#' Get survey questions from AoU for a given cohort
+#'
+#'
+#' @param cohort tbl; reference to a table with a column called "person_id"
+#' @param concepts num; a vector of concept ids for questions in the survey table
+#' @param combine lgl; whether to combine the question and answer into a single variable (used when pulling concepts across domains)
+#'
+#' @return a remote tbl with columns person_id, date (survey_datetime),
+#'  concept_id (question_concept_id), question, answer. If combine = TRUE, concept_name (paste0(question, ":::", answer)), domain (= "Survey")
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' survey_data <- aou_get_survey_concepts(cohort, concepts = c(1157, 124839))
+#'  )}
+#'
+aou_get_survey_concepts <- function(cohort, concepts, combine = FALSE, ...) {
 	cohort |>
 		omop_join("ds_survey", type = "left", by = "person_id") |>
-		select(person_id, question, question_concept_id, answer, survey, survey_datetime) |>
+		select(person_id, question, question_concept_id, answer, survey,
+					 survey_datetime) |>
 		filter(question_concept_id %in% concepts) |>
-		filter(between(survey_datetime, {{ start_date }}, {{ end_date }})) |>
+		mutate(domain = "Survey", concept_name = paste0(question, ":::", answer)) |>
 		select(person_id,
 					 date = survey_datetime, concept_id = question_concept_id,
-					 concept_name = question, answer
-		) |>
-		mutate(domain = "Survey")
+					 concept_name, domain
+		)
 }
 
 aou_get_concepts <- function(..., domain = c("condition", "measurement", "observation", "procedure", "drug", "device", "survey")) {
@@ -307,6 +322,6 @@ aou_get_concepts <- function(..., domain = c("condition", "measurement", "observ
 			'`domain` must be one of: "condition", "measurement", "observation", "procedure", "drug", "device", "survey"'
 		)
 	}
-	get(paste("aou_get", domain, "concepts", sep = "_"))(...)
+	get(paste("aou_get", domain, "concepts", sep = "_"))(..., combine = FALSE)
 }
 

@@ -16,7 +16,8 @@ aou_pull_concepts(
   n = FALSE,
   keep_all = FALSE,
   con = getOption("con.default.value"),
-  collect = TRUE
+  collect = TRUE,
+  ...
 )
 }
 \arguments{
@@ -48,7 +49,7 @@ Get occurrences of a concepts from AoU for a given cohort
 }
 \examples{
 \dontrun{
-tobacco <- pull_concepts(cohort, concept_set_id = 1157, start_date = covariate_start_date,
+tobacco <- pull_concepts(cohort, concepts = 1157, start_date = covariate_start_date,
  end_date = cohort_start_date, name = "tobacco"
  )}
 

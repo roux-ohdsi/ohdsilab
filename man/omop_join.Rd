@@ -9,7 +9,7 @@ omop_join(
   table,
   type,
   con = getOption("con.default.value"),
-  schema = getOption("schema.default.value"),
+  schema = NULL,
   ...
 )
 }

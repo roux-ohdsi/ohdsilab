@@ -29,13 +29,18 @@ omop_join <- function(data,
                       table,
                       type,
                       con = getOption("con.default.value"),
-                      schema = getOption("schema.default.value"),
+                      schema = NULL,
                       ...){
 
   if (is.null(con)) stop("Provide `con` as an argument or default with `options(con.default.value = ...)`")
-  if (is.null(schema)) stop("Provide `schema` as an argument or default with `options(schema.default.value = ...)`")
 
-  get(paste(type, "join", sep = "_"))(data, tbl(con, paste(schema, table, sep = ".")),
+	# allow for use in AoU
+  if (is.null(schema)) schema <- getOption("schema.default.value")
+  if (!is.null(schema)) schema <- paste0(schema, ".")
+
+	# stop("Provide `schema` as an argument or default with `options(schema.default.value = ...)`")
+
+  get(paste(type, "join", sep = "_"))(data, tbl(con, paste0(schema, table)),
                                       x_as = paste(sample(letters, 10, TRUE), collapse = ""),
                                       y_as = paste(sample(letters, 10, TRUE), collapse = ""), ...)
 }

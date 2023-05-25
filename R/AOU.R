@@ -190,7 +190,7 @@ aou_get_condition_concepts <- function(cohort, concepts, start_date, end_date) {
 		filter(between(condition_start_date, {{ start_date }}, {{ end_date }})) |>
 		omop_join("concept", type = "left", by = c("condition_concept_id" = "concept_id")) |>
 		select(person_id,
-					 date = device_exposure_start_date, concept_id = condition_concept_id,
+					 date = condition_start_date, concept_id = condition_concept_id,
 					 concept_name, domain = domain_id
 		)
 }
@@ -208,7 +208,7 @@ aou_get_measurement_concepts <- function(cohort, concepts, start_date, end_date)
 		filter(between(measurement_date, {{ start_date }}, {{ end_date }})) |>
 		omop_join("concept", type = "left", by = c("measurement_concept_id" = "concept_id")) |>
 		select(person_id,
-					 date = device_exposure_start_date, concept_id = measurement_concept_id,
+					 date = measurement_date, concept_id = measurement_concept_id,
 					 concept_name, domain = domain_id
 		)
 }
@@ -225,7 +225,7 @@ aou_get_procedure_concepts <- function(cohort, concepts, start_date, end_date) {
 		filter(between(procedure_date, {{ start_date }}, {{ end_date }})) |>
 		omop_join("concept", type = "left", by = c("procedure_concept_id" = "concept_id")) |>
 		select(person_id,
-					 date = device_exposure_start_date, concept_id = procedure_concept_id,
+					 date = procedure_date, concept_id = procedure_concept_id,
 					 concept_name, domain = domain_id
 		)
 }
@@ -244,7 +244,7 @@ aou_get_observation_concepts <- function(cohort, concepts, start_date, end_date)
 		filter(between(observation_date, {{ start_date }}, {{ end_date }})) |>
 		omop_join("concept", type = "left", by = c("observation_concept_id" = "concept_id")) |>
 		select(person_id,
-					 date = device_exposure_start_date, concept_id = observation_concept_id,
+					 date = observation_date, concept_id = observation_concept_id,
 					 concept_name, domain = domain_id
 		)
 }
@@ -264,7 +264,7 @@ aou_get_drug_concepts <- function(cohort, concepts, start_date, end_date) {
 		filter(between(drug_exposure_start_date, {{ start_date }}, {{ end_date }})) |>
 		omop_join("concept", type = "left", by = c("drug_concept_id" = "concept_id")) |>
 		select(person_id,
-					 date = device_exposure_start_date, concept_id = drug_concept_id,
+					 date = drug_exposure_start_date, concept_id = drug_concept_id,
 					 concept_name, domain = domain_id
 		)
 }

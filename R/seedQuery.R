@@ -14,6 +14,18 @@ seedQuery <- function(
 
 	if(!between(seed, 0, 1)) stop("Error: seed must be between 0 and 1 inclusive")
 	rendered_query <- dbplyr::sql_render(query)
-	DatabaseConnector::executeSql(con, paste0("set seed to ", seed, ";"))
+	ohdsilab::set_seed(con = con, seed = seed)
 	DBI::dbGetQuery(con, rendered_query)
+}
+
+#' Set a seed for reproducibility
+#'
+#' @param seed A seed you'd like to set - a value between 0 and 1, inclusive
+#' @param con the connection to the redshift server for ohdsilab.
+#' @export
+set_seed <- function(
+		seed,
+		con = getOption("con.default.value")) {
+	if(!between(seed, 0, 1)) stop("Error: seed must be between 0 and 1 inclusive")
+	DatabaseConnector::executeSql(con, paste0("set seed to ", seed, ";"))
 }

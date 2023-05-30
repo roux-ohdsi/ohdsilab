@@ -121,6 +121,15 @@
     <loc>/reference/rb.html</loc>
   </url>
   <url>
+    <loc>/reference/seedQuery.html</loc>
+  </url>
+  <url>
+    <loc>/reference/set_seed.html</loc>
+  </url>
+  <url>
     <loc>/reference/str_insert.html</loc>
+  </url>
+  <url>
+    <loc>/reference/write_to_database.html</loc>
   </url>
 </urlset>

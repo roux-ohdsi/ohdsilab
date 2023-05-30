@@ -100,27 +100,27 @@ ohdsi-lab database.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-lib.github.io/keyring/index.html" class="external-link">keyring</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/DatabaseConnector/" class="external-link">DatabaseConnector</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/ROhdsiWebApi/" class="external-link">ROhdsiWebApi</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">CohortGenerator</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">CohortDiagnostics</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">FeatureExtraction</span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/CohortGenerator/" class="external-link">CohortGenerator</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/CohortDiagnostics" class="external-link">CohortDiagnostics</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/OHDSI/FeatureExtraction" class="external-link">FeatureExtraction</a></span><span class="op">)</span></span></code></pre></div>
 <p>Set the connection details</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">usr</span> <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu">key_get</span><span class="op">(</span><span class="st">"lab_user"</span><span class="op">)</span></span>
-<span><span class="va">pw</span>  <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu">key_get</span><span class="op">(</span><span class="st">"lab_password"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">usr</span> <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_user"</span><span class="op">)</span></span>
+<span><span class="va">pw</span>  <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_password"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">atlas_url</span> <span class="op">=</span> <span class="st">"https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"</span></span>
 <span><span class="va">cdm_schema</span> <span class="op">=</span> <span class="st">"omop_cdm_53_pmtx_202203"</span></span>
-<span><span class="va">write_schema</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"work_"</span>, <span class="fu">keyring</span><span class="fu">::</span><span class="fu">key_get</span><span class="op">(</span><span class="st">"lab_user"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">write_schema</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"work_"</span>, <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_user"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">connectionDetails</span> <span class="op">&lt;-</span> <span class="fu">createConnectionDetails</span><span class="op">(</span>dbms <span class="op">=</span> <span class="st">"redshift"</span>,</span>
+<span><span class="va">connectionDetails</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/createConnectionDetails.html" class="external-link">createConnectionDetails</a></span><span class="op">(</span>dbms <span class="op">=</span> <span class="st">"redshift"</span>,</span>
 <span>                                             server <span class="op">=</span> <span class="st">"ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab"</span>,</span>
 <span>                                             port <span class="op">=</span> <span class="fl">5439</span>,</span>
-<span>                                             user <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu">key_get</span><span class="op">(</span><span class="st">"lab_user"</span><span class="op">)</span>,</span>
-<span>                                             password <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu">key_get</span><span class="op">(</span><span class="st">"lab_password"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>                                             user <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_user"</span><span class="op">)</span>,</span>
+<span>                                             password <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_password"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>This code will generate a table 1 for an established cohort of
 individuals with concepts of stroke and aphasia. This table was
 generated using CohortGenerator and ATLAS, and saved as “RC_aphasia” in
-my own schema. In the <code>getDbCovariateData()</code> funtion, we need
+my own schema. In the <code><a href="https://rdrr.io/pkg/FeatureExtraction/man/getDbCovariateData.html" class="external-link">getDbCovariateData()</a></code> funtion, we need
 to provide information about the database connection
 (connectionDetails), the omop database data, the specific user schema to
 look in (<code>write_schema</code>). “subject_id” becomes the row for
@@ -131,10 +131,10 @@ covariates at the person level here. We can aggregate them in the next
 step.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This sets the covarate settings as the defaults</span></span>
-<span><span class="va">covariateSettings</span> <span class="op">&lt;-</span> <span class="fu">createDefaultCovariateSettings</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">covariateSettings</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/FeatureExtraction/man/createDefaultCovariateSettings.html" class="external-link">createDefaultCovariateSettings</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># This pulls the covariate data from the cohort table</span></span>
-<span><span class="va">covariateData</span> <span class="op">&lt;-</span> <span class="fu">getDbCovariateData</span><span class="op">(</span>connectionDetails <span class="op">=</span> <span class="va">connectionDetails</span>,</span>
+<span><span class="va">covariateData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/FeatureExtraction/man/getDbCovariateData.html" class="external-link">getDbCovariateData</a></span><span class="op">(</span>connectionDetails <span class="op">=</span> <span class="va">connectionDetails</span>,</span>
 <span>                                    cdmDatabaseSchema <span class="op">=</span> <span class="va">cdm_schema</span>,</span>
 <span>                                    cohortDatabaseSchema <span class="op">=</span> <span class="va">write_schema</span>,</span>
 <span>                                    cohortTable <span class="op">=</span> <span class="st">"RC_aphasia"</span>,</span>
@@ -147,38 +147,38 @@ step.</p>
 save it once its generated. We can do this using</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># save it like this. its an andromeda sql object, only nee dto do this once. </span></span>
-<span><span class="fu">saveCovariateData</span><span class="op">(</span><span class="va">covariateData</span>, <span class="st">"covariates"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/FeatureExtraction/man/saveCovariateData.html" class="external-link">saveCovariateData</a></span><span class="op">(</span><span class="va">covariateData</span>, <span class="st">"covariates"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># we can then load later if needed it like this.</span></span>
-<span><span class="va">covariateData</span> <span class="op">&lt;-</span> <span class="fu">loadCovariateData</span><span class="op">(</span><span class="st">"covariates"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">covariateData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/FeatureExtraction/man/loadCovariateData.html" class="external-link">loadCovariateData</a></span><span class="op">(</span><span class="st">"covariates"</span><span class="op">)</span></span></code></pre></div>
 <p>According to the documentation, we should ‘tidy up’ the covariates.
-We can do this using the <code>tidyCovariateData()</code> function.</p>
+We can do this using the <code><a href="https://rdrr.io/pkg/FeatureExtraction/man/tidyCovariateData.html" class="external-link">tidyCovariateData()</a></code> function.</p>
 <p><em>Normalize covariate values by dividing by the max and/or remove
 redundant covariates and/or remove infrequent covariates. For temporal
 covariates, redundancy is evaluated per time ID.</em></p>
 <p>Again, we’ll save the result since it can take a while.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#this tidies up the covariates but I'm not sure what to use it for...</span></span>
-<span><span class="va">tidyCovariates</span> <span class="op">&lt;-</span> <span class="fu">tidyCovariateData</span><span class="op">(</span><span class="va">covariateData</span>,</span>
+<span><span class="va">tidyCovariates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/FeatureExtraction/man/tidyCovariateData.html" class="external-link">tidyCovariateData</a></span><span class="op">(</span><span class="va">covariateData</span>,</span>
 <span>                                    minFraction <span class="op">=</span> <span class="fl">0.001</span>,</span>
 <span>                                    normalize <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                                    removeRedundancy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># aggregates summary statistics for table 1.</span></span>
-<span><span class="va">covariateData.agg</span> <span class="op">&lt;-</span> <span class="fu">aggregateCovariates</span><span class="op">(</span><span class="va">covariateData</span><span class="op">)</span></span>
-<span><span class="fu">saveCovariateData</span><span class="op">(</span><span class="va">covariateData.agg</span>, <span class="st">"covariates_agg"</span><span class="op">)</span></span>
+<span><span class="va">covariateData.agg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/FeatureExtraction/man/aggregateCovariates.html" class="external-link">aggregateCovariates</a></span><span class="op">(</span><span class="va">covariateData</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/FeatureExtraction/man/saveCovariateData.html" class="external-link">saveCovariateData</a></span><span class="op">(</span><span class="va">covariateData.agg</span>, <span class="st">"covariates_agg"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># we can load it later like this:</span></span>
-<span><span class="va">covariateData.agg</span> <span class="op">&lt;-</span> <span class="fu">loadCovariateData</span><span class="op">(</span><span class="st">"covariates_agg"</span><span class="op">)</span></span></code></pre></div>
-<p>Finally, we can use the <code>createTable1()</code> function to put
+<span><span class="va">covariateData.agg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/FeatureExtraction/man/loadCovariateData.html" class="external-link">loadCovariateData</a></span><span class="op">(</span><span class="st">"covariates_agg"</span><span class="op">)</span></span></code></pre></div>
+<p>Finally, we can use the <code><a href="https://rdrr.io/pkg/FeatureExtraction/man/createTable1.html" class="external-link">createTable1()</a></code> function to put
 it all in a Table 1. I found that I prefer to have once column output. I
 haven’t found a terribly satisfying way of getting the results out in a
 nicely formatted table, so for now I’ve just saved it as a .csv file and
 formatted in excel.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">createTable1</span><span class="op">(</span><span class="va">covariateData.agg</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/FeatureExtraction/man/createTable1.html" class="external-link">createTable1</a></span><span class="op">(</span><span class="va">covariateData.agg</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span>, right <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">createTable1</span><span class="op">(</span><span class="va">covariateData.agg</span>, output <span class="op">=</span> <span class="st">"one column"</span><span class="op">)</span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/FeatureExtraction/man/createTable1.html" class="external-link">createTable1</a></span><span class="op">(</span><span class="va">covariateData.agg</span>, output <span class="op">=</span> <span class="st">"one column"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">result</span>, <span class="st">"covariates.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
   </div>
 

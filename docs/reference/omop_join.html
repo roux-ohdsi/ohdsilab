@@ -80,6 +80,8 @@ the following two lines at the top of your script after setting the schema and c
 <span>  <span class="va">type</span>,</span>
 <span>  con <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"con.default.value"</span><span class="op">)</span>,</span>
 <span>  schema <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x_as <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  y_as <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -106,6 +108,14 @@ the following two lines at the top of your script after setting the schema and c
 <dd><p>defaults to the schema you set with options()</p></dd>
 
 
+<dt>x_as</dt>
+<dd><p>optional; a string for the name of the left table</p></dd>
+
+
+<dt>y_as</dt>
+<dd><p>optional; a string for the name of the right table</p></dd>
+
+
 <dt>...</dt>
 <dd><p>arguments passed on to the join function. e.g., by = "person_id"</p></dd>
 
@@ -120,9 +130,9 @@ the following two lines at the top of your script after setting the schema and c
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>con.default.value <span class="op">=</span> <span class="va">con</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'con' not found</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in options(con.default.value = con):</span> object 'con' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>schema.default.value <span class="op">=</span> <span class="va">cdm_schema</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'cdm_schema' not found</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in options(schema.default.value = cdm_schema):</span> object 'cdm_schema' not found</span>
 <span class="r-in"><span><span class="va">obs_tbl</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">omop_join</span><span class="op">(</span><span class="st">"person"</span>, type <span class="op">=</span> <span class="st">"left"</span>, by <span class="op">=</span> <span class="st">"person_id"</span><span class="op">)</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in omop_join(obs_tbl, "person", type = "left", by = "person_id"):</span> Provide `con` as an argument or default with `options(con.default.value = ...)`</span>

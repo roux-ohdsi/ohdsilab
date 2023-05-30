@@ -10,6 +10,8 @@ omop_join(
   type,
   con = getOption("con.default.value"),
   schema = NULL,
+  x_as = NULL,
+  y_as = NULL,
   ...
 )
 }
@@ -23,6 +25,10 @@ omop_join(
 \item{con}{defaults to the connection you set with options()}
 
 \item{schema}{defaults to the schema you set with options()}
+
+\item{x_as}{optional; a string for the name of the left table}
+
+\item{y_as}{optional; a string for the name of the right table}
 
 \item{...}{arguments passed on to the join function. e.g., by = "person_id"}
 }

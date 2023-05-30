@@ -27,7 +27,7 @@
 #' obs_tbl |>
 #'   omop_join("person", type = "left", by = "person_id")
 #'
-omop_join2 <- function(data,
+omop_join <- function(data,
                       table,
                       type,
                       con = getOption("con.default.value"),

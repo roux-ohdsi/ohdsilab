@@ -14,6 +14,8 @@
 #' @param con defaults to the connection you set with options()
 #' @param schema defaults to the schema you set with options()
 #' @param ... arguments passed on to the join function. e.g., by = "person_id"
+#' @param x_as optional; a string for the name of the left table
+#' @param y_as optional; a string for the name of the right table
 #'
 #' @return more sql query info stuff
 #' @export
@@ -25,26 +27,16 @@
 #' obs_tbl |>
 #'   omop_join("person", type = "left", by = "person_id")
 #'
-omop_join <- function(data,
+omop_join2 <- function(data,
                       table,
                       type,
                       con = getOption("con.default.value"),
                       schema = NULL,
-                      ...){
+                      x_as = NULL,
+											y_as = NULL,
+											...){
 
   if (is.null(con)) stop("Provide `con` as an argument or default with `options(con.default.value = ...)`")
-
-	if (!hasArg(x_as)) {
-		x_as_ <- paste(sample(letters, 10, TRUE), collapse = "")
-		} else{
-		x_as_ <- eval.parent(match.call()[["x_as"]])
-	}
-
-	if (!hasArg(y_as)) {
-		y_as_ <- paste(sample(letters, 10, TRUE), collapse = "")
-	} else{
-		y_as_ <- eval.parent(match.call()[["y_as"]])
-	}
 
 	# allow for use in AoU
   # first argument assigns the schema as a default, or NULL if not set
@@ -55,7 +47,9 @@ omop_join <- function(data,
 	# stop("Provide `schema` as an argument or default with `options(schema.default.value = ...)`")
 
   get(paste(type, "join", sep = "_"))(data, tbl(con, paste0(schema, table)),
-                                      x_as = x_as_,
-                                      y_as = y_as_, ...)
+                                      x_as = if (missing(x_as)) {paste(sample(letters, 10, TRUE), collapse = "")} else {x_as},
+                                      y_as = if (missing(y_as)) {paste(sample(letters, 10, TRUE), collapse = "")} else {y_as},
+                                      ...)
 
 }
+

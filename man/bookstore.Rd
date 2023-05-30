@@ -4,7 +4,7 @@
 \alias{bookstore}
 \title{Function to Install and Load R Packages}
 \usage{
-bookstore(package_names)
+bookstore(package_names, quietly = TRUE)
 }
 \arguments{
 \item{package_names}{a character vector of package names from CRAN or github}

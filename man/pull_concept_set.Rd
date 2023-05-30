@@ -15,7 +15,8 @@ pull_concept_set(
   keep_all = FALSE,
   con = getOption("con.default.value"),
   atlas_url = getOption("atlas_url.default.value"),
-  write_schema = getOption("write_schema.default.value")
+  write_schema = getOption("write_schema.default.value"),
+  ...
 )
 }
 \arguments{

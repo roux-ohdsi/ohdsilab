@@ -23,7 +23,8 @@ Imports:
     tidyr,
     tibble,
     cli,
-    remotes
+    remotes,
+    janitor
 Suggests: 
     knitr,
     rmarkdown,

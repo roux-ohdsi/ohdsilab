@@ -16,10 +16,15 @@ str_insert(x, pos, insert)
 \item{insert}{what to insert}
 }
 \value{
+the character with the inserted string
+
 icd code with a period
 }
 \description{
 Useful for inserting periods in icd9 codes when they come without.
 
 Useful for inserting periods in icd9 codes when they come without.
+}
+\examples{
+str_insert("100", 2, ".")
 }

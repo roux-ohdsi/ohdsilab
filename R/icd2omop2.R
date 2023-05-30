@@ -18,7 +18,7 @@
 #'
 #' @return a dataframe of icd, SNOMED, and OMOP concept codes
 #' @export
-icd2omop2 <- function(db_con,
+icd2omop <- function(db_con,
                      codes,
                      cdm_schema = NULL,
                      icd_wildcard = "x",

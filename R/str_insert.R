@@ -3,11 +3,13 @@
 #'@description Useful for inserting periods in icd9 codes when they come without.
 #'
 #' @param x a character or character vector
-#' @param pos what position in the string to insert
+#' @param pos after which position in the string to insert
 #' @param insert what to insert
 #'
-#' @return icd code with a period
+#' @return the character with the inserted string
 #' @export
+#'
+#' @examples str_insert("100", 2, ".")
 str_insert <- function(x, pos, insert) {       # Create own function
 
   gsub(paste0("^(.{", pos, "})(.*)$"),
@@ -18,7 +20,7 @@ str_insert <- function(x, pos, insert) {       # Create own function
 
 #' Add periods to icd numbers
 #'
-#' @description Useful for when icd9 numbers come without periods. used ina pipe chain
+#' @description Useful for when icd9 numbers come without periods
 #'
 #' @param data dataframe or tibble
 #' @param icd_column name of column to fix
@@ -26,6 +28,7 @@ str_insert <- function(x, pos, insert) {       # Create own function
 #'
 #' @return the same dataframe overwriting the column with icd9
 #' @export
+#'
 icd_periods <- function(data, icd_column, overwrite = TRUE){
 
 

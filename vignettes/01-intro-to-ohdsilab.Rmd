@@ -16,13 +16,20 @@ knitr::opts_chunk$set(
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
-This package is intended to streamline working with the Ohdsilab pharmetrics data
-at the Roux Institute and other OMOP CDM databases (e.g., AllofUs). It contains some functions and template code using 
-existing OHDSI R packages like {DatabaseConnector} as well as standard R packages
-like {dplyr} and {tidyr}. This vignette will walk through some of the
-basic tools in ohdsilab.
+The goals of the ohdsilab R package are two fold: (1) To streamline working with
+the OHDSI-Lab data at the Roux Institute (and other OMOP CDM databases) and (2)
+To provde an easier onramp for students and researchers new to working with the OMOP CDM or SQL 
+databases. To do this, the package contains functions and template code snippets to facilitate easier use
+of the Ohdsilab. These functions and snippits build on existing OHDSI R packages like
+{DatabaseConnector} as well as standard R packages like {dplyr} and {tidyr}. The package also contains
+a number of vingettes intended for R users who are new to OHDSI-Lab, the OMOP CDM, or working with 
+data in SQL databases from R. 
 
 ## Installation
+
+***For OHDSI-Lab users, we strongly recommend using the {renv} R package to install ohdsilab and
+all other packages on your OHDSI-Lab Box/Workspace. Installation without {renv} is likely to fail
+due to permission restrictions. A guide to using {renv} is here: https://rstudio.github.io/renv/articles/renv.html.***
 
 Installation only needs to be done once, unless you are updating the package. 
 
@@ -31,9 +38,16 @@ install.packages("remotes")
 remotes::install_github("roux-ohdsi/ohdsilab")
 ```
 
-If you want to also install OHDSI packages (e.g., DatabaseConnector), set dependencies = "Suggests". This is not recommended if you're on the AllofUs workbench as these packages take a while to install and are not as useful with the AllofUs data. 
+or with {renv}:
 
 ```{r}
+renv::install("roux-ohdsi/ohdsilab")
+```
+
+If you want to also install OHDSI packages (e.g., DatabaseConnector), set dependencies = "Suggests". This is recommended unless you are working on the AllofUs Researcher workbench as these packages take a while to install and are not terribly useful with the AllofUs database setup. 
+
+```{r}
+# using {remotes}
 remotes::install_github("roux-ohdsi/ohdsilab", dependencies = "Suggests")
 ```
 
@@ -74,39 +88,39 @@ In the works:
 - ohdsi_api_auth
 - ohdsi_api_cohort_definition
 
-## Functions
+<!-- ## Functions -->
 
-These are in development and being updated frequently. 
+<!-- These are in development and being updated frequently.  -->
 
 
-- `dbi_collect()` is a different version of the `collect()` function that uses DBI instead of dbplyr. There are
-occasional errors with the `collect()` function where not all rows of the query are returned because the query
-times out. In these cases, use the `dbi_collect()` function. 
-- `rb()` is a function to "ROLLBACK" in redshift SQL. This is necessary when there is a mistake in the dbplyr generated
-SQL code. You can use `rb()` instead of disconnecting and reconnecting to the database.
-- `insertTable_chunks()` writes a table to your user schema in chunks to reduce writing time.
+<!-- - `dbi_collect()` is a different version of the `collect()` function that uses DBI instead of dbplyr. There are -->
+<!-- occasional errors with the `collect()` function where not all rows of the query are returned because the query -->
+<!-- times out. In these cases, use the `dbi_collect()` function.  -->
+<!-- - `rb()` is a function to "ROLLBACK" in redshift SQL. This is necessary when there is a mistake in the dbplyr generated -->
+<!-- SQL code. You can use `rb()` instead of disconnecting and reconnecting to the database. -->
+<!-- - `insertTable_chunks()` writes a table to your user schema in chunks to reduce writing time. -->
 
-- `omop_join()` is a shortcut for a join from an existing query (e.g., a dplyr pipe chunk) to an omop table without
-having to reference the connection and schema. 
+<!-- - `omop_join()` is a shortcut for a join from an existing query (e.g., a dplyr pipe chunk) to an omop table without -->
+<!-- having to reference the connection and schema.  -->
 
-- `icd2omop()` and `icd2omop2()` map a dataframe or vector of icd 9 or 10 codes to OMOP concept codes
-- `cpt2omop()` maps a vector of cpt codes to omop concept codes. It can be used for any standardized vocabulary,
-not just CPT4. (ICD9/10 are not considered standardized)
-- `str_insert()` and `icd_periods()` help to insert periods into icd codes when they come without. This
-is typically a necessary step before mapping to OMOP codes. 
+<!-- - `icd2omop()` and `icd2omop2()` map a dataframe or vector of icd 9 or 10 codes to OMOP concept codes -->
+<!-- - `cpt2omop()` maps a vector of cpt codes to omop concept codes. It can be used for any standardized vocabulary, -->
+<!-- not just CPT4. (ICD9/10 are not considered standardized) -->
+<!-- - `str_insert()` and `icd_periods()` help to insert periods into icd codes when they come without. This -->
+<!-- is typically a necessary step before mapping to OMOP codes.  -->
 
-- `aou_connect()`, `aou_ls()`, `aou_retrieve_from_bucket()`, and `aou_save_to_bucket()` are useful for
-streamlining common code in the AllofUs workbench.
-- `bookstore()` checks to see if packages are installed before loading them via `library()`. This is experimental
-and could be used in place of `install.packages()` + `library()`. 
+<!-- - `aou_connect()`, `aou_ls()`, `aou_retrieve_from_bucket()`, and `aou_save_to_bucket()` are useful for -->
+<!-- streamlining common code in the AllofUs workbench. -->
+<!-- - `bookstore()` checks to see if packages are installed before loading them via `library()`. This is experimental -->
+<!-- and could be used in place of `install.packages()` + `library()`.  -->
 
-## Connecting to the database
+## Connecting to a database
 
-If this is the first time connecting on your computer (your local machine with the VPN on or using the Amazon Box), you'll need to set your credientials before
+If this is the first time connecting on your computer (i.e., your virual machine using the Amazon Workspaces), you'll need to set your credientials before
 it will work. The snippet ohdsi_creds will create that code for you. When you
 run each line, it'll generate a pop up where you can enter your database/ohdsilab
 username (something like usr999) and your password (which is in your email). After
-setting the credentials, you shouldn't have to do it again very often. 
+setting the credentials, you shouldn't have to do it again. 
 
 ```{r}
 # Credentials
@@ -182,8 +196,9 @@ This code is looking for the concept table in the pharmetrics schema which is in
 the ohdsilab database. You can also see the concept table in the orange box
 labelled "Standardized Vocabularies" in the picture above. 
 
-You also have your own schema where you can save information pertinent to your studies.
-If you were usr999, you could access a table (that you create) like this:
+You also have your own schema (sometimes called your "scratchpad")
+where you can save information pertinent to your studies.
+If you were usr999, you could access a table (that you have previously created) like this:
 
 ```{r}
   dplyr::tbl(
@@ -204,7 +219,7 @@ dplyr::tbl(
     con,
     DatabaseConnector::inDatabaseSchema("usr999", "myCohort")
   ) |> 
-  inner_join(
+  dplyr::inner_join(
     tbl(
       con,
       DatabaseConnector::inDatabaseSchema("omop_cdm_53_pmtx_202203", "person")
@@ -229,7 +244,7 @@ dplyr::tbl(
     con,
     DatabaseConnector::inDatabaseSchema(write_schema, "myCohort")
   ) |> 
-  inner_join(
+  dplyr::inner_join(
     tbl(
       con,
       DatabaseConnector::inDatabaseSchema(cdm_schema, "person")
@@ -238,20 +253,24 @@ dplyr::tbl(
   )
 ```
 
-That's still a lot right? This is where the `omop_join()` function can help streamline your code. 
-It's just a wrapper for the dplyr `join` functions. 
+This can still be quite a bit of code for each join. Additionally, there are some known
+bugs with using the dplyr *_join functions with our redshift database isntances. For these reasons, 
+we recommend that you use the `ohdsilab::omop_join()` function can help streamline your code. 
+It's a wrapper for the dplyr `join` functions that also includes some workarounds for a few known
+bugs in the backround so that you don't have to worry about them as much. 
 
 ```{r}
 dplyr::tbl(
     con,
     DatabaseConnector::inDatabaseSchema(write_schema, "myCohort")
   ) |>
-  omop_join("person", type = "inner", by = "person_id")
+  ohdsilab::omop_join("person", type = "inner", by = "person_id")
 ```
 
 It works because we set the default connection and cdm_schema using these lines of code from the
 ohdsi_new_script snippet. The `omop_join()` function will look for these defaults first, 
-and if it doesn't find them (because you didn't run these two lines), will let you know you need to provide them directly. 
+and if it doesn't find them (because you didn't run these two lines), will let you know you need to provide them directly. Note that if you want to point omop_join() to your user scratchpad, you only
+need to set `schema = write_schema`.
 
 ```{r}
 options(con.default.value = con)

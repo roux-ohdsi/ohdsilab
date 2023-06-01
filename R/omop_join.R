@@ -59,7 +59,11 @@ omop_join <- function(data,
   # first argument assigns the schema as a default, or NULL if not set
   # second if adds a period to the schema
   if (is.null(schema)) schema <- getOption("schema.default.value")
-  if (!is.null(schema)) schema <- paste0(schema, ".")
+  if (!is.null(schema)) {
+  	schema <- paste0(schema, ".")
+  } else if(grepl("redshift", con@dbms)) {
+  	stop("Missing schema. Either provide a schema or set options(schema.default.value = cdm_schema).")
+  }
 
   y_table = tbl(con, paste0(schema, table))
   shared_columns = intersect(colnames(data), colnames(y_table))

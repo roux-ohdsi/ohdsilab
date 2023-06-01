@@ -30,7 +30,14 @@ options(schema.default.value = cdm_schema)
 # ==============================================================================
 
 tbl(con, inDatabaseSchema(my_schema, "hiv_blom")) |>
-	omop_join2("condition_occurrence", type = "inner", by = c("subject_id" = "person_id")
-						 , x_as = "p1", y_as = "p2"
-						 ) |>
-	show_query()
+	rename(person_id = subject_id) |>
+	omop_join("condition_occurrence", type = "inner", by = "person_id") |>
+	omop_join("person", by = "person_id", type = "inner", suffix = c("_a", "_b"))
+
+c1 = colnames(tbl(con, inDatabaseSchema(cdm_schema, "condition_occurrence")))
+c2 = colnames(tbl(con, inDatabaseSchema(cdm_schema, "person")))
+
+c1[which(c1 %in% c2)]
+c2[which(c2 %in% c1)]
+
+intersect(c1, c2)

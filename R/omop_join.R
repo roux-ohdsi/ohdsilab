@@ -30,6 +30,8 @@
 omop_join <- function(data,
                       table,
                       type,
+											by,
+											suffix = c("_x", "_y"),
                       con = getOption("con.default.value"),
                       schema = NULL,
                       x_as = NULL,
@@ -44,12 +46,25 @@ omop_join <- function(data,
   if (is.null(schema)) schema <- getOption("schema.default.value")
   if (!is.null(schema)) schema <- paste0(schema, ".")
 
-	# stop("Provide `schema` as an argument or default with `options(schema.default.value = ...)`")
+  y_table = tbl(con, paste0(schema, table))
+  shared_columns = intersect(colnames(data), colnames(y_table))
 
-  get(paste(type, "join", sep = "_"))(data, tbl(con, paste0(schema, table)),
-                                      x_as = if (missing(x_as)) {paste(sample(letters, 10, TRUE), collapse = "")} else {x_as},
-                                      y_as = if (missing(y_as)) {paste(sample(letters, 10, TRUE), collapse = "")} else {y_as},
-                                      ...)
+  # stop("Provide `schema` as an argument or default with `options(schema.default.value = ...)`")
+
+  if(!all(sort(shared_columns) == sort(by)) & all(suffix == c("_x", "_y"))){
+  	w1 = "There are shared column names not specified in the `by` argument."
+  	w2 = "These column names now include `_x` and `_y`."
+  	w3 = "You can change this suffix using the `suffix` argument but it cannot contain periods (`.`)."
+  	w4 = "Consider specifing all shared columns in the `by` argument."
+  	w5 = "Or if these additional shared columns are `NA`, remove them prior to joining."
+  	warning(paste(w1, w2, w3, w4, w5, sep = "\n  "))
+  }
+
+  get(paste(type, "join", sep = "_"))(data, y_table,
+  																		x_as = if (missing(x_as)) {paste(sample(letters, 10, TRUE), collapse = "")} else {x_as},
+  																		y_as = if (missing(y_as)) {paste(sample(letters, 10, TRUE), collapse = "")} else {y_as},
+  																		by = by,
+  																		suffix = suffix,
+  																		...)
 
 }
-

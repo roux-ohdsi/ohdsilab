@@ -2,11 +2,11 @@ DBMS:
 redshift
 
 Error:
-com.amazon.redshift.util.RedshiftException: ERROR: permission denied for schema omop_cdm_synpuf_110k_531
+com.amazon.redshift.util.RedshiftException: ERROR: current transaction is aborted, commands ignored until end of transaction block
 
 SQL:
 SELECT *
-FROM omop_cdm_synpuf_110k_531.condition_occurrence AS q01
+FROM omop_cdm_53_pmtx_202203.person AS q06
 WHERE (0 = 1);
 
 R version:
@@ -25,7 +25,11 @@ Attached base packages:
 - base
 
 Other attached packages:
+- keyring (1.3.1)
+- dbplyr (2.3.2)
 - ohdsilab (0.1.0)
+- ROhdsiWebApi (1.3.3)
+- DatabaseConnector (6.2.1)
 - lubridate (1.9.2)
 - forcats (1.0.0)
 - stringr (1.5.0)
@@ -33,8 +37,6 @@ Other attached packages:
 - purrr (1.0.1)
 - readr (2.1.4)
 - tidyr (1.3.0)
-- tibble (3.2.0)
+- tibble (3.2.1)
 - ggplot2 (3.4.1)
 - tidyverse (2.0.0)
-- DatabaseConnector (6.1.0)
-- keyring (1.3.1)

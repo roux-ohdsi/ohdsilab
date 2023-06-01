@@ -53,15 +53,15 @@ remotes::install_github("roux-ohdsi/ohdsilab", dependencies = "Suggests")
 
 ## Load the ohdsilab package
 
-- it should also load {DatabaseConnector}, {keyring}, and other dependencies,
-but you might want to explicitly load them for transparency.
-
 ```{r setup}
 library(ohdsilab)
 library(tidyverse)
 library(DatabaseConnector)
 library(keyring)
 ```
+
+*`library(ohdsilab)` should also load {DatabaseConnector}, {keyring}, and other dependencies,
+but you might want to explicitly load them for transparency.*
 
 ## Snippets
 
@@ -277,35 +277,45 @@ options(con.default.value = con)
 options(schema.default.value = cdm_schema)
 ```
 
-Here's an example of how we can put all this information together. Try to run these
-chunks to make sure everything is working. 
+Here's a toy example of how we can put all this information together. We can extract
+all conditions for women born in 2002. Try to run these chunks to make sure everything is working. 
 
 ```{r}
-# pull data from the cohort table
-cohort <- tbl(con, paste(write_schema, "rc_aphasia", sep = ".")) |>
-  select(person_id = subject_id, cohort_start_date, cohort_end_date)
-
-# join to the person table to get information about demographics, calculate age at cohrt entry
-demographics <- cohort |> 
-  omop_join("person", type = "left", by = "person_id") |> 
-  select(person_id, cohort_start_date, cohort_end_date, year_of_birth, gender = gender_source_value) |> 
-  mutate(age_at_entry = year(cohort_start_date) - year_of_birth)
+# Start with a pointer to a table in the database. It could be in the cdm_schema
+# or in your user write_schema.
+female_2002 <- tbl(con, inDatabaseSchema(cdm_schema, "person")) |> 
+	# filter the data for women born in 2002
+	filter(year_of_birth == 2002, gender_source_value == "F") |> 
+	# select only the necessary columns
+	select(person_id) |> 
+	# join to the condition occurrence table using an inner join
+	omop_join("condition_occurrence", type = "inner", by = "person_id")
 
 ```
 
 ```{r}
 # run to see a preview of the top 10 rows
-demographics
+female_2002
 ```
 
 ```{r}
 # how many rows are in our data?
-tally(demographics)
+tally(female_2002)
 ```
 
-If you get an error from the database, you may have to "rollback" before running a new command. 
-This is a redshift dbms feature (or annoyance). You can easily do this using ohdsilab provided
-you've set the connection and schema default values above. 
+If you get an error from the database, you often will need to "rollback" before running a new command. The error that tells you that you need to "rollback" usually looks like this: 
+
+```
+Error in `db_query_fields.DBIConnection()`:
+! Can't query fields.
+Caused by error in `.createErrorReport()`:
+! Error executing SQL:
+com.amazon.redshift.util.RedshiftException: ERROR: current transaction is aborted, commands ignored until end of transaction block
+An error report has been created at .../errorReportSql.txt
+Run `rlang::last_trace()` to see where the error occurred.
+```
+
+A rollback is essentially like going back in time to a world before you ran the chunk of code that caused an error. You can easily do this using ohdsilab provided you've set the connection and schema default values above. 
 
 ```{r}
 rb()

@@ -26,6 +26,7 @@ seedQuery <- function(
 set_seed <- function(
 		seed,
 		con = getOption("con.default.value")) {
+	stopifnot("set_seed only works on redshift connections" = con@dbms == "redshift")
 	if(!between(seed, 0, 1)) stop("Error: seed must be between 0 and 1 inclusive")
 	DatabaseConnector::executeSql(con, paste0("set seed to ", seed, ";"))
 }

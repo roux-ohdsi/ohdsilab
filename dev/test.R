@@ -34,6 +34,11 @@ tbl(con, inDatabaseSchema(my_schema, "hiv_blom")) |>
 	omop_join("condition_occurrence", type = "inner", by = "person_id") |>
 	omop_join("person", by = "person_id", type = "inner", suffix = c("_a", "_b"))
 
+tbl(con, inDatabaseSchema(cdm_schema, "person")) |>
+	filter(year_of_birth == 2002, gender_source_value == "F") |>
+	select(person_id) |>
+	omop_join("condition_occurrence", type = "inner", by = "person_id")
+
 c1 = colnames(tbl(con, inDatabaseSchema(cdm_schema, "condition_occurrence")))
 c2 = colnames(tbl(con, inDatabaseSchema(cdm_schema, "person")))
 

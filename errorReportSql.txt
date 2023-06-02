@@ -2,12 +2,10 @@ DBMS:
 redshift
 
 Error:
-com.amazon.redshift.util.RedshiftException: ERROR: relation "condition_occurrence" does not exist
+com.amazon.redshift.util.RedshiftException: An I/O error occurred while sending to the backend.
 
 SQL:
-SELECT *
-FROM condition_occurrence AS q05
-WHERE (0 = 1);
+set seed to 0.5
 
 R version:
 R version 4.2.2 (2022-10-31)

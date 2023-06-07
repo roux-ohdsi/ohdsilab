@@ -64,6 +64,9 @@
     <li>
       <a href="articles/05-working-in-allofus.html">Intro to the AllofUs Workbench</a>
     </li>
+    <li>
+      <a href="articles/getting-started-with-box.html">Getting Started with the OHDSI-Lab Box</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -85,20 +88,20 @@
 <h3 id="ohdsilab-tools-for-using-the-roux-ohdsilab-at-northeastern-university">ohdsilab: Tools for using the Roux ohdsilab at Northeastern University.<a class="anchor" aria-label="anchor" href="#ohdsilab-tools-for-using-the-roux-ohdsilab-at-northeastern-university"></a>
 </h3>
 <hr>
-<!-- badges: start --><!-- badges: end --><p>The ohdsilab package includes useful functions and basic tutorials for working with ohdsilab data at Northeastern University’s OHDSI center.</p>
-<div class="section level4">
-<h4 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h4>
-<p>You can install the development version of ohdsilab from <a href="https://github.com/roux-ohdsi/ohdsilab" class="external-link">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># only need to run once</span></span>
-<span><span class="co"># install.packages("remotes")</span></span>
-<span></span>
-<span><span class="co"># install ohdsilab</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"roux-ohdsi/ohdsilab"</span><span class="op">)</span></span></code></pre></div>
-<p>See the vignette “Introduction to ohdsilab” for help getting started. There are other additional vignettes on using CohortGenerator, FeatureExtraction, and some example datawrangling using the OMOP tables and Ohdsilab.</p>
-<p>Future Vignettes will include using ATHENA, using ATLAS, and examples of using the All of Us Researcher Workbench.</p>
+<!-- badges: start --><!-- badges: end --><p>The goals of the ohdsilab R package are two fold: (1) To streamline working with the OHDSI-Lab data at the Roux Institute (and other OMOP CDM databases) and (2) To provde an easier onramp for students and researchers new to working with the OMOP CDM or SQL databases. To do this, the package contains functions and template code snippets to facilitate easier use of the Ohdsilab. These functions and snippits build on existing OHDSI R packages like {DatabaseConnector} as well as standard R packages like {dplyr} and {tidyr}. The package also contains a number of vingettes intended for R users who are new to OHDSI-Lab, the OMOP CDM, or working with data in SQL databases from R.</p>
 </div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p><strong><em>For OHDSI-Lab users, we strongly recommend using the {renv} R package to install ohdsilab and all other packages on your OHDSI-Lab Box/Workspace. Installation without {renv} is likely to fail due to permission restrictions. A guide to using {renv} is here: <a href="https://rstudio.github.io/renv/articles/renv.html" class="external-link uri">https://rstudio.github.io/renv/articles/renv.html</a>.</em></strong></p>
+<p>Installation only needs to be done once, unless you are updating the package.</p>
+<pre class="{r}"><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"roux-ohdsi/ohdsilab"</span><span class="op">)</span></span></code></pre>
+<p>or with {renv}:</p>
+<pre class="{r}"><code><span><span class="fu">renv</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/renv/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"roux-ohdsi/ohdsilab"</span><span class="op">)</span></span></code></pre>
+<p>If you want to also install OHDSI packages (e.g., DatabaseConnector), set dependencies = “Suggests”. This is recommended unless you are working on the AllofUs Researcher workbench as these packages take a while to install and are not terribly useful with the AllofUs database setup.</p>
+<pre class="{r}"><code><span><span class="co"># using {remotes}</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"roux-ohdsi/ohdsilab"</span>, dependencies <span class="op">=</span> <span class="st">"Suggests"</span><span class="op">)</span></span></code></pre>
 </div>
 
   </div>

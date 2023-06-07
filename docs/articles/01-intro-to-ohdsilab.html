@@ -64,6 +64,9 @@
     <li>
       <a href="../articles/05-working-in-allofus.html">Intro to the AllofUs Workbench</a>
     </li>
+    <li>
+      <a href="../articles/getting-started-with-box.html">Getting Started with the OHDSI-Lab Box</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -127,16 +130,14 @@ setup.</p>
 <div class="section level2">
 <h2 id="load-the-ohdsilab-package">Load the ohdsilab package<a class="anchor" aria-label="anchor" href="#load-the-ohdsilab-package"></a>
 </h2>
-<ul>
-<li>it should also load {DatabaseConnector}, {keyring}, and other
-dependencies, but you might want to explicitly load them for
-transparency.</li>
-</ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://roux-ohdsi.github.io/ohdsilab/" class="external-link">ohdsilab</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/DatabaseConnector/" class="external-link">DatabaseConnector</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-lib.github.io/keyring/index.html" class="external-link">keyring</a></span><span class="op">)</span></span></code></pre></div>
+<p><em><code><a href="https://roux-ohdsi.github.io/ohdsilab/" class="external-link">library(ohdsilab)</a></code> should also load
+{DatabaseConnector}, {keyring}, and other dependencies, but you might
+want to explicitly load them for transparency.</em></p>
 </div>
 <div class="section level2">
 <h2 id="snippets">Snippets<a class="anchor" aria-label="anchor" href="#snippets"></a>
@@ -344,7 +345,7 @@ you need to “rollback” usually looks like this:</p>
 Caused by error in `.createErrorReport()`:
 ! Error executing SQL:
 com.amazon.redshift.util.RedshiftException: ERROR: current transaction is aborted, commands ignored until end of transaction block
-An error report has been created at  /Users/robcavanaugh/Documents/Github/ohdsilab/errorReportSql.txt
+An error report has been created at .../errorReportSql.txt
 Run `rlang::last_trace()` to see where the error occurred.</code></pre>
 <p>A rollback is essentially like going back in time to a world before
 you ran the chunk of code that caused an error. You can easily do this

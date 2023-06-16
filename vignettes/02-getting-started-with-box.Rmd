@@ -24,7 +24,7 @@ library(ohdsilab)
 
 When you click connect, it will send a push to your DUO, make sure to click confirm on your device.
 
-![](images/vpn-connect.png){width="65%"}
+![](images/vpn-connect.png){width="35%"}
 
 ## 2. Load Amazon WorkSpaces
 

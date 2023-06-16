@@ -1,7 +1,7 @@
 ---
 title: "Getting Started with the OHDSI-Lab Box"
 output: rmarkdown::html_vignette
-author: Lucy 
+author: Wanjiang (Lucy) Wang 
 vignette: >
   %\VignetteIndexEntry{Getting Started with the OHDSI-Lab Box}
   %\VignetteEngine{knitr::rmarkdown}

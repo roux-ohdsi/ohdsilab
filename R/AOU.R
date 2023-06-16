@@ -120,8 +120,8 @@ aou_ls_workspace <- function(pattern = "*.csv"){
 #' @examples
 #' \dontrun{
 #' tobacco <- pull_concepts(cohort, concepts = 1157, start_date = covariate_start_date,
-#'  end_date = cohort_start_date, name = "tobacco"
-#'  )}
+#'  end_date = cohort_start_date, name = "tobacco")
+#'  }
 #'
 aou_pull_concepts <- function(cohort,
 															concepts,

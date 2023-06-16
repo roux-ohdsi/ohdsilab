@@ -3,10 +3,10 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   01-intro-to-ohdsilab: 01-intro-to-ohdsilab.html
-  02-Generating-a-cohort: 02-Generating-a-cohort.html
-  03-feature-extraction-covariates: 03-feature-extraction-covariates.html
-  04-working-with-omop-cdm: 04-working-with-omop-cdm.html
-  05-working-in-allofus: 05-working-in-allofus.html
-  getting-started-with-box: getting-started-with-box.html
-last_built: 2023-06-07T16:05Z
+  02-getting-started-with-box: 02-getting-started-with-box.html
+  03-Generating-a-cohort: 03-Generating-a-cohort.html
+  04-feature-extraction-covariates: 04-feature-extraction-covariates.html
+  05-working-with-omop-cdm: 05-working-with-omop-cdm.html
+  06-working-in-allofus: 06-working-in-allofus.html
+last_built: 2023-06-16T14:30Z
 

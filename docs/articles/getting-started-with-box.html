@@ -84,6 +84,7 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Getting Started with the OHDSI-Lab Box</h1>
+                        <h4 data-toc-skip class="author">Lucy</h4>
             
       
       
@@ -93,13 +94,97 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://roux-ohdsi.github.io/ohdsilab/" class="external-link">ohdsilab</a></span><span class="op">)</span></span></code></pre></div>
+<div class="section level2">
+<h2 id="connect-to-northeastern-vpn">1. Connect to Northeastern VPN<a class="anchor" aria-label="anchor" href="#connect-to-northeastern-vpn"></a>
+</h2>
+<p>When you click connect, it will send a push to your DUO, make sure to
+click confirm on your device.</p>
+<p><img src="images/vpn-connect.png" style="width:65.0%"></p>
+</div>
+<div class="section level2">
+<h2 id="load-amazon-workspaces">2. Load Amazon WorkSpaces<a class="anchor" aria-label="anchor" href="#load-amazon-workspaces"></a>
+</h2>
+<p>Open Amazon WorkSpaces on your laptop and log in to your account. The
+registration code is included in the email.</p>
+<p>It may take some time to start the WorkSpace, please be patient.</p>
+<p><img src="images/AWS-log-in.png" style="width:65.0%"></p>
+<p>After you log in, you will receive an email from OHDSI.</p>
+<p><img src="images/email.png" style="width:65.0%"></p>
+<p>After logging in, your WorkSpace should look like this.</p>
+<p><img src="images/workspace.png" style="width:65.0%"></p>
+</div>
+<div class="section level2">
+<h2 id="create-concept-sets">3. Create concept sets<a class="anchor" aria-label="anchor" href="#create-concept-sets"></a>
+</h2>
+<p>Now, you can start creating your concept sets and cohort.</p>
+<p>When you try to create a concept set, it is recommended to open
+Athena on the side (<a href="https://athena.ohdsi.org/search-terms/start" class="external-link uri">https://athena.ohdsi.org/search-terms/start</a>).</p>
+<p><img src="images/Athena.png" style="width:65.0%"></p>
+<p>Begin your search by exploring the concept you desire using
+Athena.</p>
+<p>For example, if you want to create a concept set related to
+“aspirin”, you can begin with searching “aspirin” in Athena.</p>
+<p><img src="images/aspirin.png" style="width:65.0%"></p>
+<p>We have a comprehensive list of items here, and to make the process
+more manageable, let’s start by focusing on [standard concept]. If you
+don’t find what you’re looking for within this category, we can expand
+our search to include all items later on. This approach will help
+streamline the workload and ensure we cover everything effectively.</p>
+<p><img src="images/aspirin-standard.png" style="width:65.0%"></p>
+<p>Now, let’s click on the first item to view its details. Additionally,
+you have the option to select ‘hierarchy’ to explore the related parent
+and children concepts. This will give you a better understanding of what
+you may want to include. Once you have a brief idea, you can proceed to
+ATLAS.</p>
+</div>
+<div class="section level2">
+<h2 id="move-on-to-atlas">4. Move on to ATLAS<a class="anchor" aria-label="anchor" href="#move-on-to-atlas"></a>
+</h2>
+<p>You can open OHDSI ATLAS and sign in to your account, using the user
+name and password given by the email.</p>
+<p><img src="images/ATLAS.png" style="width:65.0%"></p>
+<p>You begin with clicking “New Concept Set”.</p>
+<p><img src="images/new-concept-set.png" style="width:65.0%"></p>
+<p>Then you type in your concept name, and click save button.</p>
+<p>Then go to “search”, type in the item you want. Notice, when you are
+creating the concept set, the cart symbol next to the Concept Set would
+be green.</p>
+<p>In ATLAS, you have two search options: you can either search using
+the concept ID you obtained from Athena, or you can directly search for
+a term like ‘Aspirin’ in this case. It’s important to note that the
+layout and order of items may vary between Athena and ATLAS.</p>
+<p><img src="images/aspirin-atlas.png" style="width:65.0%"></p>
+<p>You can also choose Standard Concept here.</p>
+<p>You can sort the results by DRC (descendant record count) or RC
+(record count). Then you click on the item, and you can see the
+hierarchy.</p>
+<p><img src="images/hier.png" style="width:65.0%"></p>
+<p>Then you can choose this item, and if it has children concepts, and
+you think you also need them, you can also click the Descendants option,
+then add to the concept. If there are some items you don’t want to
+include, you can choose the Exclude option.</p>
+<p>You can click the save button again.</p>
+<p><img src="images/finish.png" style="width:65.0%"></p>
+<p>If there are other item you want to include, you can go back to
+search. Otherwise, you click the close button.</p>
+<p>Now, you have already successfully created a concept set.</p>
+</div>
+<div class="section level2">
+<h2 id="other-resources">Other Resources<a class="anchor" aria-label="anchor" href="#other-resources"></a>
+</h2>
+<p>I recommend you to watch following videos for more details about
+concept sets and cohort:</p>
+<p><a href="https://youtu.be/mfjxNwn3KkM" class="external-link uri">https://youtu.be/mfjxNwn3KkM</a></p>
+<p><a href="https://youtu.be/2_JsAAFExMU" class="external-link uri">https://youtu.be/2_JsAAFExMU</a></p>
+<p><a href="https://youtu.be/JQFGedOaNiw" class="external-link uri">https://youtu.be/JQFGedOaNiw</a></p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 

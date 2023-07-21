@@ -61,7 +61,7 @@ icd2omop <- function(codes,
   }
 
   target_codes <- dplyr::tbl(con, concept) %>%
-    dplyr::filter(standard_concept = "S") %>%
+    dplyr::filter(standard_concept == "S") %>%
     dplyr::select(concept_id, target_concept_name = concept_name, target_vocabulary_id = vocabulary_id)
 
   relationships <- dplyr::tbl(con, concept_relationship) %>%

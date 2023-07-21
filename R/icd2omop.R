@@ -17,7 +17,7 @@
 #' @return a dataframe of the target and source codes, and the original codes to be matched (`orig_code`). If collect = FALSE, a reference to the SQL query.
 #' @export
 icd2omop <- function(codes,
-                     icd_wildcard = "x",
+                     source_wildcard = "x",
                      dbms_wildcard = "%",
                      translate_from = "ICD9CM",
                      translate_to = "SNOMED",
@@ -28,9 +28,9 @@ icd2omop <- function(codes,
                      ...){
 
   codes_df <- data.frame(orig_code = codes,
-                         orig_code_wild = stringr::str_replace_all(codes, paste0(icd_wildcard, "+"), dbms_wildcard))
+                         orig_code_wild = stringr::str_replace_all(codes, paste0(source_wildcard, "+"), dbms_wildcard))
 
-  if(!is.null(cdm_schema)){
+  if (!is.null(cdm_schema)) {
     concept = paste0(cdm_schema, ".concept")
     concept_relationship = paste0(cdm_schema, ".concept_relationship")
   } else {

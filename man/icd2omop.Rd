@@ -6,10 +6,9 @@
 \usage{
 icd2omop(
   codes,
-  icd_wildcard = "x",
+  source_wildcard = "x",
   dbms_wildcard = "\%",
   translate_from = "ICD9CM",
-  translate_to = "SNOMED",
   collect = TRUE,
   overwrite = TRUE,
   con = getOption("con.default.value"),
@@ -20,11 +19,11 @@ icd2omop(
 \arguments{
 \item{codes}{vector of source codes with or without wildcards}
 
+\item{source_wildcard}{wildcard indicator in source codes. for example if code is R47.x, put "x"}
+
 \item{dbms_wildcard}{wildcard indicator for dbms LIKE function.}
 
 \item{translate_from}{source vocabulary, e.g., ICD9CM or ICD10CM. Make sure to enter the same way it is included in the concept table}
-
-\item{translate_to}{target vocabulary, e.g., SNOMED. Can be a vector. Make sure to enter the same way it is included in the concept table}
 
 \item{collect}{whether to execute the query. defaults to TRUE}
 
@@ -33,11 +32,9 @@ icd2omop(
 \item{con}{the connection object to the database. defaults to option "con.default.value"}
 
 \item{cdm_schema}{the schema containing the CDM. defaults to option "cdm_schema.default.value"}
-
-\item{source_wildcard}{wildcard indicator in source codes. for example if code is R47.x, put "x"}
 }
 \value{
-a dataframe of the target and source codes, and the original codes to be matched (`orig_code`). If collect = FALSE, a reference to the SQL query.
+a dataframe of the target and source codes, and the original codes with wildcard (`orig_code`). If collect = FALSE, a reference to the SQL query.
 }
 \description{
 icd2omop

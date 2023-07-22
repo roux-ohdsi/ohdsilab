@@ -34,11 +34,11 @@ icd2omop <- function(codes,
     concept_relationship = "concept_relationship"
   }
 
-  wild <- any(stringr::str_detect(codes, source_wildcard))
+  wild <- any(stringr::str_detect(codes, stringr::fixed(source_wildcard)))
 
   if (wild) {
     codes_df <- data.frame(orig_code = codes,
-                           orig_code_wild = stringr::str_replace_all(codes, paste0(source_wildcard, "+"), dbms_wildcard))
+                           orig_code_wild = stringr::str_replace_all(codes, paste0(stringr::str_escape(source_wildcard), "+"), dbms_wildcard))
 
     tryCatch(
       dplyr::copy_to(dest = con, df = codes_df, name = "#temp",

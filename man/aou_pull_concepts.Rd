@@ -49,7 +49,7 @@ Get occurrences of a concepts from AoU for a given cohort
 \examples{
 \dontrun{
 tobacco <- pull_concepts(cohort, concepts = 1157, start_date = covariate_start_date,
- end_date = cohort_start_date, name = "tobacco"
- )}
+ end_date = cohort_start_date, name = "tobacco")
+ }
 
 }

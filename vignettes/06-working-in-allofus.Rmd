@@ -88,7 +88,6 @@ survey_dates = tbl(con, "ds_survey") %>%
   group_by(person_id) %>%
   filter(survey_datetime == min(survey_datetime)) %>%
   distinct(person_id, survey_datetime)
-
 ```
 
 And this code would start with the all of us specific person table and join that to the survey dates table to incorporate information about demogrpahics.

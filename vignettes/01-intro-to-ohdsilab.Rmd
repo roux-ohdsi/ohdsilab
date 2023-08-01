@@ -1,5 +1,5 @@
 ---
-title: "Introduction to ohdsilab"
+title: "Introduction to ohdsilab (start here!)"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction to ohdsilab}
@@ -25,20 +25,38 @@ of the Ohdsilab. These functions and snippits build on existing OHDSI R packages
 a number of vingettes intended for R users who are new to OHDSI-Lab, the OMOP CDM, or working with 
 data in SQL databases from R. 
 
-## Installation
+## Introduction
 
-***For OHDSI-Lab users, we strongly recommend using the {renv} R package to install ohdsilab and
-all other packages on your OHDSI-Lab Box/Workspace. Installation without {renv} is likely to fail
-due to permission restrictions. A guide to using {renv} is here: https://rstudio.github.io/renv/articles/renv.html.***
+As a first step for using ohdsilab in R, please work through the code in this vignette line by line. It will 
+give you some familiarity with the setup process and querying the data. It also includes important tips on
+using R and ohdsilab, which might differ from a typical workflow for using R. 
 
-Installation only needs to be done once, unless you are updating the package. 
+## Starting a new project
+
+Once you've created your workspace (i.e., your virtual computer) from the ohdsilab dashboard, and 
+logged into your computer on the Amazon Workspaces App, you're ready to get started using R to query
+the database. 
+
+After opening RStudio, begin by going to `File` and select `New Project`. Give the project
+a name and select in your preferred location using the `browse` button. Make sure to check the box that says 
+`Use renv with this project`. (If you forget, you can still activate {renv} by running `renv::activate()`
+as the first thing you do in your new project)
+
+## Installing Packages
+
+***We strongly recommend using the {renv} R package to install ohdsilab and
+all other packages on your OHDSI-Lab Box/Workspace. Installing packages without {renv} is likely to fail
+due to permission restrictions.*** 
+
+A guide to using {renv} is here: https://rstudio.github.io/renv/articles/renv.html.
+
+The first thing you should do is update renv:
 
 ```{r}
-install.packages("remotes")
-remotes::install_github("roux-ohdsi/ohdsilab")
+renv::upgrade()
 ```
 
-or with {renv}:
+You can install the ohdsilab package from Github like this: 
 
 ```{r}
 renv::install("roux-ohdsi/ohdsilab")
@@ -48,8 +66,19 @@ If you want to also install OHDSI packages (e.g., DatabaseConnector), set depend
 
 ```{r}
 # using {remotes}
-remotes::install_github("roux-ohdsi/ohdsilab", dependencies = "Suggests")
+renv::install("roux-ohdsi/ohdsilab", dependencies = "Suggests")
 ```
+
+You can also install and update regular packages from CRAN:
+
+```{r}
+renv::install("dplyr")
+```
+
+You may notice that trying to install packages without using {renv} results in 
+errors that indicate that you don't have permission to install R packages. This 
+is not the case - you are free to install R packages on your virtual computer / workspace - 
+but you should use {renv} to do is. 
 
 ## Load the ohdsilab package
 

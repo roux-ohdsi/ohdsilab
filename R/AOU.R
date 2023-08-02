@@ -320,6 +320,7 @@ aou_get_concepts <- function(..., domain = c("condition", "measurement", "observ
 #'
 aou_pull_survey_concepts <- function(cohort, concepts, collect = TRUE, reshape = FALSE, ...) {
 	dat <- cohort |>
+		select(person_id) |>
 		omop_join("ds_survey", type = "left", by = "person_id") |>
 		select(person_id, question, question_concept_id, answer, answer_concept_id, survey,
 					 survey_datetime) |>

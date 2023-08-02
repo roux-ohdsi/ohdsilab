@@ -141,6 +141,8 @@ aou_pull_concepts <- function(cohort,
 
 	if (is.null(con)) stop("Provide `con` as an argument or default with `options(con.default.value = ...)`")
 
+	cohort <- select(cohort, person_id, {{ start_date }}, {{ end_date }})
+
 	all_concepts <- map(
 		domains,
 		~ aou_get_concepts(cohort, concepts,

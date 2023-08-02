@@ -20,7 +20,7 @@ of the Ohdsilab. These functions and snippits build on existing OHDSI R packages
 a number of vingettes intended for R users who are new to OHDSI-Lab, the OMOP CDM, or working with 
 data in SQL databases from R. 
 
-If you're new to ohdsilab, we stringly recommend that you complete the tutorial here: https://roux-ohdsi.github.io/ohdsilab/articles/01-intro-to-ohdsilab.html
+If you're a new ohdsilab user, start by completing the tutorial here: https://roux-ohdsi.github.io/ohdsilab/articles/01-intro-to-ohdsilab.html
 
 
 

@@ -1,5 +1,5 @@
 ---
-title: "Introduction to ohdsilab"
+title: "Introduction to ohdsilab (start here!)"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction to ohdsilab}
@@ -16,29 +16,40 @@ knitr::opts_chunk$set(
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
-The goals of the ohdsilab R package are two fold: (1) To streamline working with
-the OHDSI-Lab data at the Roux Institute (and other OMOP CDM databases) and (2)
-To provde an easier onramp for students and researchers new to working with the OMOP CDM or SQL 
-databases. To do this, the package contains functions and template code snippets to facilitate easier use
-of the Ohdsilab. These functions and snippits build on existing OHDSI R packages like
-{DatabaseConnector} as well as standard R packages like {dplyr} and {tidyr}. The package also contains
-a number of vingettes intended for R users who are new to OHDSI-Lab, the OMOP CDM, or working with 
-data in SQL databases from R. 
+## Introduction
 
-## Installation
+As a first step for using ohdsilab in R, please work through the code in this vignette line by line. It will 
+give you some familiarity with the setup process and querying the data. It also includes important tips on
+using R and ohdsilab, which might differ from a typical workflow for using R. You'll want to have 
+your the email you received when you first created your box handy, as it has your credentials in it.
 
-***For OHDSI-Lab users, we strongly recommend using the {renv} R package to install ohdsilab and
-all other packages on your OHDSI-Lab Box/Workspace. Installation without {renv} is likely to fail
-due to permission restrictions. A guide to using {renv} is here: https://rstudio.github.io/renv/articles/renv.html.***
+## Starting a new project
 
-Installation only needs to be done once, unless you are updating the package. 
+Once you've created your workspace (i.e., your virtual computer) from the ohdsilab dashboard, and 
+logged into your computer on the Amazon Workspaces App, you're ready to get started using R to query
+the database. 
+
+After opening RStudio, begin by going to `File` and select `New Project`. Give the project
+a name and select in your preferred location using the `browse` button. Make sure to check the box that says 
+`Use renv with this project`. No problem if you accidentally skip this step, you can still activate {renv} by running `renv::activate()`
+as the first thing you do in your new project.
+
+## Installing Packages
+
+***We strongly recommend using the {renv} R package to install ohdsilab and
+all other packages on your OHDSI-Lab Box/Workspace. Installing packages without {renv} is likely to fail
+due to permission restrictions.*** 
+
+A guide to using {renv} is here: https://rstudio.github.io/renv/articles/renv.html.
+
+The first thing you should do is update renv. To do this, run the following code
+in your console. 
 
 ```{r}
-install.packages("remotes")
-remotes::install_github("roux-ohdsi/ohdsilab")
+renv::upgrade()
 ```
 
-or with {renv}:
+Then, you can install the ohdsilab package from Github like this: 
 
 ```{r}
 renv::install("roux-ohdsi/ohdsilab")
@@ -47,9 +58,19 @@ renv::install("roux-ohdsi/ohdsilab")
 If you want to also install OHDSI packages (e.g., DatabaseConnector), set dependencies = "Suggests". This is recommended unless you are working on the AllofUs Researcher workbench as these packages take a while to install and are not terribly useful with the AllofUs database setup. 
 
 ```{r}
-# using {remotes}
-remotes::install_github("roux-ohdsi/ohdsilab", dependencies = "Suggests")
+renv::install("roux-ohdsi/ohdsilab", dependencies = "Suggests")
 ```
+
+You can also install and update regular packages from CRAN:
+
+```{r}
+renv::install("dplyr")
+```
+
+You may notice that trying to install packages without using {renv} results in 
+errors that indicate that you don't have permission to install R packages. This 
+is not the case - you are free to install R packages on your virtual computer / workspace - 
+but you should use {renv} to do is. 
 
 ## Load the ohdsilab package
 
@@ -63,108 +84,70 @@ library(keyring)
 *`library(ohdsilab)` should also load {DatabaseConnector}, {keyring}, and other dependencies,
 but you might want to explicitly load them for transparency.*
 
-## Snippets
+## Setting up your credentials
 
-{ohdsilab} stores some basic [snippets](https://rstudio.github.io/rstudio-extensions/rstudio_snippets.html) for quick starting new scripts and projects. Follow the instructions in the link above to install
-the snippets. They are located in the /snippets folder in the package. The easiest way to copy
-them is copy text below the first line from the raw file on github: https://raw.githubusercontent.com/roux-ohdsi/ohdsilab/main/snippets/snippets. If you notice any
-mistakes or have any suggestions for the snippets, feel free to create a pull request or 
-start an issue on the github page. The snippet you'll find most useful to begin with is
-probably ohdsi_new_script.
+There are two sets of credentials you'll want to set up to make accessing 
+the data and ATLAS easier. These credentials are in an email you received
+when you first created your workspace. 
 
-Current snippets:
+First, set your credentials for the amazon redshift database (db).
 
-Polished:
+```{r}
+keyring::key_set("db_username")
+keyring::key_set("db_password")
+```
 
-- ohdsi_new_script
+You can call these variables anything you'd like. They save your username and password in the background
+so that you can access your username and password quickly. For example, try running the following after
+setting up your username. 
 
-In the works:
+```{r}
+keyring::key_get("db_username")
+```
 
-- ohdsi_new_project
-- ohdsi_creds
-- ohdsi_db
-- ohdsi_db_variables
-- ohdsi_db_connect
-- ohdsi_api_auth
-- ohdsi_api_cohort_definition
+You should also set up your ATLAS credentials, as they may be different than your redshift
+database credentials.
 
-<!-- ## Functions -->
-
-<!-- These are in development and being updated frequently.  -->
-
-
-<!-- - `dbi_collect()` is a different version of the `collect()` function that uses DBI instead of dbplyr. There are -->
-<!-- occasional errors with the `collect()` function where not all rows of the query are returned because the query -->
-<!-- times out. In these cases, use the `dbi_collect()` function.  -->
-<!-- - `rb()` is a function to "ROLLBACK" in redshift SQL. This is necessary when there is a mistake in the dbplyr generated -->
-<!-- SQL code. You can use `rb()` instead of disconnecting and reconnecting to the database. -->
-<!-- - `insertTable_chunks()` writes a table to your user schema in chunks to reduce writing time. -->
-
-<!-- - `omop_join()` is a shortcut for a join from an existing query (e.g., a dplyr pipe chunk) to an omop table without -->
-<!-- having to reference the connection and schema.  -->
-
-<!-- - `icd2omop()` and `icd2omop2()` map a dataframe or vector of icd 9 or 10 codes to OMOP concept codes -->
-<!-- - `cpt2omop()` maps a vector of cpt codes to omop concept codes. It can be used for any standardized vocabulary, -->
-<!-- not just CPT4. (ICD9/10 are not considered standardized) -->
-<!-- - `str_insert()` and `icd_periods()` help to insert periods into icd codes when they come without. This -->
-<!-- is typically a necessary step before mapping to OMOP codes.  -->
-
-<!-- - `aou_connect()`, `aou_ls()`, `aou_retrieve_from_bucket()`, and `aou_save_to_bucket()` are useful for -->
-<!-- streamlining common code in the AllofUs workbench. -->
-<!-- - `bookstore()` checks to see if packages are installed before loading them via `library()`. This is experimental -->
-<!-- and could be used in place of `install.packages()` + `library()`.  -->
+```{r}
+keyring::key_set("atlas_username")
+keyring::key_set("atlas_password")
+```
 
 ## Connecting to a database
 
-If this is the first time connecting on your computer (i.e., your virual machine using the Amazon Workspaces), you'll need to set your credientials before
-it will work. The snippet ohdsi_creds will create that code for you. When you
-run each line, it'll generate a pop up where you can enter your database/ohdsilab
-username (something like usr999) and your password (which is in your email). After
-setting the credentials, you shouldn't have to do it again. 
+You'll use the {DatabaseConnector} package to connect to the database.
 
 ```{r}
-# Credentials
-keyring::key_set("lab_user", prompt = "Username for this workspace")
-keyring::key_set("lab_password", prompt = "Password for this workspace")
-```
-
-The following code was generated using the ohdsi_new_script snippet. It creates
-a template for the basic code needed to connect to the database. Now that you've 
-set up your credentials, see if it'll run without errors. Note that you'll also 
-need to be using RStudio within the Amazon workspace box or you need to use the 
-global connect VPN. 
-
-```{r}
-# ==============================================================================
-# Packages =====================================================================
-library(keyring)
-library(DatabaseConnector)
-library(tidyverse)
-library(ohdsilab)
-
-# Credentials ==================================================================
-usr = keyring::key_get("lab_user")
-pw  = keyring::key_get("lab_password")
-
-# DB Connections ===============================================================
-atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+# Schema Information ===========================================================
 cdm_schema = "omop_cdm_53_pmtx_202203"
 write_schema = paste0("work_", keyring::key_get("lab_user"))
+
 # Create the connection
 con =  DatabaseConnector::connect(
   dbms = "redshift",
   server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
   port = 5439,
-  user = keyring::key_get("lab_user"),
-  password = keyring::key_get("lab_password")
+  user = keyring::key_get("db_username"),
+  password = keyring::key_get("db_password")
 )
-class(con)
+
+# Test if the connection words
+if(isTRUE(DatabaseConnector::dbIsValid(con))){print("Connected Successfully")}
+
 # make it easier for some r functions to find the database
 options(con.default.value = con)
 options(schema.default.value = cdm_schema)
+options(write_schema.default.value = write_schema)
+```
 
-# End Setup ====================================================================
-# ==============================================================================
+Instead of including this at the top of your script, you can also use a shortcut 
+function in from the ohdsilab package, which will do the same thing.
+
+```{r}
+con <- ohdsilab::ohdsilab_connect(
+	username = key_get("db_username"),
+	password = key_get("db_password")
+)
 ```
 
 ## Querying the database
@@ -201,13 +184,14 @@ where you can save information pertinent to your studies.
 If you were usr999, you could access a table (that you have previously created) like this:
 
 ```{r}
+# note - this wont actually work! the table doesn't exist
   dplyr::tbl(
       con,
       DatabaseConnector::inDatabaseSchema("usr999", "myCohort")
     )
 ```
 
-Because these tables are in the database, we can connect them together. For example, 
+Because both of these tables are in the database, we can connect them together. For example, 
 you might use {cohortGenerator} to generate a cohort table in your schema ("myCohort"). Your
 cohort table includes a column of person_id's (and some other information) that you
 can use to reduce the giant amount of data in pharmetrics - usually with an `inner_join`. 
@@ -229,8 +213,8 @@ dplyr::tbl(
 ```
 
 Remembering the name of the database schema and your usr schema can be a bit annoying. That's
-why the ohdsi_new_script snipped also includes the following lines of code, so you can just
-reference these strings using the variables `cdm_schema` and `write_schema`. 
+why you should get in the habit of saving the schema names as variables at the top of your scripts,
+so you can just reference these strings using the variables `cdm_schema` and `write_schema`. 
 
 ```{r}
 cdm_schema = "omop_cdm_53_pmtx_202203"
@@ -318,7 +302,7 @@ Run `rlang::last_trace()` to see where the error occurred.
 A rollback is essentially like going back in time to a world before you ran the chunk of code that caused an error. You can easily do this using ohdsilab provided you've set the connection and schema default values above. 
 
 ```{r}
-rb()
+ohdsilab::rb()
 ```
 
 This is synonymous with running.
@@ -327,3 +311,10 @@ This is synonymous with running.
 executeSql(con, "ROLLBACK;")
 ```
 
+## Summary
+
+If you're able to connect to the database and run a few basic queries - you should be 
+good to go. Next, check out some of the other articles on this website. You might
+also want to browse Athena (https://athena.ohdsi.org/) to start thinking about how 
+your area of interest is represented in OMOP. There are also lots of videos on using the
+OMOP CDM on youtube (https://www.youtube.com/@OHDSI). 

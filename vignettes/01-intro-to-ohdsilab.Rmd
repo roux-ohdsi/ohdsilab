@@ -31,8 +31,8 @@ the database.
 
 After opening RStudio, begin by going to `File` and select `New Project`. Give the project
 a name and select in your preferred location using the `browse` button. Make sure to check the box that says 
-`Use renv with this project`. (If you forget, you can still activate {renv} by running `renv::activate()`
-as the first thing you do in your new project)
+`Use renv with this project`. No problem if you accidentally skip this step, you can still activate {renv} by running `renv::activate()`
+as the first thing you do in your new project.
 
 ## Installing Packages
 
@@ -58,7 +58,6 @@ renv::install("roux-ohdsi/ohdsilab")
 If you want to also install OHDSI packages (e.g., DatabaseConnector), set dependencies = "Suggests". This is recommended unless you are working on the AllofUs Researcher workbench as these packages take a while to install and are not terribly useful with the AllofUs database setup. 
 
 ```{r}
-# using {remotes}
 renv::install("roux-ohdsi/ohdsilab", dependencies = "Suggests")
 ```
 
@@ -88,9 +87,10 @@ but you might want to explicitly load them for transparency.*
 ## Setting up your credentials
 
 There are two sets of credentials you'll want to set up to make accessing 
-the data and ATLAS easier. 
+the data and ATLAS easier. These credentials are in an email you received
+when you first created your workspace. 
 
-First, set your credentials for the redshift database (db).
+First, set your credentials for the amazon redshift database (db).
 
 ```{r}
 keyring::key_set("db_username")
@@ -106,7 +106,7 @@ keyring::key_get("db_username")
 ```
 
 You should also set up your ATLAS credentials, as they may be different than your redshift
-database credentials
+database credentials.
 
 ```{r}
 keyring::key_set("atlas_username")

@@ -29,29 +29,18 @@ Aphasia is a *language* disorder that most typically occurs after left-hemispher
 impact on communication as well as overall quality of life. There are about 2.5 million people
 currently in the U.S. with aphasia.
 
-Start by setting the credientials, like previous vignettes, we'll also set the defaults
-for the connection so that we can use the `omop_join()` and other similar functions
-from the ohdsilab package.
+Start by setting the credientials and default schemas.
 
 ```{r}
-usr = keyring::key_get("lab_user")
-pw  = keyring::key_get("lab_password")
-
 # DB Connections
-
 atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
 cdm_schema = "omop_cdm_53_pmtx_202203"
 write_schema = paste0("work_", keyring::key_get("lab_user"))
 
 # Create the connection
-con =  DatabaseConnector::connect(dbms = "redshift",
-                                  server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
-                                  port = 5439,
-                                  user = keyring::key_get("lab_user"),
+con =  ohdsilab::ohdsilab_connect(username = keyring::key_get("lab_user"),
                                   password = keyring::key_get("lab_password"))
 
-options(con.default.value = con)
-options(schema.default.value = cdm_schema)
 ```
 
 

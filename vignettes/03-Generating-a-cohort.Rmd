@@ -15,13 +15,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-This will be a quick tutorial on using a cohort created using ATLAS and saving
+This is a quick tutorial on using a cohort created using ATLAS and saving
 cohort IDs and entry/exit in your user schema. This tutorial will use a cohort
 created from the SynPuf synthetic dataset, using the cohort definition
 "[RC] CVA Ischemic or Hemorrhagic with admission - synpuf". This cohort definition
 imported a phenotype for CVA from stroke ischemic or Hemorrhagic with admission from 
-Phenotype library (https://data.ohdsi.org/PhenotypeLibrary/). The steps for doing this
-will be recorded elsewhere. 
+Phenotype library (https://data.ohdsi.org/PhenotypeLibrary/). More details on generating
+cohorts can be found here: https://ohdsi.github.io/CohortGenerator/ and here: https://ohdsi.github.io/TheBookOfOhdsi/Cohorts.html. 
 
 We'll need to install two new packages: the OHDSI Web Api and cohortGenerator
 
@@ -65,19 +65,20 @@ connectionDetails <- createConnectionDetails(dbms = "redshift",
 
 We're also going to authorize the api for accessing ATLAS from R. This uses the
 atlas_url information, and your username/password which you set using `keyring::key_set()`
-to know that its ok for you to access ATLAS. 
+in a previous vignette ("Introduction to OHDSI Lab"). 
 
 ```{r}
 ROhdsiWebApi::authorizeWebApi(atlas_url, 
                               authMethod = "db", 
-                              webApiUsername = keyring::key_get("lab_user"), 
-                              webApiPassword = keyring::key_get("lab_password"))
+                              webApiUsername = keyring::key_get("atlas_username"), 
+                              webApiPassword = keyring::key_get("atlas_password"))
 ```
 
 
 Ok now we need to do two things. First - pick which cohort to use to generate 
 a data set. This is the number for the cohort that you (or someone else) creates
-in ATLAS. 
+in ATLAS. Note that if you want to include multiple cohorts in the same table, 
+you can provide a vector of cohort ID numbers.
 
 ```{r}
 cohortId <- 1124
@@ -134,25 +135,26 @@ con =  DatabaseConnector::connect(
   dbms = "redshift",
   server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
   port = 5439,
-  user = keyring::key_get("lab_user"),
-  password = keyring::key_get("lab_password")
+  user = keyring::key_get("db_username"),
+  password = keyring::key_get("db_password")
 )
 ```
 
-How would you use this new table? Remember in the first Vignette, when we joined the "rc_aphasia" table? 
+Then, you might use this table (for example) to reduce the full person table to include only
+people in your cohort.
 
 ```{r}
-# pull data from the cohort table
-cohort <- tbl(con, paste(write_schema, "rc_aphasia", sep = ".")) |>
+# pull data from the new cohort table
+cohort <- tbl(con, inDatabaseSchema(write_schema, "synPuf_CVA", sep = ".")) |>
   select(person_id = subject_id, cohort_start_date, cohort_end_date)
 
 # join to the person table to get information about demographics, calculate age at cohrt entry
 demographics <- cohort |> 
-  omop_join("person", type = "left", by = "person_id") |> 
+  omop_join("person", type = "inner", by = "person_id") |> 
   select(person_id, cohort_start_date, cohort_end_date, year_of_birth, gender = gender_source_value) |> 
   mutate(age_at_entry = year(cohort_start_date) - year_of_birth)
 
 ```
 
 This code starts with a table made with CohortGenerator and uses it to limit the OMOP person table
-to just the people that we're interested in, as defined by our cohort. 
+to just the people that we're interested in, as defined by our cohort, and then calculates an age at entry. 

@@ -64,9 +64,6 @@
     <li>
       <a href="../articles/05-working-with-omop-cdm.html">Working with Data from the ohdsilab database</a>
     </li>
-    <li>
-      <a href="../articles/06-working-in-allofus.html">Intro to the AllofUs Workbench</a>
-    </li>
   </ul>
 </li>
       </ul>
@@ -100,13 +97,13 @@
 
     
     
-<p>This will be a quick tutorial on using a cohort created using ATLAS
-and saving cohort IDs and entry/exit in your user schema. This tutorial
-will use a cohort created from the SynPuf synthetic dataset, using the
-cohort definition “[RC] CVA Ischemic or Hemorrhagic with admission -
-synpuf”. This cohort definition imported a phenotype for CVA from stroke
-ischemic or Hemorrhagic with admission from Phenotype library (<a href="https://data.ohdsi.org/PhenotypeLibrary/" class="external-link uri">https://data.ohdsi.org/PhenotypeLibrary/</a>). The steps for
-doing this will be recorded elsewhere.</p>
+<p>This is a quick tutorial on using a cohort created using ATLAS and
+saving cohort IDs and entry/exit in your user schema. This tutorial will
+use a cohort created from the SynPuf synthetic dataset, using the cohort
+definition “[RC] CVA Ischemic or Hemorrhagic with admission - synpuf”.
+This cohort definition imported a phenotype for CVA from stroke ischemic
+or Hemorrhagic with admission from Phenotype library (<a href="https://data.ohdsi.org/PhenotypeLibrary/" class="external-link uri">https://data.ohdsi.org/PhenotypeLibrary/</a>). More details
+on generating cohorts can be found here: <a href="https://ohdsi.github.io/CohortGenerator/" class="external-link uri">https://ohdsi.github.io/CohortGenerator/</a> and here: <a href="https://ohdsi.github.io/TheBookOfOhdsi/Cohorts.html" class="external-link uri">https://ohdsi.github.io/TheBookOfOhdsi/Cohorts.html</a>.</p>
 <p>We’ll need to install two new packages: the OHDSI Web Api and
 cohortGenerator</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -140,16 +137,18 @@ connectionDetails method instead of using a connection.</p>
 <span>                                             password <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_password"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>We’re also going to authorize the api for accessing ATLAS from R.
 This uses the atlas_url information, and your username/password which
-you set using <code><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">keyring::key_set()</a></code> to know that its ok for
-you to access ATLAS.</p>
+you set using <code><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">keyring::key_set()</a></code> in a previous vignette
+(“Introduction to OHDSI Lab”).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ROhdsiWebApi/reference/authorizeWebApi.html" class="external-link">authorizeWebApi</a></span><span class="op">(</span><span class="va">atlas_url</span>, </span>
 <span>                              authMethod <span class="op">=</span> <span class="st">"db"</span>, </span>
-<span>                              webApiUsername <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_user"</span><span class="op">)</span>, </span>
-<span>                              webApiPassword <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_password"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>                              webApiUsername <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"atlas_username"</span><span class="op">)</span>, </span>
+<span>                              webApiPassword <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"atlas_password"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Ok now we need to do two things. First - pick which cohort to use to
 generate a data set. This is the number for the cohort that you (or
-someone else) creates in ATLAS.</p>
+someone else) creates in ATLAS. Note that if you want to include
+multiple cohorts in the same table, you can provide a vector of cohort
+ID numbers.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cohortId</span> <span class="op">&lt;-</span> <span class="fl">1124</span></span></code></pre></div>
 <p>Then we’re going to create a cohortDefinitionSet object using that ID
@@ -194,24 +193,24 @@ the top right of RStudio.</p>
 <span>  dbms <span class="op">=</span> <span class="st">"redshift"</span>,</span>
 <span>  server <span class="op">=</span> <span class="st">"ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab"</span>,</span>
 <span>  port <span class="op">=</span> <span class="fl">5439</span>,</span>
-<span>  user <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_user"</span><span class="op">)</span>,</span>
-<span>  password <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_password"</span><span class="op">)</span></span>
+<span>  user <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span>,</span>
+<span>  password <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_password"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>How would you use this new table? Remember in the first Vignette,
-when we joined the “rc_aphasia” table?</p>
+<p>Then, you might use this table (for example) to reduce the full
+person table to include only people in your cohort.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># pull data from the cohort table</span></span>
-<span><span class="va">cohort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">write_schema</span>, <span class="st">"rc_aphasia"</span>, sep <span class="op">=</span> <span class="st">"."</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="co"># pull data from the new cohort table</span></span>
+<span><span class="va">cohort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="va">write_schema</span>, <span class="st">"synPuf_CVA"</span>, sep <span class="op">=</span> <span class="st">"."</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span>person_id <span class="op">=</span> <span class="va">subject_id</span>, <span class="va">cohort_start_date</span>, <span class="va">cohort_end_date</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># join to the person table to get information about demographics, calculate age at cohrt entry</span></span>
 <span><span class="va">demographics</span> <span class="op">&lt;-</span> <span class="va">cohort</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/omop_join.html">omop_join</a></span><span class="op">(</span><span class="st">"person"</span>, type <span class="op">=</span> <span class="st">"left"</span>, by <span class="op">=</span> <span class="st">"person_id"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/omop_join.html">omop_join</a></span><span class="op">(</span><span class="st">"person"</span>, type <span class="op">=</span> <span class="st">"inner"</span>, by <span class="op">=</span> <span class="st">"person_id"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">person_id</span>, <span class="va">cohort_start_date</span>, <span class="va">cohort_end_date</span>, <span class="va">year_of_birth</span>, gender <span class="op">=</span> <span class="va">gender_source_value</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>age_at_entry <span class="op">=</span> <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">cohort_start_date</span><span class="op">)</span> <span class="op">-</span> <span class="va">year_of_birth</span><span class="op">)</span></span></code></pre></div>
 <p>This code starts with a table made with CohortGenerator and uses it
 to limit the OMOP person table to just the people that we’re interested
-in, as defined by our cohort.</p>
+in, as defined by our cohort, and then calculates an age at entry.</p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

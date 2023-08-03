@@ -35,9 +35,6 @@ library(FeatureExtraction)
 Set the connection details
 
 ```{r}
-usr = keyring::key_get("lab_user")
-pw  = keyring::key_get("lab_password")
-
 atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
 cdm_schema = "omop_cdm_53_pmtx_202203"
 write_schema = paste0("work_", keyring::key_get("lab_user"))
@@ -45,8 +42,8 @@ write_schema = paste0("work_", keyring::key_get("lab_user"))
 connectionDetails <- createConnectionDetails(dbms = "redshift",
                                              server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
                                              port = 5439,
-                                             user = keyring::key_get("lab_user"),
-                                             password = keyring::key_get("lab_password"))
+                                             user = keyring::key_get("db_username"),
+                                             password = keyring::key_get("db_password"))
 ```
 
 This code will generate a table 1 for an established cohort of individuals with concepts of stroke

@@ -64,9 +64,6 @@
     <li>
       <a href="../articles/05-working-with-omop-cdm.html">Working with Data from the ohdsilab database</a>
     </li>
-    <li>
-      <a href="../articles/06-working-in-allofus.html">Intro to the AllofUs Workbench</a>
-    </li>
   </ul>
 </li>
       </ul>
@@ -113,29 +110,16 @@ that most typically occurs after left-hemisphere stroke and has a
 profound impact on communication as well as overall quality of life.
 There are about 2.5 million people currently in the U.S. with
 aphasia.</p>
-<p>Start by setting the credientials, like previous vignettes, we’ll
-also set the defaults for the connection so that we can use the
-<code><a href="../reference/omop_join.html">omop_join()</a></code> and other similar functions from the ohdsilab
-package.</p>
+<p>Start by setting the credientials and default schemas.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">usr</span> <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_user"</span><span class="op">)</span></span>
-<span><span class="va">pw</span>  <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_password"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># DB Connections</span></span>
-<span></span>
+<code class="sourceCode R"><span><span class="co"># DB Connections</span></span>
 <span><span class="va">atlas_url</span> <span class="op">=</span> <span class="st">"https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"</span></span>
 <span><span class="va">cdm_schema</span> <span class="op">=</span> <span class="st">"omop_cdm_53_pmtx_202203"</span></span>
 <span><span class="va">write_schema</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"work_"</span>, <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_user"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create the connection</span></span>
-<span><span class="va">con</span> <span class="op">=</span>  <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/connect.html" class="external-link">connect</a></span><span class="op">(</span>dbms <span class="op">=</span> <span class="st">"redshift"</span>,</span>
-<span>                                  server <span class="op">=</span> <span class="st">"ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab"</span>,</span>
-<span>                                  port <span class="op">=</span> <span class="fl">5439</span>,</span>
-<span>                                  user <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_user"</span><span class="op">)</span>,</span>
-<span>                                  password <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_password"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>con.default.value <span class="op">=</span> <span class="va">con</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>schema.default.value <span class="op">=</span> <span class="va">cdm_schema</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">con</span> <span class="op">=</span>  <span class="fu">ohdsilab</span><span class="fu">::</span><span class="fu"><a href="../reference/ohdsilab_connect.html">ohdsilab_connect</a></span><span class="op">(</span>username <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_user"</span><span class="op">)</span>,</span>
+<span>                                  password <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keyring/man/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"lab_password"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>We’ll use a cohort generated in ATLAS, #860: [RC] CVA Ischemic or
 Hemorrhagic with admission. This is a cohort based on the phenotype
 library defintion for stroke with inpatient admission. The cohort

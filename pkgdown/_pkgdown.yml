@@ -1,0 +1,10 @@
+template:
+  bootstrap: 5
+  bslib:
+    h1-font-size: 2
+    h2-font-size: 1.75
+    h3-font-size: 1.5
+    primary: "#C8102E"
+    font-size-base: 0.9rem
+navbar:
+  bg: black

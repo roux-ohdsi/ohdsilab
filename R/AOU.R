@@ -316,7 +316,7 @@ aou_get_concepts <- function(..., domain = c("condition", "measurement", "observ
 #' @examples
 #' \dontrun{
 #' survey_data <- aou_pull_survey_concepts(cohort, concepts = c(1157, 124839), reshape = TRUE)
-#'  )}
+#' }
 #'
 aou_pull_survey_concepts <- function(cohort, concepts, collect = TRUE, reshape = FALSE, ...) {
 	dat <- cohort |>

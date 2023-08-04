@@ -8,3 +8,5 @@ template:
     font-size-base: 0.9rem
 navbar:
   bg: black
+  includes:
+    in_header: pkgdown/extra.css

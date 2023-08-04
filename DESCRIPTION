@@ -38,3 +38,4 @@ Suggests:
     bigrquery
 VignetteBuilder: knitr
 URL: https://roux-ohdsi.github.io/ohdsilab/, https://github.com/roux-ohdsi/ohdsilab
+License: MIT + file LICENSE

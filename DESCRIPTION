@@ -3,10 +3,10 @@ Type: Package
 Title: ohdsilab: useful R functions for the Roux ohdsilab at Northeastern University
 Version: 0.1.0
 Authors@R: c(
-  person("Louisa", "Smith", 
+  person("Louisa", "Smith", ,
     email = "louisa.smith@northeastern.edu",
     role = c("aut")),
-  person("Rob", "Cavanaugh",
+  person("Rob", "Cavanaugh",  ,
     email = "r.cavanaugh@northeastern.edu",
     role = c("aut", "cre"))
     )

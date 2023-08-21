@@ -44,4 +44,4 @@ git commit -m "this is a message about the changes you made"
 git push
 ```
 
-Information about these commands can be found in [Happy Git with R](https://happygitwithr.com/git-commands) chapter X. Or, for a visual explanation, see the [fantastic illustrations by Allison Horst](https://allisonhorst.com/git-github)
+Information about these commands can be found in [Happy Git with R](https://happygitwithr.com/git-commands) chapter 21. Or, for a visual explanation, see the [fantastic illustrations by Allison Horst](https://allisonhorst.com/git-github)

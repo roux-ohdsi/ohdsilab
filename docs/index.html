@@ -83,11 +83,19 @@
 <!-- badges: start --><!-- badges: end --><p>The goals of the ohdsilab R package are two fold:</p>
 <ol style="list-style-type: decimal">
 <li><p>Streamline working with the OHDSI-Lab database at the Roux Institute (and other OMOP CDM databases)</p></li>
-<li><p>Provide an easier onramp for students and researchers new to working with the OMOP CDM or SQL databases.</p></li>
+<li><p>Provide an easier on-ramp for students and researchers new to working with the OMOP CDM or SQL databases.</p></li>
 </ol>
 <p>The package contains functions and template code snippets to facilitate easier use of the Ohdsilab. These functions and snippits build on existing OHDSI R packages like {DatabaseConnector} as well as standard R packages like {dplyr} and {tidyr}. The package also contains a number of vingettes intended for R users who are new to OHDSI-Lab, the OMOP CDM, or working with data in SQL databases from R.</p>
 <p>If you’re a new ohdsilab user, you can get set up by <a href="https://northeastern.sharepoint.com/:f:/r/sites/OHDSINortheastern/Shared%20Documents/OHDSI%20Lab%20-%20User%20Group?csf=1&amp;web=1&amp;e=lvfisr" class="external-link">following the user guide</a>.</p>
 <p>After you’ve created your workspace and have successfully logged in, finish setting up your R environment by <a href="https://roux-ohdsi.github.io/ohdsilab/articles/01-intro-to-ohdsilab.html" class="external-link">completing the setup tutorial</a></p>
+<p><strong><em>A note on storage</em></strong></p>
+<p>The best practice is to use a version control system for saving code and results to a location other than your workspace. We recommend using git and github for this purpose. Storage on your workspace should be considered temporary and not a location for long-term storage.</p>
+<p>Thankfully, connecting git and github to R is now quite easy. Follow the steps in <a href="https://happygitwithr.com/https-pat" class="external-link">Happy Git with R</a> chapter 9 to connect your github account to RStudio. And while using git and github can be complex, for a single user (you!), it’s as simple as knowing these four commands:</p>
+<pre><code>git pull
+git add .
+git commit -m "this is a message about the changes you made"
+git push</code></pre>
+<p>Information about these commands can be found in <a href="https://happygitwithr.com/git-commands" class="external-link">Happy Git with R</a> chapter 21. Or, for a visual explanation, see the <a href="https://allisonhorst.com/git-github" class="external-link">fantastic illustrations by Allison Horst</a>.</p>
 </div>
 
   </main><aside class="col-md-3"><div class="links">

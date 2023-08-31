@@ -25,6 +25,9 @@ If you're a new ohdsilab user, you can get set up by [following the user guide](
 After you've created your workspace and have successfully logged in, finish setting
 up your R environment by [completing the setup tutorial](https://roux-ohdsi.github.io/ohdsilab/articles/01-intro-to-ohdsilab.html)
 
+If you have questions about using ohdsilab or getting started, 
+[the OHDSI center hosts weekly office hours](https://outlook.office.com/bookwithme/user/3164c5734afa47c2be308b599b41631a@northeastern.edu/meetingtype/SVRwCe7HMUGxuT6WGxi68g2?anonymous&ep=mcard).
+
 ***A note on storage***
 
 The best practice is to use a version control system for saving code and results

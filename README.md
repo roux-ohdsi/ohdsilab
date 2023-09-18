@@ -28,7 +28,12 @@ up your R environment by [completing the setup tutorial](https://roux-ohdsi.gith
 If you have questions about using ohdsilab or getting started, 
 [the OHDSI center hosts weekly office hours](https://outlook.office.com/bookwithme/user/3164c5734afa47c2be308b599b41631a@northeastern.edu/meetingtype/SVRwCe7HMUGxuT6WGxi68g2?anonymous&ep=mcard).
 
-***A note on storage***
+<br> 
+
+#### An important note on storage
+
+Your OHDSI Lab Workspace is intended to be a resource for *compute*. ***It is NOT intended to be permanent storage***.
+We do not recommend saving scripts permanently on your workspace without backing them up elsewhere.
 
 The best practice is to use a version control system for saving code and results
 to a location other than your workspace. We recommend using git and github for this purpose. 

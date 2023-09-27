@@ -3,12 +3,12 @@ Type: Package
 Title: ohdsilab: useful R functions for the Roux ohdsilab at Northeastern University
 Version: 0.1.0
 Authors@R: c(
-  person("Louisa", "Smith", 
+  person("Louisa", "Smith", ,
     email = "louisa.smith@northeastern.edu",
-    role = c("aut", "cre")),
-  person("Rob", "Cavanaugh",
+    role = c("aut")),
+  person("Rob", "Cavanaugh",  ,
     email = "r.cavanaugh@northeastern.edu",
-    role = c("aut"))
+    role = c("aut", "cre"))
     )
 Maintainer: Rob Cavanaugh <r.cavanaugh@northeastern.edu>
 Description: Useful R functions for the Roux ohdsilab at Northeastern University.
@@ -38,3 +38,4 @@ Suggests:
     bigrquery
 VignetteBuilder: knitr
 URL: https://roux-ohdsi.github.io/ohdsilab/, https://github.com/roux-ohdsi/ohdsilab
+License: MIT + file LICENSE

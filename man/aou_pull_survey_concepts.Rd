@@ -32,6 +32,6 @@ Get survey questions from AoU for a given cohort
 \examples{
 \dontrun{
 survey_data <- aou_pull_survey_concepts(cohort, concepts = c(1157, 124839), reshape = TRUE)
- )}
+}
 
 }

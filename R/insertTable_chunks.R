@@ -1,8 +1,8 @@
 #' Insert a table to your user schema in chunks because speed and bugs
 #'
 #' @param data data you want to write to your user schema
-#' @param n the number of chunks to split. defaults to 100. Aim for < 200 rows per chunk right now.
 #' @param table_name the name of the table that you want to write to the database
+#' @param n the number of chunks to split. defaults to 100. Aim for < 200 rows per chunk right now.
 #' @param overwrite do you want to overwrite an existing table of the same name?
 #' @param con connection. defaults to the set option if done.
 #' @param user_schema your user schema. defaults to the set option if done
@@ -14,9 +14,9 @@
 #' \dontrun{
 #' options(con.default.value = con)
 #' write_schema = paste0("work_", keyring::key_get("lab_user"))
-#' insertTable_chunk(data = data, n = 50, table_name = "table1", overwrite = TRUE, user_schema = write_schema)
+#' insertTable_chunk(data = data, table_name = "table1", n = 50, overwrite = TRUE, user_schema = write_schema)
 #' }
-insertTable_chunk <- function(data, n = 100, table_name,
+insertTable_chunk <- function(data, table_name, n = 100,
                               overwrite = TRUE,
                               con = getOption("con.default.value"),
                               write_schema = getOption("write_schema.default.value"),
@@ -35,6 +35,9 @@ insertTable_chunk <- function(data, n = 100, table_name,
   if(isTRUE(overwrite)){
     drop = TRUE
     create = TRUE
+  } else {
+    drop = FALSE
+    create = FALSE
   }
 
   suppressMessages(

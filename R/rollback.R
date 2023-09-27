@@ -12,7 +12,7 @@
 rb <- function(con = getOption("con.default.value")){
     tryCatch(
       expr = {
-        executeSql(con, "ROLLBACK;", progressBar = FALSE, reportOverallTime = FALSE)
+        DatabaseConnector::executeSql(con, "ROLLBACK;", progressBar = FALSE, reportOverallTime = FALSE)
         cat(cli::col_green("Rollback Successful"))
       },
       error = function(e){

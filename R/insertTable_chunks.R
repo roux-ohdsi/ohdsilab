@@ -34,10 +34,8 @@ insertTable_chunk <- function(data, table_name, n = 100,
 
   if(isTRUE(overwrite)){
     drop = TRUE
-    create = TRUE
   } else {
     drop = FALSE
-    create = FALSE
   }
 
   suppressMessages(
@@ -46,7 +44,7 @@ insertTable_chunk <- function(data, table_name, n = 100,
                                        data = df_head,
                                        tableName = table_name,
                                        dropTableIfExists = drop,
-                                       createTable = create
+                                       createTable = TRUE
                                        )
     )
 

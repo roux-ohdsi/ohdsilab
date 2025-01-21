@@ -46,7 +46,7 @@ library(CohortGenerator)
 atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
 cdm_schema = "omop_cdm_53_pmtx_202203"
 synpuf_schema = "omop_cdm_synpuf_110k_531"
-write_schema = paste0("work_", keyring::key_get("lab_user"))
+write_schema = paste0("work_", keyring::key_get("db_username"))
 ```
 
 Instead of creating a database connection, we're just going to create a set of connection
@@ -58,9 +58,15 @@ using a connection.
 connectionDetails <- createConnectionDetails(dbms = "redshift",
                                              server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
                                              port = 5439,
-                                             user = keyring::key_get("lab_user"),
-                                             password = keyring::key_get("lab_password"))
+                                             user = keyring::key_get("db_username"),
+                                             password = keyring::key_get("db_password"),
+																						 pathToDriver = "D:/Users/j.bradenday/Documents/R_projects/pmtx_connection_test/jdbc/redshift-jdbc42-2.1.0.32")
 
+
+# make it easier for some r functions to find the database
+options(con.default.value = con)
+options(schema.default.value = cdm_schema)
+options(write_schema.default.value = write_schema)
 ```
 
 We're also going to authorize the api for accessing ATLAS from R. This uses the
@@ -136,8 +142,8 @@ con =  DatabaseConnector::connect(
   server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
   port = 5439,
   user = keyring::key_get("db_username"),
-  password = keyring::key_get("db_password")
-)
+  password = keyring::key_get("db_password"),
+  pathToDriver = "D:/Users/j.bradenday/Documents/R_projects/pmtx_connection_test/jdbc/redshift-jdbc42-2.1.0.32")
 ```
 
 Then, you might use this table (for example) to reduce the full person table to include only
@@ -145,7 +151,7 @@ people in your cohort.
 
 ```{r}
 # pull data from the new cohort table
-cohort <- tbl(con, inDatabaseSchema(write_schema, "synPuf_CVA", sep = ".")) |>
+cohort <- tbl(con, inDatabaseSchema(write_schema, "synPuf_CVA")) |>
   select(person_id = subject_id, cohort_start_date, cohort_end_date)
 
 # join to the person table to get information about demographics, calculate age at cohrt entry

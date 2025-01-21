@@ -130,7 +130,12 @@ keyring::key_set("atlas_password")
 
 ## Connecting to a database
 
-You'll use the {DatabaseConnector} package to connect to the database.
+You'll use the {DatabaseConnector} package to connect to the database. You will also need to download the Amazon Redshift JDBC driver. To do so, complete the following steps:
+
+- Navigate to the [Amazon Redshift JDBC download page](https://docs.aws.amazon.com/redshift/latest/mgmt/jdbc20-download-driver.html).
+- Click "JDBC 4.2–compatible driver version 2.1 and AWS SDK driver–dependent libraries" to start the download.
+- Move the JDBC zip file to a directory of your choosing.
+- Double-click on the zip file to unzip it.
 
 ```{r}
 # Schema Information ===========================================================
@@ -143,8 +148,8 @@ con =  DatabaseConnector::connect(
   server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
   port = 5439,
   user = keyring::key_get("db_username"),
-  password = keyring::key_get("db_password")
-)
+  password = keyring::key_get("db_password"),
+  pathToDriver = "insert the path to your installed Amazon Redshift JDBC driver here")
 
 # Test if the connection words
 if(isTRUE(DatabaseConnector::dbIsValid(con))){print("Connected Successfully")}

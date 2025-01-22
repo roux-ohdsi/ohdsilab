@@ -37,7 +37,7 @@ Set the connection details
 ```{r}
 atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
 cdm_schema = "omop_cdm_53_pmtx_202203"
-write_schema = paste0("work_", keyring::key_get("lab_user"))
+write_schema = paste0("work_", keyring::key_get("db_username"))
 
 connectionDetails <- createConnectionDetails(dbms = "redshift",
                                              server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",

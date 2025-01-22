@@ -1,5 +1,5 @@
-pandoc: 3.1.5
-pkgdown: 2.0.7
+pandoc: '3.2'
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   01-intro-to-ohdsilab: 01-intro-to-ohdsilab.html
@@ -7,5 +7,4 @@ articles:
   03-Generating-a-cohort: 03-Generating-a-cohort.html
   04-feature-extraction-covariates: 04-feature-extraction-covariates.html
   05-working-with-omop-cdm: 05-working-with-omop-cdm.html
-last_built: 2023-09-18T14:42Z
-
+last_built: 2025-01-22T14:26Z

@@ -1,162 +1,56 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/articles/01-intro-to-ohdsilab.html</loc>
-  </url>
-  <url>
-    <loc>/articles/02-Generating-a-cohort.html</loc>
-  </url>
-  <url>
-    <loc>/articles/02-getting-started-with-box.html</loc>
-  </url>
-  <url>
-    <loc>/articles/03-.html</loc>
-  </url>
-  <url>
-    <loc>/articles/03-Generating-a-cohort.html</loc>
-  </url>
-  <url>
-    <loc>/articles/03-feature-extraction-covariates.html</loc>
-  </url>
-  <url>
-    <loc>/articles/04-feature-extraction-covariates.html</loc>
-  </url>
-  <url>
-    <loc>/articles/04-working-with-omop-cdm.html</loc>
-  </url>
-  <url>
-    <loc>/articles/05-working-in-allofus.html</loc>
-  </url>
-  <url>
-    <loc>/articles/05-working-with-omop-cdm.html</loc>
-  </url>
-  <url>
-    <loc>/articles/06-working-in-allofus.html</loc>
-  </url>
-  <url>
-    <loc>/articles/Generating-a-cohort.html</loc>
-  </url>
-  <url>
-    <loc>/articles/feature-extraction-covariates.html</loc>
-  </url>
-  <url>
-    <loc>/articles/getting-started-with-box.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/intro-to-ohdsilab.html</loc>
-  </url>
-  <url>
-    <loc>/articles/working-in-allofus.html</loc>
-  </url>
-  <url>
-    <loc>/articles/working-with-omop-cdm.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/aou_bucket_to_workspace.html</loc>
-  </url>
-  <url>
-    <loc>/reference/aou_connect.html</loc>
-  </url>
-  <url>
-    <loc>/reference/aou_ls.html</loc>
-  </url>
-  <url>
-    <loc>/reference/aou_ls_bucket.html</loc>
-  </url>
-  <url>
-    <loc>/reference/aou_ls_workspace.html</loc>
-  </url>
-  <url>
-    <loc>/reference/aou_pull_concepts.html</loc>
-  </url>
-  <url>
-    <loc>/reference/aou_pull_survey_concepts.html</loc>
-  </url>
-  <url>
-    <loc>/reference/aou_retrieve_from_bucket.html</loc>
-  </url>
-  <url>
-    <loc>/reference/aou_save_to_bucket.html</loc>
-  </url>
-  <url>
-    <loc>/reference/aou_workspace_to_bucket.html</loc>
-  </url>
-  <url>
-    <loc>/reference/bookstore.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dbi_collect.html</loc>
-  </url>
-  <url>
-    <loc>/reference/hello.html</loc>
-  </url>
-  <url>
-    <loc>/reference/icd2omop.html</loc>
-  </url>
-  <url>
-    <loc>/reference/icd2omop2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/icd_periods.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/insertTable_chunk.html</loc>
-  </url>
-  <url>
-    <loc>/reference/lab_project.html</loc>
-  </url>
-  <url>
-    <loc>/reference/map2omop.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mat_health_icd.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ohdsilab_connect.html</loc>
-  </url>
-  <url>
-    <loc>/reference/omop_join.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pull_concept_set.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rb.html</loc>
-  </url>
-  <url>
-    <loc>/reference/seedQuery.html</loc>
-  </url>
-  <url>
-    <loc>/reference/set_seed.html</loc>
-  </url>
-  <url>
-    <loc>/reference/str_insert.html</loc>
-  </url>
-  <url>
-    <loc>/reference/write_to_database.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/articles/01-intro-to-ohdsilab.html</loc></url>
+<url><loc>/articles/02-Generating-a-cohort.html</loc></url>
+<url><loc>/articles/02-getting-started-with-box.html</loc></url>
+<url><loc>/articles/03-.html</loc></url>
+<url><loc>/articles/03-Generating-a-cohort.html</loc></url>
+<url><loc>/articles/03-feature-extraction-covariates.html</loc></url>
+<url><loc>/articles/04-feature-extraction-covariates.html</loc></url>
+<url><loc>/articles/04-working-with-omop-cdm.html</loc></url>
+<url><loc>/articles/05-working-in-allofus.html</loc></url>
+<url><loc>/articles/05-working-with-omop-cdm.html</loc></url>
+<url><loc>/articles/06-working-in-allofus.html</loc></url>
+<url><loc>/articles/Generating-a-cohort.html</loc></url>
+<url><loc>/articles/feature-extraction-covariates.html</loc></url>
+<url><loc>/articles/getting-started-with-box.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/articles/intro-to-ohdsilab.html</loc></url>
+<url><loc>/articles/working-in-allofus.html</loc></url>
+<url><loc>/articles/working-with-omop-cdm.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/reference/aou_bucket_to_workspace.html</loc></url>
+<url><loc>/reference/aou_connect.html</loc></url>
+<url><loc>/reference/aou_ls.html</loc></url>
+<url><loc>/reference/aou_ls_bucket.html</loc></url>
+<url><loc>/reference/aou_ls_workspace.html</loc></url>
+<url><loc>/reference/aou_pull_concepts.html</loc></url>
+<url><loc>/reference/aou_pull_survey_concepts.html</loc></url>
+<url><loc>/reference/aou_retrieve_from_bucket.html</loc></url>
+<url><loc>/reference/aou_save_to_bucket.html</loc></url>
+<url><loc>/reference/aou_workspace_to_bucket.html</loc></url>
+<url><loc>/reference/bookstore.html</loc></url>
+<url><loc>/reference/dbi_collect.html</loc></url>
+<url><loc>/reference/hello.html</loc></url>
+<url><loc>/reference/icd2omop.html</loc></url>
+<url><loc>/reference/icd2omop2.html</loc></url>
+<url><loc>/reference/icd_periods.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/insertTable_chunk.html</loc></url>
+<url><loc>/reference/lab_project.html</loc></url>
+<url><loc>/reference/map2omop.html</loc></url>
+<url><loc>/reference/mat_health_icd.html</loc></url>
+<url><loc>/reference/ohdsilab_connect.html</loc></url>
+<url><loc>/reference/omop_join.html</loc></url>
+<url><loc>/reference/pipe.html</loc></url>
+<url><loc>/reference/pull_concept_set.html</loc></url>
+<url><loc>/reference/rb.html</loc></url>
+<url><loc>/reference/seedQuery.html</loc></url>
+<url><loc>/reference/set_seed.html</loc></url>
+<url><loc>/reference/str_insert.html</loc></url>
+<url><loc>/reference/write_to_database.html</loc></url>
 </urlset>
+

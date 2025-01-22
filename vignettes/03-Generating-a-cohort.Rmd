@@ -60,7 +60,7 @@ connectionDetails <- createConnectionDetails(dbms = "redshift",
                                              port = 5439,
                                              user = keyring::key_get("db_username"),
                                              password = keyring::key_get("db_password"),
-																						 pathToDriver = "D:/Users/j.bradenday/Documents/R_projects/pmtx_connection_test/jdbc/redshift-jdbc42-2.1.0.32")
+																						 pathToDriver = "insert the path to your installed Amazon Redshift JDBC driver here")
 
 
 # make it easier for some r functions to find the database
@@ -143,7 +143,7 @@ con =  DatabaseConnector::connect(
   port = 5439,
   user = keyring::key_get("db_username"),
   password = keyring::key_get("db_password"),
-  pathToDriver = "D:/Users/j.bradenday/Documents/R_projects/pmtx_connection_test/jdbc/redshift-jdbc42-2.1.0.32")
+  pathToDriver = "insert the path to your installed Amazon Redshift JDBC driver here")
 ```
 
 Then, you might use this table (for example) to reduce the full person table to include only

@@ -1,20 +1,18 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>/404.html</loc></url>
-<url><loc>/LICENSE-text.html</loc></url>
-<url><loc>/LICENSE.html</loc></url>
 <url><loc>/articles/01-intro-to-ohdsilab.html</loc></url>
 <url><loc>/articles/02-Generating-a-cohort.html</loc></url>
 <url><loc>/articles/02-getting-started-with-box.html</loc></url>
 <url><loc>/articles/03-.html</loc></url>
-<url><loc>/articles/03-Generating-a-cohort.html</loc></url>
 <url><loc>/articles/03-feature-extraction-covariates.html</loc></url>
+<url><loc>/articles/03-Generating-a-cohort.html</loc></url>
 <url><loc>/articles/04-feature-extraction-covariates.html</loc></url>
 <url><loc>/articles/04-working-with-omop-cdm.html</loc></url>
 <url><loc>/articles/05-working-in-allofus.html</loc></url>
 <url><loc>/articles/05-working-with-omop-cdm.html</loc></url>
 <url><loc>/articles/06-working-in-allofus.html</loc></url>
-<url><loc>/articles/Generating-a-cohort.html</loc></url>
 <url><loc>/articles/feature-extraction-covariates.html</loc></url>
+<url><loc>/articles/Generating-a-cohort.html</loc></url>
 <url><loc>/articles/getting-started-with-box.html</loc></url>
 <url><loc>/articles/index.html</loc></url>
 <url><loc>/articles/intro-to-ohdsilab.html</loc></url>
@@ -22,6 +20,8 @@
 <url><loc>/articles/working-with-omop-cdm.html</loc></url>
 <url><loc>/authors.html</loc></url>
 <url><loc>/index.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
 <url><loc>/reference/aou_bucket_to_workspace.html</loc></url>
 <url><loc>/reference/aou_connect.html</loc></url>
 <url><loc>/reference/aou_ls.html</loc></url>

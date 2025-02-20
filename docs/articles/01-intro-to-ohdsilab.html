@@ -81,7 +81,7 @@
 in this vignette line by line. It will give you some familiarity with
 the setup process and querying the data. It also includes important tips
 on using R and ohdsilab, which might differ from a typical workflow for
-using R. You’ll want to have your the email you received when you first
+using R. You’ll want to have the email you received when you first
 created your box handy, as it has your credentials in it.</p>
 </div>
 <div class="section level2">
@@ -137,8 +137,8 @@ setup.</p>
 <p>You may notice that trying to install packages without using {renv}
 results in errors that indicate that you don’t have permission to
 install R packages. This is not the case - you are free to install R
-packages on your virtual computer / workspace - but you should use
-{renv} to do is.</p>
+packages on your virtual computer/workspace - but you should use {renv}
+to do is.</p>
 </div>
 <div class="section level2">
 <h2 id="load-the-ohdsilab-package">Load the ohdsilab package<a class="anchor" aria-label="anchor" href="#load-the-ohdsilab-package"></a>
@@ -158,8 +158,10 @@ want to explicitly load them for transparency.</em></p>
 <p>There are two sets of credentials you’ll want to set up to make
 accessing the data and ATLAS easier. These credentials are in an email
 you received when you first created your workspace.</p>
-<p>First, set your credentials for the amazon redshift database
-(db).</p>
+<p>First, set your credentials for the amazon redshift database (db).
+These credentials can be found in the email you received when you first
+launched the workspace next to “Amazon Redshift Username:” and “Amazon
+Redshift Password:” respectively.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_set</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span></span>
 <span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_set</a></span><span class="op">(</span><span class="st">"db_password"</span><span class="op">)</span></span></code></pre></div>
@@ -170,7 +172,10 @@ after setting up your username.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span></span></code></pre></div>
 <p>You should also set up your ATLAS credentials, as they may be
-different than your redshift database credentials.</p>
+different than your redshift database credentials. These credentials can
+also be found in the email you received when you first launchedyour
+workspace next to “ATLAS Username:” and “ATLAS Password:”
+respectively.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_set</a></span><span class="op">(</span><span class="st">"atlas_username"</span><span class="op">)</span></span>
 <span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_set</a></span><span class="op">(</span><span class="st">"atlas_password"</span><span class="op">)</span></span></code></pre></div>
@@ -194,14 +199,16 @@ driver–dependent libraries” to start the download.</li>
 <span><span class="va">cdm_schema</span> <span class="op">=</span> <span class="st">"omop_cdm_53_pmtx_202203"</span></span>
 <span><span class="va">write_schema</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"work_"</span>, <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># Set the path to the JDBC driver you installed above</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span><span class="st">"DATABASECONNECTOR_JAR_FOLDER"</span> <span class="op">=</span> <span class="st">"insert path to jdbc driver here"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Create the connection</span></span>
 <span><span class="va">con</span> <span class="op">=</span>  <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/connect.html" class="external-link">connect</a></span><span class="op">(</span></span>
 <span>  dbms <span class="op">=</span> <span class="st">"redshift"</span>,</span>
 <span>  server <span class="op">=</span> <span class="st">"ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab"</span>,</span>
 <span>  port <span class="op">=</span> <span class="fl">5439</span>,</span>
 <span>  user <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span>,</span>
-<span>  password <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_password"</span><span class="op">)</span>,</span>
-<span>  pathToDriver <span class="op">=</span> <span class="st">"insert the path to your installed Amazon Redshift JDBC driver here"</span><span class="op">)</span></span>
+<span>  password <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_password"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Test if the connection words</span></span>
 <span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu">dbIsValid</span><span class="op">(</span><span class="va">con</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="st">"Connected Successfully"</span><span class="op">)</span><span class="op">}</span></span>
@@ -229,7 +236,7 @@ database organization looks like this (this is a very similar OMOP CDM
 5.4 - there are only very minor differences).</p>
 <p><img src="https://ohdsi.github.io/CommonDataModel/images/cdm54.png" width="100%"></p>
 <p>A more comprehensive diagram with information about the columns in
-each of the tables can be found here: <a href="http://ohdsi.github.io/CommonDataModel/cdm54erd.html" class="external-link uri">http://ohdsi.github.io/CommonDataModel/cdm54erd.html</a></p>
+each of the tables can be found here: <a href="https://lucid.app/lucidchart/dc75ba24-cbb6-4152-9528-a1f67b4b3843/view?page=0_0&amp;invitationId=inv_d9040d51-a9b0-4d91-b3e5-f2f0ce927cf7#" class="external-link uri">https://lucid.app/lucidchart/dc75ba24-cbb6-4152-9528-a1f67b4b3843/view?page=0_0&amp;invitationId=inv_d9040d51-a9b0-4d91-b3e5-f2f0ce927cf7#</a></p>
 <p>The data help in the database is stored under the cdm schema You can
 think of a schema as kind of like a subfolder in the database. So the
 pharmetrics data is stored in ohdsilab/omop_cdm_53_pmtx_202203/… where
@@ -345,7 +352,8 @@ you need to “rollback” usually looks like this:</p>
 ! Can't query fields.
 Caused by error in `.createErrorReport()`:
 ! Error executing SQL:
-com.amazon.redshift.util.RedshiftException: ERROR: current transaction is aborted, commands ignored until end of transaction block
+com.amazon.redshift.util.RedshiftException: ERROR: current transaction is 
+aborted, commands ignored until end of transaction block
 An error report has been created at .../errorReportSql.txt
 Run `rlang::last_trace()` to see where the error occurred.</code></pre>
 <p>A rollback is essentially like going back in time to a world before

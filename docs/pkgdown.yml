@@ -1,4 +1,4 @@
-pandoc: '3.2'
+pandoc: 3.1.1
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
@@ -7,4 +7,4 @@ articles:
   03-Generating-a-cohort: 03-Generating-a-cohort.html
   04-feature-extraction-covariates: 04-feature-extraction-covariates.html
   05-working-with-omop-cdm: 05-working-with-omop-cdm.html
-last_built: 2025-01-22T15:09Z
+last_built: 2025-02-20T15:27Z

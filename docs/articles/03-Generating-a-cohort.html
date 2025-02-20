@@ -94,7 +94,7 @@ cohortGenerator</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/DatabaseConnector/" class="external-link">DatabaseConnector</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://roux-ohdsi.github.io/ohdsilab/" class="external-link">ohdsilab</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ROhdsiWebApi</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/ROhdsiWebApi/" class="external-link">ROhdsiWebApi</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/CohortGenerator/" class="external-link">CohortGenerator</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># DB Connections ===============================================================</span></span>
@@ -124,7 +124,7 @@ This uses the atlas_url information, and your username/password which
 you set using <code><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">keyring::key_set()</a></code> in a previous vignette
 (“Introduction to OHDSI Lab”).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu">authorizeWebApi</span><span class="op">(</span><span class="va">atlas_url</span>, </span>
+<code class="sourceCode R"><span><span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ROhdsiWebApi/reference/authorizeWebApi.html" class="external-link">authorizeWebApi</a></span><span class="op">(</span><span class="va">atlas_url</span>, </span>
 <span>                              authMethod <span class="op">=</span> <span class="st">"db"</span>, </span>
 <span>                              webApiUsername <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"atlas_username"</span><span class="op">)</span>, </span>
 <span>                              webApiPassword <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"atlas_password"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -138,7 +138,7 @@ ID numbers.</p>
 <p>Then we’re going to create a cohortDefinitionSet object using that ID
 and the baseUrl.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cohortDefinitionSet</span> <span class="op">&lt;-</span> <span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu">exportCohortDefinitionSet</span><span class="op">(</span>baseUrl <span class="op">=</span> <span class="va">atlas_url</span>,</span>
+<code class="sourceCode R"><span><span class="va">cohortDefinitionSet</span> <span class="op">&lt;-</span> <span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ROhdsiWebApi/reference/exportCohortDefinitionSet.html" class="external-link">exportCohortDefinitionSet</a></span><span class="op">(</span>baseUrl <span class="op">=</span> <span class="va">atlas_url</span>,</span>
 <span>                                                               cohortIds <span class="op">=</span> <span class="va">cohortId</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cohortDefinitionSet</span></span></code></pre></div>

@@ -93,6 +93,8 @@ aphasia.</p>
 <span><span class="va">cdm_schema</span> <span class="op">=</span> <span class="st">"omop_cdm_53_pmtx_202203"</span></span>
 <span><span class="va">write_schema</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"work_"</span>, <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span><span class="st">"DATABASECONNECTOR_JAR_FOLDER"</span> <span class="op">=</span> <span class="st">"insert path to jdbc driver here"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Create the connection</span></span>
 <span><span class="va">con</span> <span class="op">=</span>  <span class="fu">ohdsilab</span><span class="fu">::</span><span class="fu"><a href="../reference/ohdsilab_connect.html">ohdsilab_connect</a></span><span class="op">(</span>username <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span>,</span>
 <span>                                  password <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_password"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -142,14 +144,14 @@ condition occurrence table to just rows for the individuals AND
 timeframe that I care about. This code chunk first joins the cohort
 table with the fixed person_id column name (from above) to the condition
 occurrence table, which holds instances of the conditions tagged to
-people in the data set. Second, it filteres for only the conditions that
+people in the data set. Second, it filters for only the conditions that
 occured within the timeframe of interest (within 365 days of the index
 date). Third, it joins the concepts table from above to get human
 readable concept names on the conditions that were found. Finally, I
 select only the columns I’m interested in.</p>
 <p>We can use the <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally()</a></code> function to check how many rows
 would be returned by the query (this can take a hot second). If its not
-too many rows for my local system (and this one isn’t) , we can go ahead
+too many rows for my local system (and this one isn’t), we can go ahead
 and “collect” the data, which means bringing it into our local R
 session. The number of rows you can collect will vary based on your
 computer’s RAM/CPU but I wouldn’t recommend trying to collect more than
@@ -224,8 +226,7 @@ out - but all of that wrangling was done locally (so not on the database
 end) - just like you would for any normal dataset you read into R.</p>
 <p>Hopefully this was a helpful example to see how you can combine
 information across the different OMOP tables to filter and drill down to
-exactly the data you’re interested in. exactly the data you’re
-interested in</p>
+exactly the data you’re interested in.</p>
   </main>
 </div>
 

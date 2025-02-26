@@ -1,0 +1,168 @@
+---
+title: "Generating a cohort with Capr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Generating a cohort with Capr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+This tutorial is similar to the last except in this one we're generating a 
+cohort using the Capr package instead of ATLAS. After the cohort is generated, 
+it can be treated the exact same as an ATLAS-generated cohort. This tutorial 
+will use a cohort created from the SynPuf synthetic dataset, using a cohort 
+definition with the same criteria as the ATLAS cohort "[DEMO] Type 2 diabetes 
+patients prescribed metformin within 30 days after type 2 diabetes diagnosis"
+More details on generating cohorts can be found here: 
+https://ohdsi.github.io/CohortGenerator/ and here: 
+https://ohdsi.github.io/TheBookOfOhdsi/Cohorts.html. 
+
+We'll need to install one new package: Capr
+
+```{r setup, eval = FALSE}
+renv::install("ohdsi/Capr")
+```
+
+We'll use the same set up code as the intro vignette. 
+
+```{r}
+# ==============================================================================
+# Packages =====================================================================
+library(Capr)
+library(DatabaseConnector)
+library(ohdsilab)
+library(DatabaseConnector)
+library(keyring)
+library(CohortGenerator)
+library(tidyverse)
+
+# DB Connections ===============================================================
+synpuf_schema = "omop_cdm_synpuf_110k_531"
+write_schema = paste0("work_", keyring::key_get("db_username"))
+```
+
+Again, we'll create the connection details and add the path to the jdbc driver 
+we installed in the intro vignette.
+
+```{r}
+Sys.setenv("DATABASECONNECTOR_JAR_FOLDER" = "insert path to jdbc driver here")
+
+connectionDetails <- createConnectionDetails(dbms = "redshift",
+                                             server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+                                             port = 5439,
+                                             user = keyring::key_get("db_username"),
+                                             password = keyring::key_get("db_password"))
+
+# Connect to the database. You won't need this connection until later, but for 
+#now you just need the "con" information saved for the next step.
+con =  DatabaseConnector::connect(
+  dbms = "redshift",
+  server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+  port = 5439,
+  user = keyring::key_get("db_username"),
+  password = keyring::key_get("db_password"))
+
+# Make it easier for some r functions to find the database
+options(con.default.value = con)
+options(schema.default.value = synpuf_schema)
+options(write_schema.default.value = write_schema)
+```
+
+Now, we're ready to start using Capr. Just like ATLAS, the first thing you have
+to do when designing a cohort is create concept sets for the clinical concepts 
+(conditions, drugs, procedures, etc.) involved in your cohort. Let's create a
+concept set for type 2 diabetes using the concept ID 201826 and all of its 
+descendants and a concept set for the drug metformin with only one concept ID 
+40164929.
+
+```{r}
+t2d <- cs(descendants(201826), name = "Type 2 diabetes")
+
+metformin <- cs(40164929, name = "Metformin")
+```
+
+Now we define our cohort using the same logic as ATLAS. The syntax may look a
+little different, but the ideas are the same. An entry event, 
+inclusion criteria (attrition), and an exit event can be defined. The following
+cohort includes persons who have a condition occurrence of type 2 diabetes and 
+also a drug exposure of metformin starting between 0 and 30 days after their 
+type 2 diabetes diagnosis. Persons will leave this cohort at the end of 
+continuous observation (default in both ATLAS and Capr)
+
+```{r}
+t2dcohortDef <- cohort(
+	entry = 
+		entry(conditionOccurrence(t2d), primaryCriteriaLimit = "All"),
+	attrition = 
+		attrition("metformin within 0-30 days" = 
+								withAll(atLeast(1, drugExposure(metformin), 
+																duringInterval(eventStarts(0,30))))))
+```
+
+Now we have to save the cohort definition as a json file, then convert that json
+into a SQL query that can be run against the database.
+
+```{r}
+#convert cohort definition to json
+t2dcohortDef_json <- as.json(t2dcohortDef)
+
+#convert json to SQL query
+sql <- CirceR::buildCohortQuery(
+  expression = CirceR::cohortExpressionFromJson(t2dcohortDef_json),
+  options = CirceR::createGenerateOptions(generateStats = FALSE))
+```
+
+Finally, like we did for the ATLAS cohort, we have to create a cohort definition
+set, though this time we're using our own SQL query rather than pulling one from
+ATLAS.
+
+```{r}
+cohortDefinitionSet <- tibble::tibble(
+  cohortId = 1,
+  cohortName = "Type 2 Diabetes",
+  sql = sql)
+```
+
+And that's where the differences end! From here, we can run through the same 
+process of generating the cohort.
+
+```{r}
+# Set a naming convention for the cohort tables.
+cohortTableNames <- getCohortTableNames(cohortTable = "synpuf_t2d")
+
+# Create empty tables in your personal schema using the naming convention
+#designated in the last step.
+createCohortTables(connectionDetails = connectionDetails,
+                   cohortTableNames = cohortTableNames,
+                   cohortDatabaseSchema = write_schema)
+
+# Generate your cohort for the Synpuf database.
+cohortsGenerated <- generateCohortSet(connectionDetails = connectionDetails,
+                                      cdmDatabaseSchema = synpuf_schema,
+                                      cohortDatabaseSchema = write_schema,
+                                      cohortTableNames = cohortTableNames,
+                                      cohortDefinitionSet = cohortDefinitionSet)
+```
+
+Now to prove that our cohort generated successfully, let's create a table 
+containing the people in our cohort and count them. This number can be compared 
+to the number of persons in the synpuf dataset in the identical ATLAS cohort 
+"[DEMO] Type 2 diabetes patients prescribed metformin within 30 days after type 
+2 diabetes diagnosis"
+
+```{r}
+# Create a table containing your new cohort.
+cohort <- tbl(con, inDatabaseSchema(write_schema, "synpuf_t2d")) |>
+  select(person_id = subject_id, cohort_start_date, cohort_end_date)
+
+# How many people are in the cohort?
+tally(cohort)
+```

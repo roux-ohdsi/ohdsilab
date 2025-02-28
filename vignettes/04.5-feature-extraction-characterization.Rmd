@@ -1,0 +1,160 @@
+---
+title: "Generating Characterization Files"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Generating Characterization Files}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This vignette summarizes the code that can be found here: https://ohdsi.github.io/Characterization/ and illustrates how this code can be 
+used within the OHDSI Lab against OHDSI Lab data.
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+Install one new package (Characterization) and load it along with the other
+typical packages.
+
+```{r setup}
+renv::install("ohdsi/Characterization")
+
+library(ohdsilab)
+library(DatabaseConnector)
+library(keyring)
+library(ROhdsiWebApi)
+library(CohortGenerator)
+library(FeatureExtraction)
+library(Characterization)
+```
+
+Set the connection details. I connect to the database here so I can set the 
+option(con.default.value) setting in the next line.
+
+```{r}
+Sys.setenv("DATABASECONNECTOR_JAR_FOLDER" = "insert path to JDBC driver")
+
+connectionDetails <- DatabaseConnector::createConnectionDetails(
+	dbms = "redshift",
+	server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+	port = 5439,
+	user = keyring::key_get("db_username"),
+	password = keyring::key_get("db_password"))
+
+atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+synpuf_schema = "omop_cdm_synpuf_110k_531"
+write_schema = paste0("work_", keyring::key_get("db_username"))
+
+con =  DatabaseConnector::connect(
+  dbms = "redshift",
+  server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+  port = 5439,
+  user = keyring::key_get("db_username"),
+  password = keyring::key_get("db_password"))
+
+options(con.default.value = con)
+options(schema.default.value = synpuf_schema)
+options(write_schema.default.value = write_schema)
+```
+
+Connect to ATLAS
+
+```{r}
+ROhdsiWebApi::authorizeWebApi(
+	atlas_url,
+	authMethod = "db",
+	webApiUsername = keyring::key_get("atlas_username"),
+	webApiPassword = keyring::key_get("atlas_password"))
+```
+
+Instead of setting one cohort Id, this time you're setting a target cohort Id 
+and an outcome id as the purpose of the characterization package is to compare a
+target cohort with an outcome cohort.
+
+```{r}
+targetId <- 4675
+outcomeId <- 4681
+```
+
+Pull the cohorts definitions from ATLAS, and use them to populate tables in 
+your write_schema (this code comes from the "Generating a cohort" vignette)
+
+```{r}
+cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(
+	baseUrl = atlas_url,
+	cohortIds = c(targetId, outcomeId))
+
+
+cohortTableNames <- CohortGenerator::getCohortTableNames(
+	cohortTable = "cohort")
+
+
+createCohortTables(connectionDetails = connectionDetails,
+                   cohortTableNames = cohortTableNames,
+                   cohortDatabaseSchema = write_schema)
+
+
+
+cohortsGenerated <- CohortGenerator::generateCohortSet(
+	connectionDetails = connectionDetails,
+	cdmDatabaseSchema = synpuf_schema,
+	cohortDatabaseSchema = write_schema,
+	cohortTableNames = cohortTableNames,
+	cohortDefinitionSet = cohortDefinitionSet)
+```
+
+Now, set the covariate settings. The createCovariateSettings() function can be
+used to customize the output of characterization. Run ?createCovariateSettings 
+to view all possible arguments. For now, we'll just use 
+createDefaultCovariateSettings() as we don't need anything specific. The 
+aggreegateCovariate Settings will be used as an argument when we set the 
+characterization settings. Other argument options for characterization are 
+timeToEventSettings and dechallengeRechallengeSettings.
+
+```{r}
+aggregateCovariateSettings <- Characterization::createAggregateCovariateSettings(
+  targetIds = targetId,
+  outcomeIds = outcomeId,
+  riskWindowStart = 1,
+  startAnchor = 'cohort start',
+  riskWindowEnd = 365,
+  endAnchor = 'cohort start',
+  covariateSettings = FeatureExtraction::createDefaultCovariateSettings())
+```
+
+Set the characterization settings
+
+```{r}
+characterizationSettings <- Characterization::createCharacterizationSettings(
+  aggregateCovariateSettings = aggregateCovariateSettings)
+```
+
+Run the characterization. This will generate a series of csv files that can 
+later be analyzed using traditional or programmatic methods. You may want to 
+create a folder before running the following code and set the path of 
+outputDirectory and executionPath to that folder.
+
+```{r}
+Characterization::runCharacterizationAnalyses(
+  connectionDetails = connectionDetails,
+  cdmDatabaseSchema = synpuf_schema,
+  targetDatabaseSchema = write_schema,
+  targetTable = 'cohort',
+  outcomeDatabaseSchema = write_schema,
+  outcomeTable = 'cohort',
+  characterizationSettings = characterizationSettings,   
+  outputDirectory = "insert path to output folder",
+  executionPath = "insert path to output folder",
+  csvFilePrefix = 'insert custom prefix')
+```
+
+And that's it! The characterization files may take a while to generate depending
+on the size of your cohorts and the amount of variables you include in your 
+characterization settings.
+
+

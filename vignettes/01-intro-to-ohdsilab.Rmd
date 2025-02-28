@@ -145,13 +145,13 @@ keyring::key_set("atlas_password")
 
 You'll use the {DatabaseConnector} package to connect to the database. You will 
 also need to download the Amazon Redshift JDBC driver. To do so, complete the 
-following steps:
+following steps within your OHDSI Lab Workstation:
 
 - Navigate to the [Amazon Redshift JDBC download page](https://docs.aws.amazon.com/redshift/latest/mgmt/jdbc20-download-driver.html).
 - Click "JDBC 4.2–compatible driver version 2.1 and AWS SDK driver–dependent 
 libraries" to start the download.
 - Move the JDBC zip file to a directory of your choosing.
-- Double-click on the zip file to unzip it.
+- Right-click on the zip file, and select "Extract" to unzip it.
 
 ```{r}
 # Schema Information ===========================================================

@@ -45,6 +45,7 @@
     <li><a class="dropdown-item" href="../articles/03-Generating-a-cohort.html">Generating a cohort</a></li>
     <li><a class="dropdown-item" href="../articles/03.5-Generating-a-cohort-with_Capr.html">Generating a cohort with Capr</a></li>
     <li><a class="dropdown-item" href="../articles/04-feature-extraction-covariates.html">Generating Covariates and Table 1</a></li>
+    <li><a class="dropdown-item" href="../articles/04.5-feature-extraction-characterization.html">Generating Characterization Files</a></li>
     <li><a class="dropdown-item" href="../articles/05-working-with-omop-cdm.html">Working with Data from the ohdsilab database</a></li>
   </ul>
 </li>
@@ -186,14 +187,15 @@ respectively.</p>
 </h2>
 <p>You’ll use the {DatabaseConnector} package to connect to the
 database. You will also need to download the Amazon Redshift JDBC
-driver. To do so, complete the following steps:</p>
+driver. To do so, complete the following steps within your OHDSI Lab
+Workstation:</p>
 <ul>
 <li>Navigate to the <a href="https://docs.aws.amazon.com/redshift/latest/mgmt/jdbc20-download-driver.html" class="external-link">Amazon
 Redshift JDBC download page</a>.</li>
 <li>Click “JDBC 4.2–compatible driver version 2.1 and AWS SDK
 driver–dependent libraries” to start the download.</li>
 <li>Move the JDBC zip file to a directory of your choosing.</li>
-<li>Double-click on the zip file to unzip it.</li>
+<li>Right-click on the zip file, and select “Extract” to unzip it.</li>
 </ul>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Schema Information ===========================================================</span></span>

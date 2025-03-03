@@ -1,0 +1,161 @@
+---
+title: "Visualizing Sample Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Generating a cohort with Capr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+This tutorial will illustrate how to use the cohortExplorer package created by
+the OHDSI communitiy and described here: https://ohdsi.github.io/CohortExplorer/.
+This package retrieves person-level data for persons included in a specific 
+cohort and displays it in a user-friendly Shiny application. Because this 
+package displays person-level data, any outputs should not be shared with 
+individuals who are not active OHDSI Lab Users (with the exception of outputs 
+based on Synpuf synthetic data).
+
+We'll need to install one new package: CohortExplorer
+
+```{r setup, eval = FALSE}
+renv::install("ohdsi/CohortExplorer")
+```
+
+We'll generate a cohort from ATLAS as we did in vignette 3.
+
+```{r}
+# ==============================================================================
+# Packages =====================================================================
+library(CohortExplorer)
+library(DatabaseConnector)
+library(ohdsilab)
+library(DatabaseConnector)
+library(keyring)
+library(CohortGenerator)
+library(tidyverse)
+
+# DB and ATLAS Connections =====================================================
+atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+synpuf_schema = "omop_cdm_synpuf_110k_531"
+write_schema = paste0("work_", keyring::key_get("db_username"))
+
+# Setting connectionDetails for later use
+Sys.setenv("DATABASECONNECTOR_JAR_FOLDER" = "Insert path to JDBC driver")
+
+connectionDetails <- createConnectionDetails(
+	dbms = "redshift",
+	server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+	port = 5439,
+	user = keyring::key_get("db_username"),
+	password = keyring::key_get("db_password"))
+
+# Connecting to the database for the purpose of setting the following options
+con =  DatabaseConnector::connect(
+  dbms = "redshift",
+  server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+  port = 5439,
+  user = keyring::key_get("db_username"),
+  password = keyring::key_get("db_password"))
+
+options(con.default.value = con)
+options(schema.default.value = synpuf_schema)
+options(write_schema.default.value = write_schema)
+
+# Connecting to ATLAS
+ROhdsiWebApi::authorizeWebApi(atlas_url, 
+                              authMethod = "db", 
+                              webApiUsername = keyring::key_get("atlas_username"), 
+                              webApiPassword = keyring::key_get("atlas_password"))
+
+# Choosing an ATLAS cohort definition
+cohortId <- 4675
+
+# Pulling the cohort definition from ATLAS
+cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(
+	baseUrl = atlas_url,
+	cohortIds = cohortId)
+
+# Setting naming convention for cohort tables
+cohortTableNames <- getCohortTableNames(cohortTable = "cohort")
+
+# Creating cohort tables based on naming convention
+createCohortTables(
+	connectionDetails = connectionDetails,
+	cohortTableNames = cohortTableNames,
+	cohortDatabaseSchema = write_schema)
+
+# Generating the cohort population from the Synpuf dataset
+cohortsGenerated <- generateCohortSet(connectionDetails = connectionDetails,
+                                      cdmDatabaseSchema = synpuf_schema,
+                                      cohortDatabaseSchema = write_schema,
+                                      cohortTableNames = cohortTableNames,
+                                      cohortDefinitionSet = cohortDefinitionSet)
+```
+
+Now, we build the CohortExplorer app.
+
+```{r}
+CohortExplorer::createCohortExplorerApp(
+  connectionDetails = connectionDetails,
+  cohortDatabaseSchema = write_schema,
+  cdmDatabaseSchema = synpuf_schema,
+  cohortTable = "cohort",
+  cohortDefinitionId = cohortId,
+  exportFolder = "Insert path to folder you want application files created in",
+  databaseId = "SynPUF"
+)
+```
+
+The above code will generate several files in the export folder you designated.
+Navigate to that folder and open the README.md file. Follow the contained 
+instructions to launch the Shiny application.
+
+Note: If you run into errors when running renv::restore() within the 
+CohortExplorer R project, run the following code instead, then move on to 
+runApp().
+
+```{r}
+# Install required packages
+renv::install("lattice", "MASS", "Matrix", "mgcv", "nlme", "renv", "anytime", 
+							"askpass", "base64enc", "BH", "bslib", "cachem", "cli", 
+							"colorspace", "commonmark", "cpp11", "crayon", "crosstalk", 
+							"curl", "data.table", "digest", "dplyr", "ellipsis", "evaluate", 
+							"fansi", "farver", "fastmap", "fontawesome", "fs", "generics", 
+							"ggplot2", "glue", "gtable", "highr", "htmltools", "htmlwidgets", 
+							"httpuv", "httr", "isoband", "jquerylib", "jsonlite", "knitr", 
+							"labeling", "later", "lazyeval", "lifecycle", "magrittr", 
+							"memoise", "mime", "munsell", "openssl", "pillar", "pkgconfig", 
+							"plotly", "promises", "purrr", "R6", "rappdirs", "RColorBrewer", 
+							"Rcpp", "reactable", "reactR", "rlang", "rmarkdown", "sass", 
+							"scales", "shiny", "shinycssloaders", "shinyWidgets", 
+							"sourcetools", "stringi", "stringr", "sys", "tibble", "tidyr", 
+							"tidyselect", "tinytex", "utf8", "vctrs", "viridisLite", "withr", 
+							"xfun", "xtable", "yaml")
+
+# Load the required packages
+packages <- c("lattice", "MASS", "Matrix", "mgcv", "nlme", "renv", "anytime", 
+							"askpass", "base64enc", "BH", "bslib", "cachem", "cli", 
+							"colorspace", "commonmark", "cpp11", "crayon", "crosstalk", 
+							"curl", "data.table", "digest", "dplyr", "ellipsis", "evaluate", 
+							"fansi", "farver", "fastmap", "fontawesome", "fs", "generics", 
+							"ggplot2", "glue", "gtable", "highr", "htmltools", "htmlwidgets", 
+							"httpuv", "httr", "isoband", "jquerylib", "jsonlite", "knitr", 
+							"labeling", "later", "lazyeval", "lifecycle", "magrittr", 
+							"memoise", "mime", "munsell", "openssl", "pillar", "pkgconfig", 
+							"plotly", "promises", "purrr", "R6", "rappdirs", "RColorBrewer", 
+							"Rcpp", "reactable", "reactR", "rlang", "rmarkdown", "sass", 
+							"scales", "shiny", "shinycssloaders", "shinyWidgets", 
+							"sourcetools", "stringi", "stringr", "sys", "tibble", "tidyr", 
+							"tidyselect", "tinytex", "utf8", "vctrs", "viridisLite", "withr", 
+							"xfun", "xtable", "yaml")
+
+lapply(packages, library, character.only = TRUE)
+```

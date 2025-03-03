@@ -9,4 +9,5 @@ articles:
   04-feature-extraction-covariates: 04-feature-extraction-covariates.html
   04.5-feature-extraction-characterization: 04.5-feature-extraction-characterization.html
   05-working-with-omop-cdm: 05-working-with-omop-cdm.html
-last_built: 2025-02-28T19:06Z
+  06-CohortExplorer: 06-CohortExplorer.html
+last_built: 2025-03-03T19:41Z

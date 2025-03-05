@@ -58,22 +58,18 @@ connectionDetails <- createConnectionDetails(
 	password = keyring::key_get("db_password"))
 
 # Connecting to the database for the purpose of setting the following options
-con =  DatabaseConnector::connect(
-  dbms = "redshift",
-  server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
-  port = 5439,
-  user = keyring::key_get("db_username"),
-  password = keyring::key_get("db_password"))
+con =  DatabaseConnector::connect(connectionDetails)
 
 options(con.default.value = con)
 options(schema.default.value = synpuf_schema)
 options(write_schema.default.value = write_schema)
 
 # Connecting to ATLAS
-ROhdsiWebApi::authorizeWebApi(atlas_url, 
-                              authMethod = "db", 
-                              webApiUsername = keyring::key_get("atlas_username"), 
-                              webApiPassword = keyring::key_get("atlas_password"))
+ROhdsiWebApi::authorizeWebApi(
+	atlas_url,
+	authMethod = "db",
+	webApiUsername = keyring::key_get("atlas_username"),
+	webApiPassword = keyring::key_get("atlas_password"))
 
 # Choosing an ATLAS cohort definition
 cohortId <- 4675
@@ -93,11 +89,12 @@ createCohortTables(
 	cohortDatabaseSchema = write_schema)
 
 # Generating the cohort population from the Synpuf dataset
-cohortsGenerated <- generateCohortSet(connectionDetails = connectionDetails,
-                                      cdmDatabaseSchema = synpuf_schema,
-                                      cohortDatabaseSchema = write_schema,
-                                      cohortTableNames = cohortTableNames,
-                                      cohortDefinitionSet = cohortDefinitionSet)
+cohortsGenerated <- generateCohortSet(
+	connectionDetails = connectionDetails,
+	cdmDatabaseSchema = synpuf_schema,
+	cohortDatabaseSchema = write_schema,
+	cohortTableNames = cohortTableNames,
+	cohortDefinitionSet = cohortDefinitionSet)
 ```
 
 Now, we build the CohortExplorer app.
@@ -157,5 +154,8 @@ packages <- c("lattice", "MASS", "Matrix", "mgcv", "nlme", "renv", "anytime",
 							"tidyselect", "tinytex", "utf8", "vctrs", "viridisLite", "withr", 
 							"xfun", "xtable", "yaml")
 
-lapply(packages, library, character.only = TRUE)
+lapply(
+	packages,
+	library,
+	character.only = TRUE)
 ```

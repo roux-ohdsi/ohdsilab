@@ -40,7 +40,7 @@ write_schema = paste0("work_", keyring::key_get("db_username"))
 
 Sys.setenv("DATABASECONNECTOR_JAR_FOLDER" = "insert path to jdbc driver here")
 
-# Create the connection
+# Create the connection (using the shortcut ohdsilab_connect function)
 con =  ohdsilab::ohdsilab_connect(username = keyring::key_get("db_username"),
                                   password = keyring::key_get("db_password"))
 
@@ -66,7 +66,9 @@ the OMOP data. (Next time I will call it person_id from the get go).
 
 ```{r}
 # Get cohort that has an entry date prior to 2018
-cohort = tbl(con, inDatabaseSchema(write_schema, "rc_aphasia")) |>
+cohort = tbl(
+	con,
+	inDatabaseSchema(write_schema, "rc_aphasia")) |>
   select(person_id = subject_id, cohort_start_date, cohort_end_date)
 ```
 
@@ -91,7 +93,9 @@ And I'm going to use these concept IDs to filter the concept table to get the
 human readable concept name. We'll save this table for use later. 
 
 ```{r}
-concepts = tbl(con, inDatabaseSchema(cdm_schema, "concept")) |> 
+concepts = tbl(
+	con,
+	inDatabaseSchema(cdm_schema, "concept")) |> 
   filter(concept_id %in% !!aphasia_concepts)
 ```
 

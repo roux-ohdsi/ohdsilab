@@ -41,11 +41,12 @@ write_schema = paste0("work_", keyring::key_get("db_username"))
 
 Sys.setenv("DATABASECONNECTOR_JAR_FOLDER" = "insert path to jdbc driver here")
 
-connectionDetails <- createConnectionDetails(dbms = "redshift",
-                                             server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
-                                             port = 5439,
-                                             user = keyring::key_get("db_username"),
-                                             password = keyring::key_get("db_password"))
+connectionDetails <- createConnectionDetails(
+	dbms = "redshift",
+	server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+	port = 5439,
+	user = keyring::key_get("db_username"),
+	password = keyring::key_get("db_password"))
 ```
 
 This code will generate a table 1 for an established cohort of individuals with 
@@ -65,13 +66,14 @@ person level here. We can aggregate them in the next step.
 covariateSettings <- createDefaultCovariateSettings()
 
 # This pulls the covariate data from the cohort table
-covariateData <- getDbCovariateData(connectionDetails = connectionDetails,
-                                    cdmDatabaseSchema = cdm_schema,
-                                    cohortDatabaseSchema = write_schema,
-                                    cohortTable = "RC_aphasia",
-                                    cohortIds = -1,
-                                    rowIdField = "subject_id", 
-                                    covariateSettings = covariateSettings)
+covariateData <- getDbCovariateData(
+	connectionDetails = connectionDetails,
+	cdmDatabaseSchema = cdm_schema,
+	cohortDatabaseSchema = write_schema,
+	cohortTable = "RC_aphasia",
+	cohortIds = -1,
+	rowIdField = "subject_id",
+	covariateSettings = covariateSettings)
 
 summary(covariateData)
 ```
@@ -94,14 +96,17 @@ this using the `tidyCovariateData()` function.
 Again, we'll save the result since it can take a while. 
 ```{r}
 #this tidies up the covariates but I'm not sure what to use it for...
-tidyCovariates <- tidyCovariateData(covariateData,
-                                    minFraction = 0.001,
-                                    normalize = FALSE,
-                                    removeRedundancy = TRUE)
+tidyCovariates <- tidyCovariateData(
+	covariateData,
+	minFraction = 0.001,
+	normalize = FALSE,
+	removeRedundancy = TRUE)
 
 # aggregates summary statistics for table 1.
 covariateData.agg <- aggregateCovariates(covariateData)
-saveCovariateData(covariateData.agg, "covariates_agg")
+saveCovariateData(
+	covariateData.agg,
+	"covariates_agg")
 
 # we can load it later like this:
 covariateData.agg <- loadCovariateData("covariates_agg")
@@ -114,9 +119,17 @@ now I've just saved it as a .csv file and formatted in excel.
 
 ```{r}
 result <- createTable1(covariateData.agg)
-print(result, row.names = FALSE, right = FALSE)
-result <- createTable1(covariateData.agg, output = "one column")
-write.csv(result, "covariates.csv", row.names = FALSE)
+print(
+	result,
+	row.names = FALSE,
+	right = FALSE)
+result <- createTable1(
+	covariateData.agg,
+	output = "one column")
+write.csv(
+	result,
+	"covariates.csv",
+	row.names = FALSE)
 ```
 
 

@@ -55,20 +55,16 @@ we installed in the intro vignette.
 ```{r}
 Sys.setenv("DATABASECONNECTOR_JAR_FOLDER" = "insert path to jdbc driver here")
 
-connectionDetails <- createConnectionDetails(dbms = "redshift",
-                                             server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
-                                             port = 5439,
-                                             user = keyring::key_get("db_username"),
-                                             password = keyring::key_get("db_password"))
+connectionDetails <- createConnectionDetails(
+	dbms = "redshift",
+	server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+	port = 5439,
+	user = keyring::key_get("db_username"),
+	password = keyring::key_get("db_password"))
 
 # Connect to the database. You won't need this connection until later, but for 
 #now you just need the "con" information saved for the next step.
-con =  DatabaseConnector::connect(
-  dbms = "redshift",
-  server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
-  port = 5439,
-  user = keyring::key_get("db_username"),
-  password = keyring::key_get("db_password"))
+con =  DatabaseConnector::connect(connectionDetails)
 
 # Make it easier for some r functions to find the database
 options(con.default.value = con)
@@ -84,9 +80,13 @@ descendants and a concept set for the drug metformin with only one concept ID
 40164929.
 
 ```{r}
-t2d <- cs(descendants(201826), name = "Type 2 diabetes")
+t2d <- cs(
+	descendants(201826),
+	name = "Type 2 diabetes")
 
-metformin <- cs(40164929, name = "Metformin")
+metformin <- cs(
+	40164929,
+	name = "Metformin")
 ```
 
 Now we define our cohort using the same logic as ATLAS. The syntax may look a
@@ -140,16 +140,18 @@ cohortTableNames <- getCohortTableNames(cohortTable = "synpuf_t2d")
 
 # Create empty tables in your personal schema using the naming convention
 #designated in the last step.
-createCohortTables(connectionDetails = connectionDetails,
-                   cohortTableNames = cohortTableNames,
-                   cohortDatabaseSchema = write_schema)
+createCohortTables(
+	connectionDetails = connectionDetails,
+	cohortTableNames = cohortTableNames,
+	cohortDatabaseSchema = write_schema)
 
 # Generate your cohort for the Synpuf database.
-cohortsGenerated <- generateCohortSet(connectionDetails = connectionDetails,
-                                      cdmDatabaseSchema = synpuf_schema,
-                                      cohortDatabaseSchema = write_schema,
-                                      cohortTableNames = cohortTableNames,
-                                      cohortDefinitionSet = cohortDefinitionSet)
+cohortsGenerated <- generateCohortSet(
+	connectionDetails = connectionDetails,
+	cdmDatabaseSchema = synpuf_schema,
+	cohortDatabaseSchema = write_schema,
+	cohortTableNames = cohortTableNames,
+	cohortDefinitionSet = cohortDefinitionSet)
 ```
 
 Now to prove that our cohort generated successfully, let's create a table 
@@ -160,7 +162,9 @@ to the number of persons in the synpuf dataset in the identical ATLAS cohort
 
 ```{r}
 # Create a table containing your new cohort.
-cohort <- tbl(con, inDatabaseSchema(write_schema, "synpuf_t2d")) |>
+cohort <- tbl(
+	con,
+	inDatabaseSchema(write_schema, "synpuf_t2d")) |>
   select(person_id = subject_id, cohort_start_date, cohort_end_date)
 
 # How many people are in the cohort?

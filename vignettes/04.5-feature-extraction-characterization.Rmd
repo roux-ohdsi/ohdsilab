@@ -50,12 +50,7 @@ atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
 synpuf_schema = "omop_cdm_synpuf_110k_531"
 write_schema = paste0("work_", keyring::key_get("db_username"))
 
-con =  DatabaseConnector::connect(
-  dbms = "redshift",
-  server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
-  port = 5439,
-  user = keyring::key_get("db_username"),
-  password = keyring::key_get("db_password"))
+con =  DatabaseConnector::connect(connectionDetails)
 
 options(con.default.value = con)
 options(schema.default.value = synpuf_schema)
@@ -94,10 +89,10 @@ cohortTableNames <- CohortGenerator::getCohortTableNames(
 	cohortTable = "cohort")
 
 
-createCohortTables(connectionDetails = connectionDetails,
-                   cohortTableNames = cohortTableNames,
-                   cohortDatabaseSchema = write_schema)
-
+createCohortTables(
+	connectionDetails = connectionDetails,
+	cohortTableNames = cohortTableNames,
+	cohortDatabaseSchema = write_schema)
 
 
 cohortsGenerated <- CohortGenerator::generateCohortSet(

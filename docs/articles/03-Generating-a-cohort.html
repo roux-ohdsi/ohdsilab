@@ -113,12 +113,16 @@ connectionDetails method instead of using a connection.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span><span class="st">"DATABASECONNECTOR_JAR_FOLDER"</span> <span class="op">=</span> <span class="st">"insert path to jdbc driver here"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">connectionDetails</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/createConnectionDetails.html" class="external-link">createConnectionDetails</a></span><span class="op">(</span>dbms <span class="op">=</span> <span class="st">"redshift"</span>,</span>
-<span>                                             server <span class="op">=</span> <span class="st">"ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab"</span>,</span>
-<span>                                             port <span class="op">=</span> <span class="fl">5439</span>,</span>
-<span>                                             user <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span>,</span>
-<span>                                             password <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_password"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">connectionDetails</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/createConnectionDetails.html" class="external-link">createConnectionDetails</a></span><span class="op">(</span></span>
+<span>    dbms <span class="op">=</span> <span class="st">"redshift"</span>,</span>
+<span>    server <span class="op">=</span> <span class="st">"ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab"</span>,</span>
+<span>    port <span class="op">=</span> <span class="fl">5439</span>,</span>
+<span>    user <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span>,</span>
+<span>    password <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_password"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># We do need to connect to the database to save the variable "con", but we can </span></span>
+<span><span class="co"># it with much less code now that we the connectionDetails saved</span></span>
+<span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/connect.html" class="external-link">connect</a></span><span class="op">(</span><span class="va">connectionDetails</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># make it easier for some r functions to find the database</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>con.default.value <span class="op">=</span> <span class="va">con</span><span class="op">)</span></span>
@@ -129,10 +133,11 @@ This uses the atlas_url information, and your username/password which
 you set using <code><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">keyring::key_set()</a></code> in a previous vignette
 (“Introduction to OHDSI Lab”).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ROhdsiWebApi/reference/authorizeWebApi.html" class="external-link">authorizeWebApi</a></span><span class="op">(</span><span class="va">atlas_url</span>, </span>
-<span>                              authMethod <span class="op">=</span> <span class="st">"db"</span>, </span>
-<span>                              webApiUsername <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"atlas_username"</span><span class="op">)</span>, </span>
-<span>                              webApiPassword <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"atlas_password"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ROhdsiWebApi/reference/authorizeWebApi.html" class="external-link">authorizeWebApi</a></span><span class="op">(</span></span>
+<span>    <span class="va">atlas_url</span>,</span>
+<span>    authMethod <span class="op">=</span> <span class="st">"db"</span>,</span>
+<span>    webApiUsername <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"atlas_username"</span><span class="op">)</span>,</span>
+<span>    webApiPassword <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"atlas_password"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Ok now we need to do two things. First - pick which cohort to use to
 generate a data set. This is the number for the cohort that you (or
 someone else) creates in ATLAS. Note that if you want to include
@@ -143,8 +148,9 @@ ID numbers.</p>
 <p>Then we’re going to create a cohortDefinitionSet object using that ID
 and the baseUrl.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cohortDefinitionSet</span> <span class="op">&lt;-</span> <span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ROhdsiWebApi/reference/exportCohortDefinitionSet.html" class="external-link">exportCohortDefinitionSet</a></span><span class="op">(</span>baseUrl <span class="op">=</span> <span class="va">atlas_url</span>,</span>
-<span>                                                               cohortIds <span class="op">=</span> <span class="va">cohortId</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cohortDefinitionSet</span> <span class="op">&lt;-</span> <span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ROhdsiWebApi/reference/exportCohortDefinitionSet.html" class="external-link">exportCohortDefinitionSet</a></span><span class="op">(</span></span>
+<span>    baseUrl <span class="op">=</span> <span class="va">atlas_url</span>,</span>
+<span>    cohortIds <span class="op">=</span> <span class="va">cohortId</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cohortDefinitionSet</span></span></code></pre></div>
 <p>We’ll create a name for this cohort - this is the name that’s used
@@ -157,9 +163,10 @@ connectionDetails object, the cohortTableName object, and the mySchema
 object from above.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create empty tables in the {mySchema}.cohort table</span></span>
-<span><span class="fu"><a href="https://ohdsi.github.io/CohortGenerator/reference/createCohortTables.html" class="external-link">createCohortTables</a></span><span class="op">(</span>connectionDetails <span class="op">=</span> <span class="va">connectionDetails</span>,</span>
-<span>                   cohortTableNames <span class="op">=</span> <span class="va">cohortTableNames</span>,</span>
-<span>                   cohortDatabaseSchema <span class="op">=</span> <span class="va">write_schema</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://ohdsi.github.io/CohortGenerator/reference/createCohortTables.html" class="external-link">createCohortTables</a></span><span class="op">(</span></span>
+<span>    connectionDetails <span class="op">=</span> <span class="va">connectionDetails</span>,</span>
+<span>    cohortTableNames <span class="op">=</span> <span class="va">cohortTableNames</span>,</span>
+<span>    cohortDatabaseSchema <span class="op">=</span> <span class="va">write_schema</span><span class="op">)</span></span></code></pre></div>
 <p><em>This function doesn’t actually currently work in Rmarkdown, see
 <a href="https://github.com/OHDSI/CohortGenerator/issues/97" class="external-link uri">https://github.com/OHDSI/CohortGenerator/issues/97</a> for
 details. If you need to use it in RMarkdown supposedly you can wrap it
@@ -169,11 +176,12 @@ that this code references the synpuf schema. If you were working with
 the pharmetrics data, you’d reference <code>cdm_schema</code> or
 <code>"omop_cdm_53_pmtx_202203"</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cohortsGenerated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/CohortGenerator/reference/generateCohortSet.html" class="external-link">generateCohortSet</a></span><span class="op">(</span>connectionDetails <span class="op">=</span> <span class="va">connectionDetails</span>,</span>
-<span>                                      cdmDatabaseSchema <span class="op">=</span> <span class="va">synpuf_schema</span>,</span>
-<span>                                      cohortDatabaseSchema <span class="op">=</span> <span class="va">write_schema</span>,</span>
-<span>                                      cohortTableNames <span class="op">=</span> <span class="va">cohortTableNames</span>,</span>
-<span>                                      cohortDefinitionSet <span class="op">=</span> <span class="va">cohortDefinitionSet</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cohortsGenerated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/CohortGenerator/reference/generateCohortSet.html" class="external-link">generateCohortSet</a></span><span class="op">(</span></span>
+<span>    connectionDetails <span class="op">=</span> <span class="va">connectionDetails</span>,</span>
+<span>    cdmDatabaseSchema <span class="op">=</span> <span class="va">synpuf_schema</span>,</span>
+<span>    cohortDatabaseSchema <span class="op">=</span> <span class="va">write_schema</span>,</span>
+<span>    cohortTableNames <span class="op">=</span> <span class="va">cohortTableNames</span>,</span>
+<span>    cohortDefinitionSet <span class="op">=</span> <span class="va">cohortDefinitionSet</span><span class="op">)</span></span></code></pre></div>
 <p>If you want to visually see this new table in your schema, you can
 connect to the database and use the <strong>Connections</strong> pane in
 the top right of RStudio.</p>
@@ -188,8 +196,10 @@ the top right of RStudio.</p>
 person table to include only people in your cohort.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># pull data from the new cohort table</span></span>
-<span><span class="va">cohort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="va">write_schema</span>, <span class="st">"synPuf_CVA"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span>person_id <span class="op">=</span> <span class="va">subject_id</span>, <span class="va">cohort_start_date</span>, <span class="va">cohort_end_date</span><span class="op">)</span></span>
+<span><span class="va">cohort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
+<span>    <span class="va">con</span>,</span>
+<span>    <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="va">write_schema</span>, <span class="st">"synPuf_CVA"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span>person_id <span class="op">=</span> <span class="va">subject_id</span>, <span class="va">cohort_start_date</span>, <span class="va">cohort_end_date</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># join to the person table to get information about demographics, calculate age at cohort entry</span></span>
 <span><span class="va">demographics</span> <span class="op">&lt;-</span> <span class="va">cohort</span> <span class="op">|&gt;</span> </span>

@@ -108,12 +108,7 @@ set the option(con.default.value) setting in the next line.</p>
 <span><span class="va">synpuf_schema</span> <span class="op">=</span> <span class="st">"omop_cdm_synpuf_110k_531"</span></span>
 <span><span class="va">write_schema</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"work_"</span>, <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">con</span> <span class="op">=</span>  <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/connect.html" class="external-link">connect</a></span><span class="op">(</span></span>
-<span>  dbms <span class="op">=</span> <span class="st">"redshift"</span>,</span>
-<span>  server <span class="op">=</span> <span class="st">"ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab"</span>,</span>
-<span>  port <span class="op">=</span> <span class="fl">5439</span>,</span>
-<span>  user <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span>,</span>
-<span>  password <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_password"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">con</span> <span class="op">=</span>  <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/connect.html" class="external-link">connect</a></span><span class="op">(</span><span class="va">connectionDetails</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>con.default.value <span class="op">=</span> <span class="va">con</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>schema.default.value <span class="op">=</span> <span class="va">synpuf_schema</span><span class="op">)</span></span>
@@ -144,10 +139,10 @@ cohort” vignette)</p>
 <span>    cohortTable <span class="op">=</span> <span class="st">"cohort"</span><span class="op">)</span></span>
 <span></span>
 <span></span>
-<span><span class="fu"><a href="https://ohdsi.github.io/CohortGenerator/reference/createCohortTables.html" class="external-link">createCohortTables</a></span><span class="op">(</span>connectionDetails <span class="op">=</span> <span class="va">connectionDetails</span>,</span>
-<span>                   cohortTableNames <span class="op">=</span> <span class="va">cohortTableNames</span>,</span>
-<span>                   cohortDatabaseSchema <span class="op">=</span> <span class="va">write_schema</span><span class="op">)</span></span>
-<span></span>
+<span><span class="fu"><a href="https://ohdsi.github.io/CohortGenerator/reference/createCohortTables.html" class="external-link">createCohortTables</a></span><span class="op">(</span></span>
+<span>    connectionDetails <span class="op">=</span> <span class="va">connectionDetails</span>,</span>
+<span>    cohortTableNames <span class="op">=</span> <span class="va">cohortTableNames</span>,</span>
+<span>    cohortDatabaseSchema <span class="op">=</span> <span class="va">write_schema</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span><span class="va">cohortsGenerated</span> <span class="op">&lt;-</span> <span class="fu">CohortGenerator</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/CohortGenerator/reference/generateCohortSet.html" class="external-link">generateCohortSet</a></span><span class="op">(</span></span>

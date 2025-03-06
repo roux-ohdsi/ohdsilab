@@ -1,5 +1,5 @@
 ---
-title: "Visualizing Sample Data"
+title: "8: Visualizing Sample Data"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Generating a cohort with Capr}
@@ -26,13 +26,12 @@ based on Synpuf synthetic data).
 We'll need to install one new package: CohortExplorer
 
 ```{r setup, eval = FALSE}
-renv::install("ohdsi/CohortExplorer")
+renv::install("OHDSI/CohortExplorer")
 ```
 
 We'll generate a cohort from ATLAS as we did in vignette 3.
 
 ```{r}
-# ==============================================================================
 # Packages =====================================================================
 library(CohortExplorer)
 library(DatabaseConnector)

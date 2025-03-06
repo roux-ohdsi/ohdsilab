@@ -1,5 +1,5 @@
 ---
-title: "Generating a cohort with Capr"
+title: "4: Generating a cohort with Capr"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Generating a cohort with Capr}
@@ -28,7 +28,7 @@ https://ohdsi.github.io/TheBookOfOhdsi/Cohorts.html.
 We'll need to install one new package: Capr
 
 ```{r setup, eval = FALSE}
-renv::install("ohdsi/Capr")
+renv::install("OHDSI/Capr")
 ```
 
 We'll use the same set up code as the intro vignette. 

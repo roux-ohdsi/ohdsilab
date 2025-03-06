@@ -1,5 +1,5 @@
 ---
-title: "1: Introduction to ohdsilab (start here!)"
+title: "Introduction to ohdsilab (start here!)"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction to ohdsilab}

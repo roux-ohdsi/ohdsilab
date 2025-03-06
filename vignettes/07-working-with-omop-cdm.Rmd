@@ -1,5 +1,5 @@
 ---
-title: "7: Working with Data from the ohdsilab database"
+title: "Working with Data from the ohdsilab database"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Working with Data from the ohdsilab database}

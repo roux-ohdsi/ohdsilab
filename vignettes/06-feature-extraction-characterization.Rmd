@@ -1,5 +1,5 @@
 ---
-title: "Generating Characterization Files"
+title: "6: Generating Characterization Files"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Generating Characterization Files}
@@ -22,7 +22,7 @@ Install one new package (Characterization) and load it along with the other
 typical packages.
 
 ```{r setup}
-renv::install("ohdsi/Characterization")
+renv::install("OHDSI/Characterization")
 
 library(ohdsilab)
 library(DatabaseConnector)

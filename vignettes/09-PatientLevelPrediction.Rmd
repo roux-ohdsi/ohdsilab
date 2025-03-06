@@ -1,0 +1,220 @@
+---
+title: "9: Patient Level Prediction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Generating a cohort with Capr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+This tutorial will illustrate how to use the PatientLevelPrediction package
+created by the OHDSI community and described here: 
+https://ohdsi.github.io/PatientLevelPrediction/. Researchers can use this
+package to predict risk of specific outcomes for persons in a target cohort. The
+prediction results can be analyzed programmatically or in an R Shiny application.
+
+The Pharmetrics dataset (containing real patient claims data) will be used
+in this tutorial to ensure that correlation between risk of outcome and presence
+of outcome is consistent (Synthetic data may not produce consistent 
+relationships between covariates). Any person-level results should not be shared 
+with individuals who are not active OHDSI Lab users.
+
+We'll need to install one new package: PatientLevelPrediction
+
+```{r setup, eval = FALSE}
+renv::install("OHDSI/PatientLevelPrediction")
+```
+
+We'll generate a cohort from ATLAS as we did in vignette 3, except now we need
+two cohorts: a target cohort (i.e. the population we're analyzing), 4675 (Persons
+with type 2 diabetes and prescribed metformin within 0-30 days after their type
+2 diabetes diagnosis) and an outcome cohort (i.e. the outcome we're predicting 
+risk for) 4681 (Persons with congestive heart failure).
+
+```{r}
+# Packages =====================================================================
+library(PatientLevelPrediction)
+library(DatabaseConnector)
+library(DatabaseConnector)
+library(keyring)
+library(CohortGenerator)
+library(tidyverse)
+
+# DB and ATLAS Connections =====================================================
+atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+cdm_schema = "omop_cdm_53_pmtx_202203"
+write_schema = paste0("work_", keyring::key_get("db_username"))
+
+# Setting connectionDetails for later use
+Sys.setenv("DATABASECONNECTOR_JAR_FOLDER" = "Insert path to JDBC driver")
+
+connectionDetails <- createConnectionDetails(
+	dbms = "redshift",
+	server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+	port = 5439,
+	user = keyring::key_get("db_username"),
+	password = keyring::key_get("db_password"))
+
+# Connecting to the database for the purpose of setting the following options
+con =  DatabaseConnector::connect(connectionDetails)
+
+options(con.default.value = con)
+options(schema.default.value = cdm_schema)
+options(write_schema.default.value = write_schema)
+
+# Connecting to ATLAS
+ROhdsiWebApi::authorizeWebApi(
+	atlas_url,
+	authMethod = "db",
+	webApiUsername = keyring::key_get("atlas_username"),
+	webApiPassword = keyring::key_get("atlas_password"))
+
+# Choosing an ATLAS cohort definition
+cohortIds <- c(4675, 4681)
+
+# Pulling the cohort definition from ATLAS
+cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(
+	baseUrl = atlas_url,
+	cohortIds = cohortIds)
+
+# Setting naming convention for cohort tables
+cohortTableNames <- getCohortTableNames(cohortTable = "cohort")
+
+# Creating cohort tables based on naming convention
+createCohortTables(
+	connectionDetails = connectionDetails,
+	cohortTableNames = cohortTableNames,
+	cohortDatabaseSchema = write_schema)
+
+# Generating the cohort population from the Pharmetrics dataset
+cohortsGenerated <- generateCohortSet(
+	connectionDetails = connectionDetails,
+	cdmDatabaseSchema = cdm_schema,
+	cohortDatabaseSchema = write_schema,
+	cohortTableNames = cohortTableNames,
+	cohortDefinitionSet = cohortDefinitionSet)
+```
+
+Now, we need to create the settings for the prediction model. First we set up 
+the database and cohort details.
+
+```{r}
+databaseDetails <- PatientLevelPrediction::createDatabaseDetails(
+  connectionDetails = connectionDetails,
+  cdmDatabaseSchema = cdm_schema,
+  cdmDatabaseName = cdm_schema,
+  cdmDatabaseId = "pmtx",
+  cohortDatabaseSchema = write_schema,
+  cohortTable = "cohort",
+  outcomeDatabaseSchema = write_schema,
+  outcomeTable = "cohort",
+  targetId = 4675,
+  outcomeIds = 4681)
+```
+
+Next, we create covariates using Feature Extraction as shown in vignette 6. This
+may take some time to run.
+
+```{r}
+plpData <- PatientLevelPrediction::getPlpData(
+  databaseDetails = databaseDetails,
+  covariateSettings = FeatureExtraction::createDefaultCovariateSettings())
+```
+
+So we don't have to run the above again, we save plpData as an object and then
+load it again.
+
+```{r}
+#save plpData
+PatientLevelPrediction::savePlpData(plpData, "plpData")
+
+#load plpData
+plpData <- PatientLevelPrediction::loadPlpData("plpData")
+```
+
+Next, we set our population settings, choosing which persons in our cohort to 
+include/remove from the prediction.
+
+```{r}
+populationSettings <- PatientLevelPrediction::createStudyPopulationSettings(
+  binary = TRUE,
+  firstExposureOnly = FALSE,
+  washoutPeriod = 0,
+  removeSubjectsWithPriorOutcome = FALSE,
+  priorOutcomeLookback = 99999,
+  requireTimeAtRisk = TRUE,
+  minTimeAtRisk = 0,
+  riskWindowStart = 0,
+  startAnchor = 'cohort start',
+  riskWindowEnd = 365,
+  endAnchor = 'cohort start')
+```
+
+Here,we select the type of prediction model we want to use. In this example, we
+will use lasso logistic regression.
+
+```{r}
+lr_model <- PatientLevelPrediction::setLassoLogisticRegression()
+```
+
+Now, we're ready to run the model (and set a few more settings). Depending 
+on the size of our cohort and other settings, this may take a while (when I ran 
+it, it took 2 hours). Feel free to create more restrictive cohorts or edit any 
+of the prediction settings.
+
+```{r}
+lr_results <- PatientLevelPrediction::runPlp( 
+  plpData = plpdata, 
+  outcomeId = 4681,
+  analysisId = 'demo', 
+  analysisName = 'run plp demo', 
+  populationSettings = populationSettings, 
+  splitSettings = PatientLevelPrediction::createDefaultSplitSetting(
+    type = "time",
+    testFraction = 0.25,
+    nfold = 2), 
+  sampleSettings = PatientLevelPrediction::createSampleSettings(),
+  preprocessSettings = PatientLevelPrediction::createPreprocessSettings(
+    minFraction = 0, 
+    normalize = T), 
+  modelSettings = lr_model, 
+  executeSettings = PatientLevelPrediction::createDefaultExecuteSettings(), 
+  saveDirectory = "insert path to directory you want to save your results to")
+```
+
+Again, because the above code takes so long to run, let's save the results as an
+object for quick loading.
+
+```{r}
+#save results
+PatientLevelPrediction::savePlpResult(lr_results, "demo_results")
+
+#load results
+lr_results <- PatientLevelPrediction::loadPlpResult("demo_results")
+```
+
+Now that we have run the prediction model, let's view the results in two of
+ways. First, to launch the R Shiny application, we run the following code.
+
+```{r}
+PatientLevelPrediction::viewPlp(lr_results)
+```
+
+Finally, let's view the results in tabular form. Once you run the following code, 
+note that the value column contains the risk that that person had of 
+experiencing the outcome. If we calculated the average of the value column for 
+each outcome (0 meaning no outcome, and 1 meaning with outcome), we could judge 
+whether the model we used was successful in prediction.
+
+```{r}
+results <- PatientLevelPrediction::loadPlpResult("insert path to plpResult directory It should have saved within the directory you set above.")
+View(results$prediction)
+```

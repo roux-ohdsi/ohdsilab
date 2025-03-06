@@ -1,5 +1,5 @@
 ---
-title: "5: Generating Covariates and Table 1"
+title: "Generating Covariates and Table 1"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Generating Covariates and Table 1}
@@ -22,13 +22,13 @@ knitr::opts_chunk$set(
 
 We'll need to install one new package: FeatureExtraction
 
-```{r setup, eval = FALSE}
+```{r}
 renv::install("OHDSI/FeatureExtraction")
 ```
 
 Load the typical packages
 
-```{r setup}
+```{r}
 library(ohdsilab)
 library(keyring)
 library(DatabaseConnector)

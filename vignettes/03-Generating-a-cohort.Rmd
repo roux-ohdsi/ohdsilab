@@ -1,5 +1,5 @@
 ---
-title: "3: Generating a cohort"
+title: "Generating a cohort"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Generating a cohort}

@@ -1,5 +1,5 @@
 ---
-title: "9: Patient Level Prediction"
+title: "Patient Level Prediction"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Generating a cohort with Capr}

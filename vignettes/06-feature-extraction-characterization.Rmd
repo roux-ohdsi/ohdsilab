@@ -1,5 +1,5 @@
 ---
-title: "6: Generating Characterization Files"
+title: "Generating Characterization Files"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Generating Characterization Files}

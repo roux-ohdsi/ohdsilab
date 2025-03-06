@@ -5,9 +5,10 @@ articles:
   01-intro-to-ohdsilab: 01-intro-to-ohdsilab.html
   02-getting-started-with-box: 02-getting-started-with-box.html
   03-Generating-a-cohort: 03-Generating-a-cohort.html
-  03.5-Generating-a-cohort-with_Capr: 03.5-Generating-a-cohort-with_Capr.html
-  04-feature-extraction-covariates: 04-feature-extraction-covariates.html
-  04.5-feature-extraction-characterization: 04.5-feature-extraction-characterization.html
-  05-working-with-omop-cdm: 05-working-with-omop-cdm.html
-  06-CohortExplorer: 06-CohortExplorer.html
-last_built: 2025-03-05T17:05Z
+  04-Generating-a-cohort-with_Capr: 04-Generating-a-cohort-with_Capr.html
+  05-feature-extraction-covariates: 05-feature-extraction-covariates.html
+  06-feature-extraction-characterization: 06-feature-extraction-characterization.html
+  07-working-with-omop-cdm: 07-working-with-omop-cdm.html
+  08-CohortExplorer: 08-CohortExplorer.html
+  09-PatientLevelPrediction: 09-PatientLevelPrediction.html
+last_built: 2025-03-06T19:42Z

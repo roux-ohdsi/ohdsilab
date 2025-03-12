@@ -1,0 +1,101 @@
+---
+title: "Generating a Synthetic Dataset"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Generating a cohort with Capr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+This tutorial will illustrate how to use the Eunomia package
+created by the OHDSI community and described here: 
+https://ohdsi.github.io/PatientLevelPrediction/. Researchers can use this
+package to create a synthetic OMOP CDM (Common Data Model) dataset for 
+demonstration and testing purposes. This package may have limited usefulness 
+within the OHDSI Lab due to thealready-included SynPUF synthetic dataset, but
+the Eunomia dataset can also be loaded outside the OHDSI Lab on a local machine 
+or other workspace. This can be useful if you prefer to develop and test 
+analytical code on your personal computer.
+
+We'll need to install one new package: Eunomia
+
+```{r setup, eval = FALSE}
+renv::install("OHDSI/Eunomia")
+
+library(Eunomia)
+library(DatabaseConnector)
+```
+
+Now we create our connection details. This step is far simpler than creating
+connection details for the OHDSI Lab databases (PharMetrics and SynPUF).
+
+```{r}
+connectionDetails <- Eunomia::getEunomiaConnectionDetails()
+```
+
+We connect to the Eunomia database is the same way we connected to the OHDSI Lab
+databases.
+
+```{r}
+con <- DatabaseConnector::connect(connectionDetails)
+options(con.default.value = con)
+```
+
+Now we can use the Eunomia database in much the same ways as we have the OHDSI
+Lab databases. Let's generate a cohort of patients with Otitis Media to prove it.
+The only notable difference is the cohortDatabaseSchema and cdmDataBaseSchema
+will be set to "main".
+
+```{r}
+# Load the necessary packages
+library(ROhdsiWebApi)
+library(CohortGenerator)
+
+# Set ATLAS url
+atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+
+# Connect to ATLAS
+ROhdsiWebApi::authorizeWebApi(
+	atlas_url,
+	authMethod = "db",
+	webApiUsername = keyring::key_get("atlas_username"),
+	webApiPassword = keyring::key_get("atlas_password"))
+
+# Identify the cohort definition
+cohortId <- 4734
+
+# Export the cohort definition from ATLAS
+cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(
+	baseUrl = atlas_url,
+	cohortIds = cohortId)
+
+# Set the naming convention for the cohort tables
+cohortTableNames <- getCohortTableNames(cohortTable = "cohort")
+
+# Create the cohort tables
+createCohortTables(
+	connectionDetails = connectionDetails,
+	cohortTableNames = cohortTableNames,
+	cohortDatabaseSchema = "main")
+
+# Populate the cohort tables with persons in the Eunomia dataset who meet the
+# cohort definition
+cohortsGenerated <- generateCohortSet(
+	connectionDetails = connectionDetails,
+	cdmDatabaseSchema = "main",
+	cohortDatabaseSchema = "main",
+	cohortTableNames = cohortTableNames,
+	cohortDefinitionSet = cohortDefinitionSet)
+```
+
+From here, we can do anything we normally do with cohorts (see vignettes 3-9). 
+The Eunomia package can be a quick way to test or demonstrate code intended to 
+be run against an OMOP CDM dataset.

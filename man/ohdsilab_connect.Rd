@@ -30,8 +30,8 @@ and getOption("write_schema.default.value").
 
 \dontrun{
 con <- ohdsilab_connect(
-    username = keyring::key_get("lab_user"),
-    password = keyring::key_get("lab_password")
+    username = keyring::key_get("db_username"),
+    password = keyring::key_get("db_password")
     )
 }
 }

@@ -12,4 +12,4 @@ navbar:
   bg: black
   includes:
     in_header: pkgdown/extra.css
-
+url: https://roux-ohdsi.github.io/ohdsilab/

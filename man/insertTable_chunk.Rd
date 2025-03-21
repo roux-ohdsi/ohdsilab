@@ -6,8 +6,8 @@
 \usage{
 insertTable_chunk(
   data,
-  n = 100,
   table_name,
+  n = 100,
   overwrite = TRUE,
   con = getOption("con.default.value"),
   write_schema = getOption("write_schema.default.value"),
@@ -17,9 +17,9 @@ insertTable_chunk(
 \arguments{
 \item{data}{data you want to write to your user schema}
 
-\item{n}{the number of chunks to split. defaults to 100. Aim for < 200 rows per chunk right now.}
-
 \item{table_name}{the name of the table that you want to write to the database}
+
+\item{n}{the number of chunks to split. defaults to 100. Aim for < 200 rows per chunk right now.}
 
 \item{overwrite}{do you want to overwrite an existing table of the same name?}
 
@@ -35,7 +35,7 @@ Insert a table to your user schema in chunks because speed and bugs
 \examples{
 \dontrun{
 options(con.default.value = con)
-write_schema = paste0("work_", keyring::key_get("lab_user"))
-insertTable_chunk(data = data, n = 50, table_name = "table1", overwrite = TRUE, user_schema = write_schema)
+write_schema = paste0("work_", keyring::key_get("db_username"))
+insertTable_chunk(data = data, table_name = "table1", n = 50, overwrite = TRUE, user_schema = write_schema)
 }
 }

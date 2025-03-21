@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Introduction to ohdsilab (start here!)">
 </head>
@@ -149,11 +149,11 @@ to do is.</p>
 <h2 id="load-the-ohdsilab-package">Load the ohdsilab package<a class="anchor" aria-label="anchor" href="#load-the-ohdsilab-package"></a>
 </h2>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://roux-ohdsi.github.io/ohdsilab/" class="external-link">ohdsilab</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://roux-ohdsi.github.io/ohdsilab/">ohdsilab</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/DatabaseConnector/" class="external-link">DatabaseConnector</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://keyring.r-lib.org/" class="external-link">keyring</a></span><span class="op">)</span></span></code></pre></div>
-<p><em><code><a href="https://roux-ohdsi.github.io/ohdsilab/" class="external-link">library(ohdsilab)</a></code> should also load
+<p><em><code><a href="https://roux-ohdsi.github.io/ohdsilab/">library(ohdsilab)</a></code> should also load
 {DatabaseConnector}, {keyring}, and other dependencies, but you might
 want to explicitly load them for transparency.</em></p>
 </div>
@@ -167,23 +167,30 @@ you received when you first created your workspace.</p>
 These credentials can be found in the email you received when you first
 launched the workspace next to “Amazon Redshift Username:” and “Amazon
 Redshift Password:” respectively.</p>
+<p>The following code will create a pop-up where you will enter your
+username and then your password. They save your username and password in
+the background so that you can access your username and password quickly
+and securely. Run this code (without editing it):</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_set</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span></span>
-<span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_set</a></span><span class="op">(</span><span class="st">"db_password"</span><span class="op">)</span></span></code></pre></div>
-<p>You can call these variables anything you’d like. They save your
-username and password in the background so that you can access your
-username and password quickly. For example, try running the following
-after setting up your username.</p>
+<code class="sourceCode R"><span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_set</a></span><span class="op">(</span><span class="st">"db_username"</span>, prompt <span class="op">=</span> <span class="st">"Redshift Username"</span><span class="op">)</span></span>
+<span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_set</a></span><span class="op">(</span><span class="st">"db_password"</span>, prompt <span class="op">=</span> <span class="st">"Redshift Password"</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="images%2Fclipboard-1342327686.png" width="400" alt="You’ll type your username in here, and your password in the next pop-up."><div class="figcaption">You’ll type your username in here, and your
+password in the next pop-up.</div>
+</div>
+<p>Then try running the following to make sure it’s saved. (Notice that
+here we are <strong>G</strong>etting the username rather than
+<strong>S</strong>etting the username.)</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span></span></code></pre></div>
 <p>You should also set up your ATLAS credentials, as they may be
 different than your redshift database credentials. These credentials can
-also be found in the email you received when you first launchedyour
+also be found in the email you received when you first launchedy our
 workspace next to “ATLAS Username:” and “ATLAS Password:”
 respectively.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_set</a></span><span class="op">(</span><span class="st">"atlas_username"</span><span class="op">)</span></span>
-<span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_set</a></span><span class="op">(</span><span class="st">"atlas_password"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_set</a></span><span class="op">(</span><span class="st">"atlas_username"</span>, prompt <span class="op">=</span> <span class="st">"Atlas username"</span><span class="op">)</span></span>
+<span><span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_set</a></span><span class="op">(</span><span class="st">"atlas_password"</span>, prompt <span class="op">=</span> <span class="st">"Atlas password"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="connecting-to-a-database">Connecting to a database<a class="anchor" aria-label="anchor" href="#connecting-to-a-database"></a>
@@ -202,8 +209,8 @@ driver–dependent libraries” to start the download.</li>
 </ul>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Schema Information ===========================================================</span></span>
-<span><span class="va">cdm_schema</span> <span class="op">=</span> <span class="st">"omop_cdm_53_pmtx_202203"</span></span>
-<span><span class="va">write_schema</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"work_"</span>, <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">cdm_schema</span> <span class="op">&lt;-</span> <span class="st">"omop_cdm_53_pmtx_202203"</span></span>
+<span><span class="va">write_schema</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"work_"</span>, <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Set the path to the JDBC driver you installed above</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span><span class="st">"DATABASECONNECTOR_JAR_FOLDER"</span> <span class="op">=</span> <span class="st">"insert path to jdbc driver here"</span><span class="op">)</span></span>
@@ -216,18 +223,23 @@ driver–dependent libraries” to start the download.</li>
 <span>  user <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span>,</span>
 <span>  password <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_password"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Test if the connection words</span></span>
-<span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu">dbIsValid</span><span class="op">(</span><span class="va">con</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="st">"Connected Successfully"</span><span class="op">)</span><span class="op">}</span></span>
+<span><span class="co"># Test if the connection works</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu">dbIsValid</span><span class="op">(</span><span class="va">con</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="st">"Connected Successfully"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># make it easier for some r functions to find the database</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>con.default.value <span class="op">=</span> <span class="va">con</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>schema.default.value <span class="op">=</span> <span class="va">cdm_schema</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>write_schema.default.value <span class="op">=</span> <span class="va">write_schema</span><span class="op">)</span></span></code></pre></div>
-<p>Instead of including this at the top of your script, you can also use
-a shortcut function in from the ohdsilab package, which will do the same
-thing.</p>
+<p>When you start a new R script to do some analysis, you won’t need to
+re-download the drivers or store your username and password (as long as
+you are in the same ohdsilab workspace). In fact, you don’t need most of
+this code. You can also start your script off using a shortcut function
+in from the ohdsilab package, which will do the same thing.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu">ohdsilab</span><span class="fu">::</span><span class="fu"><a href="../reference/ohdsilab_connect.html">ohdsilab_connect</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://roux-ohdsi.github.io/ohdsilab/">ohdsilab</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/DatabaseConnector/" class="external-link">DatabaseConnector</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ohdsilab_connect.html">ohdsilab_connect</a></span><span class="op">(</span></span>
 <span>    username <span class="op">=</span> <span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span>,</span>
 <span>    password <span class="op">=</span> <span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_password"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -243,16 +255,20 @@ database organization looks like this (this is a very similar OMOP CDM
 <p><img src="https://ohdsi.github.io/CommonDataModel/images/cdm54.png" width="100%"></p>
 <p>A more comprehensive diagram with information about the columns in
 each of the tables can be found here: <a href="https://lucid.app/lucidchart/dc75ba24-cbb6-4152-9528-a1f67b4b3843/view?page=0_0&amp;invitationId=inv_d9040d51-a9b0-4d91-b3e5-f2f0ce927cf7#" class="external-link uri">https://lucid.app/lucidchart/dc75ba24-cbb6-4152-9528-a1f67b4b3843/view?page=0_0&amp;invitationId=inv_d9040d51-a9b0-4d91-b3e5-f2f0ce927cf7#</a></p>
-<p>The data help in the database is stored under the cdm schema You can
+<p>The data help in the database is stored under the cdm schema. You can
 think of a schema as kind of like a subfolder in the database. So the
 pharmetrics data is stored in ohdsilab/omop_cdm_53_pmtx_202203/… where
 the … indicates what table you’re interested in.</p>
 <p>To query a table in pharmetrics you might write a line of code like
 this:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span> <span class="co"># for tbl() function</span></span>
+<span><span class="co"># we also have ohdsilab and DatabaseConnector loaded as above</span></span>
+<span><span class="co"># and have created the con object using ohdsilab_connect</span></span>
+<span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
 <span>    <span class="va">con</span>,</span>
-<span>    <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="st">"omop_cdm_53_pmtx_202203"</span>, <span class="st">"concept"</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="st">"omop_cdm_53_pmtx_202203"</span>, <span class="st">"concept"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p>This code is looking for the concept table in the pharmetrics schema
 which is in the ohdsilab database. You can also see the concept table in
@@ -264,9 +280,9 @@ usr999, you could access a table (that you have previously created) like
 this:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># note - this wont actually work! the table doesn't exist</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
-<span>      <span class="va">con</span>,</span>
-<span>      <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="st">"usr999"</span>, <span class="st">"myCohort"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
+<span>    <span class="va">con</span>,</span>
+<span>    <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="st">"usr999"</span>, <span class="st">"myCohort"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span></code></pre></div>
 <p>Because both of these tables are in the database, we can connect them
 together. For example, you might use {cohortGenerator} to generate a
@@ -277,14 +293,14 @@ reduce the giant amount of data in pharmetrics - usually with an
 <p>(See <a href="https://ohdsi.github.io/CohortGenerator/articles/GeneratingCohorts.html" class="external-link uri">https://ohdsi.github.io/CohortGenerator/articles/GeneratingCohorts.html</a>
 for a tutorial)</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
 <span>    <span class="va">con</span>,</span>
-<span>    <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="st">"usr999"</span>, <span class="st">"myCohort"</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="st">"usr999"</span>, <span class="st">"myCohort"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
 <span>      <span class="va">con</span>,</span>
-<span>      <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="st">"omop_cdm_53_pmtx_202203"</span>, <span class="st">"person"</span><span class="op">)</span></span>
+<span>      <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="st">"omop_cdm_53_pmtx_202203"</span>, <span class="st">"person"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"person_id"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
@@ -294,18 +310,18 @@ schema names as variables at the top of your scripts, so you can just
 reference these strings using the variables <code>cdm_schema</code> and
 <code>write_schema</code>.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cdm_schema</span> <span class="op">=</span> <span class="st">"omop_cdm_53_pmtx_202203"</span></span>
-<span><span class="va">write_schema</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"work_"</span>, <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cdm_schema</span> <span class="op">&lt;-</span> <span class="st">"omop_cdm_53_pmtx_202203"</span></span>
+<span><span class="va">write_schema</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"work_"</span>, <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"db_username"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>It might look like this:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
 <span>    <span class="va">con</span>,</span>
-<span>    <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="va">write_schema</span>, <span class="st">"myCohort"</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="va">write_schema</span>, <span class="st">"myCohort"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
 <span>      <span class="va">con</span>,</span>
-<span>      <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="va">cdm_schema</span>, <span class="st">"person"</span><span class="op">)</span></span>
+<span>      <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="va">cdm_schema</span>, <span class="st">"person"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    by <span class="op">=</span> <span class="st">"person_id"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
@@ -317,24 +333,26 @@ your code. It’s a wrapper for the dplyr <code>join</code> functions that
 also includes some workarounds for a few known bugs in the backround so
 that you don’t have to worry about them as much.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
 <span>    <span class="va">con</span>,</span>
-<span>    <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="va">write_schema</span>, <span class="st">"myCohort"</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="va">write_schema</span>, <span class="st">"myCohort"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">ohdsilab</span><span class="fu">::</span><span class="fu"><a href="../reference/omop_join.html">omop_join</a></span><span class="op">(</span><span class="st">"person"</span>, type <span class="op">=</span> <span class="st">"inner"</span>, by <span class="op">=</span> <span class="st">"person_id"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/omop_join.html">omop_join</a></span><span class="op">(</span><span class="st">"person"</span>, type <span class="op">=</span> <span class="st">"inner"</span>, by <span class="op">=</span> <span class="st">"person_id"</span><span class="op">)</span></span></code></pre></div>
 <p>It works because we set the default connection and cdm_schema using
-these lines of code from the ohdsi_new_script snippet. The
-<code><a href="../reference/omop_join.html">omop_join()</a></code> function will look for these defaults first,
-and if it doesn’t find them (because you didn’t run these two lines),
-will let you know you need to provide them directly. Note that if you
-want to point omop_join() to your user scratchpad, you only need to set
-<code>schema = write_schema</code>.</p>
+the <code><a href="../reference/ohdsilab_connect.html">ohdsilab_connect()</a></code> function. If you didn’t use that
+connection to connect, you will have to set them manually:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>con.default.value <span class="op">=</span> <span class="va">con</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>schema.default.value <span class="op">=</span> <span class="va">cdm_schema</span><span class="op">)</span></span></code></pre></div>
-<p>Here’s a toy example of how we can put all this information together.
-We can extract all conditions for women born in 2002. Try to run these
-chunks to make sure everything is working.</p>
+<p>The <code><a href="../reference/omop_join.html">omop_join()</a></code> function will look for these defaults
+first, and if it doesn’t find them (because you didn’t run these two
+lines), will let you know you need to provide them directly. Note that
+if you want to point <code><a href="../reference/omop_join.html">omop_join()</a></code> to your user scratchpad,
+you only need to use the argument
+<code>schema = write_schema</code>.Here’s a toy example of how we can
+put all this information together. We can extract all conditions for
+women born in 2002. Try to run these chunks to make sure everything is
+working.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Start with a pointer to a table in the database. It could be in the cdm_schema</span></span>
 <span><span class="co"># or in your user write_schema.</span></span>
@@ -364,10 +382,10 @@ An error report has been created at .../errorReportSql.txt
 Run `rlang::last_trace()` to see where the error occurred.</code></pre>
 <p>A rollback is essentially like going back in time to a world before
 you ran the chunk of code that caused an error. You can easily do this
-using ohdsilab provided you’ve set the connection and schema default
+using ohdsilab, provided you’ve set the connection and schema default
 values above.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">ohdsilab</span><span class="fu">::</span><span class="fu"><a href="../reference/rb.html">rb</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/rb.html">rb</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>This is synonymous with running.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/executeSql.html" class="external-link">executeSql</a></span><span class="op">(</span><span class="va">con</span>, <span class="st">"ROLLBACK;"</span><span class="op">)</span></span></code></pre></div>

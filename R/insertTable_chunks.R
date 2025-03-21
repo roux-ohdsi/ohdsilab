@@ -13,7 +13,7 @@
 #' @examples
 #' \dontrun{
 #' options(con.default.value = con)
-#' write_schema = paste0("work_", keyring::key_get("lab_user"))
+#' write_schema = paste0("work_", keyring::key_get("db_username"))
 #' insertTable_chunk(data = data, table_name = "table1", n = 50, overwrite = TRUE, user_schema = write_schema)
 #' }
 insertTable_chunk <- function(data, table_name, n = 100,

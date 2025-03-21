@@ -22,8 +22,8 @@
 #'
 #' \dontrun{
 #' con <- ohdsilab_connect(
-#'     username = keyring::key_get("lab_user"),
-#'     password = keyring::key_get("lab_password")
+#'     username = keyring::key_get("db_username"),
+#'     password = keyring::key_get("db_password")
 #'     )
 #' }
 ohdsilab_connect <- function(username, password, cdm_schema = "omop_cdm_53_pmtx_202203"){

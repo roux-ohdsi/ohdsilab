@@ -1,0 +1,290 @@
+---
+title: "Designing a network analysis using Strategus"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Designing a network analysis using Strategus}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+Certain studies may require data elements not included in OHDSI Lab datasets. In
+these scenarios, you may want to run an OHDSI network study, engaging with
+OMOP CDM databases hosted by other institutions. Your code can be sent to
+collaborators at these other institutions for them to run against their database
+and return the results to you. There are multiple ways to handle this exchange
+of code/analysis processes. You can send R or SQL scripts directly or you can
+take advantage of the Strategus package, which modularizes other HADES packages 
+(e.g., Characterization or Cohort Diagnostics) and creates an analysis 
+specification in JSON format to be sent to collaborator researchers. The benefits
+of Strategus include reducing the number of files that need to be exchanged 
+(i.e. without Strategus, multiple HADES packages may require multiple files)
+and reducing the complexity of running these shared analyses (running a Strategus
+analysis requires far fewer lines of R code than running its separate parts).
+
+There are three stages to this tutorial:
+1. Creating the Strategus analysis specification: this is the most complicated as
+it requires knowledge of other HADES packages. This step is completed by you (the 
+programming lead).
+2. Executing the Strategus analysis specification: This step is completed by
+your collaborators at other database-hosting institutions once they have received
+your JSON analysis specification.
+3. Viewing the results: This step is completed by you (the study lead) once you 
+have received your collaborator's results.
+
+Stage 1: Design the analysis
+To ensure that Strategus runs properly, I recommend downloading the Strategus 
+template renv.lock file, which will install all R dependencies including the 
+OHDSI HADES libraries and Strategus.
+
+```{r setup, eval = FALSE}
+download.file(
+  "https://raw.githubusercontent.com/ohdsi-studies/StrategusStudyRepoTemplate/main/renv.lock",
+  "INSERT PATH TO R PROJECT DIRECTORY")
+install.packages("renv")
+renv::activate()
+renv::restore()
+```
+
+For the purposes of this tutorial, our analysis specification will include code
+to generate the same type 2 diabetes cohort used in other vignettes and run the 
+cohort diagnostics package to return a basic characterization of that cohort.
+Other HADES packages including patient-level-prediction and cohort-incidence can 
+also be added as Strategus modules depending on the needs of your study.
+
+We'll start with designing the cohort generator module. To begin, we need a
+cohort from ATLAS, which we retrieve in the same way done in previous vignettes.
+
+```{r}
+#set the atlas web API url
+atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+
+#connect to ATLAS
+ROhdsiWebApi::authorizeWebApi(
+	atlas_url,
+	authMethod = "db",
+	webApiUsername = keyring::key_get("atlas_username"),
+	webApiPassword = keyring::key_get("atlas_password"))
+
+#choose an ATLAS cohort definition id
+cohortId <- 4675
+
+#export the chosen ATLAS cohort definition from ATLAS
+cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(
+	baseUrl = atlas_url,
+	cohortIds = c(targetId))
+```
+
+Now, we need to create the cohort generator module
+```{r}
+#create empty cohort generator module (cgModule)
+cgModule <- Strategus::CohortGeneratorModule$new()
+
+# Create a cohort definition shared resource element from the cohort generator 
+# module
+cohortDefinitionSharedResource <- cgModule$createCohortSharedResourceSpecifications(
+  cohortDefinitionSet = cohortDefinitionSet
+)
+
+# Create a module specification
+cohortGeneratorModuleSpecifications <- cgModule$createModuleSpecifications(
+  generateStats = TRUE
+)
+```
+
+Next, we need to create the cohort diagnostics module
+```{r}
+#create empty cohort diagnostics module (cdModule)
+cdModule <- Strategus::CohortDiagnosticsModule$new()
+
+#specify cohort diagnostics settings
+cohortDiagnosticsModuleSpecifications <- cdModule$createModuleSpecifications(
+  runInclusionStatistics = TRUE,
+  runIncludedSourceConcepts = TRUE,
+  runOrphanConcepts = TRUE,
+  runTimeSeries = FALSE,
+  runVisitContext = TRUE,
+  runBreakdownIndexEvents = TRUE,
+  runIncidenceRate = TRUE,
+  runCohortRelationship = TRUE,
+  runTemporalCohortCharacterization = TRUE
+)
+```
+
+Finally, we need to combine our modules into the analysis specification
+JSON file. When run (see the following stage), this specification will generate 
+the type 2 diabetes cohorts as well as diagnostics (simple characterization) files 
+about that cohort.
+```{r}
+#combine modules into one analysis specification
+analysisSpecifications <- Strategus::createEmptyAnalysisSpecificiations() |>
+  Strategus::addSharedResources(cohortDefinitionSharedResource) |>
+	Strategus::addModuleSpecifications(cohortGeneratorModuleSpecifications) |>
+  Strategus::addModuleSpecifications(cohortDiagnosticsModuleSpecifications)
+
+#save analysis specification to a JSON file
+ParallelLogger::saveSettingsToJson(
+	analysisSpecifications,
+	file.path("INSERT PATH TO OUTPUT FOLDER", "analysis_settings.json"))
+
+```
+
+Stage 2: Execute the analysis
+Once your collaborator receives the JSON analysis specification, they need to
+provide information about their database so the analysis knows where to run. 
+The code I provide below (pulled from the other vignettes) refers to our 
+PharMetrics database, so it would need to be changed to match whatever database 
+your collaborators have access to.
+```{r}
+#loading relevant packages
+library(Strategus)
+library(DatabaseConnector)
+library(keyring)
+
+Sys.setenv("DATABASECONNECTOR_JAR_FOLDER" = "INSERT PATH TO JDBC DRIVER")
+
+connectionDetails <- createConnectionDetails(
+	dbms = "redshift",
+	server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+	port = 5439,
+	user = keyring::key_get("db_username"),
+	password = keyring::key_get("db_password"))
+
+cdm_schema = "omop_cdm_53_pmtx_202203"
+write_schema = paste0("work_", keyring::key_get("db_username"))
+```
+
+Next, we need detail our execution settings.
+```{r}
+#choose a folder for the results files to populate
+outputFolder <- "INSERT PATH TO EXECUTION OUTPUT FOLDER"
+
+#set schemas, tables, and directories for outputs
+executionSettings <- createCdmExecutionSettings(
+  workDatabaseSchema = write_schema,
+  cdmDatabaseSchema = cdm_schema,
+  cohortTableNames = CohortGenerator::getCohortTableNames(),
+  workFolder = file.path(outputFolder, "work_folder"),
+  resultsFolder = file.path(outputFolder, "results_folder"),
+  minCellCount = 5
+)
+
+#save the execution settings to JSON file. This file can be used for any analysis
+#being run against the database described above
+ParallelLogger::saveSettingsToJson(
+  object = executionSettings,
+  file.path(outputFolder, "execution_settings.json")
+)
+```
+
+Finally, you (or your collaborator) are ready to execute the study. This will
+output results files to the outputFolder indicated in the last step.
+```{r}
+#load the analysis specification JSON file from stage 1
+analysisSpecifications <- ParallelLogger::loadSettingsFromJson(
+  fileName = "INSERT PATH TO ANALYSIS SETTINGS JSON FILE")
+
+#load the execution settings JSON file from the last step
+executionSettings <- ParallelLogger::loadSettingsFromJson(
+  fileName = "INSERT PATH TO EXECUTION SETTINGS JSON FILE")
+
+
+#execute the analysis
+Strategus::execute(
+  connectionDetails = connectionDetails,
+  analysisSpecifications = analysisSpecifications,
+  executionSettings = executionSettings
+)
+```
+
+Stage 3: View the results
+Once the analysis has been executed, your collaborator can either run the 
+following code to view the results themselves, or they can send you the results 
+files, for you to run the following code and view the results. To view the 
+results, you will need write access to a schema called "study_results" within
+a postgres database. For instructions on setting up a local postgres database,
+watch [this video](https://www.youtube.com/watch?v=oWsAYx2R9RI).
+
+First, set the connection to the postgres database. This is where the results
+will be written to for viewing. Download/install the postgres JDBC driver [here](https://jdbc.postgresql.org/).
+```{r}
+#You will need to replace the following details with your own postgres database
+#details
+resultsConnectionDetails <- DatabaseConnector::createConnectionDetails(
+  dbms     = "postgresql", 
+  server   = "localhost/postgres", 
+  user     = "postgres", 
+  password = "ohdsi", 
+  port     = 5432, 
+  pathToDriver = "INSERT PATH TO JDBC DRIVER (NEEDS TO BE INSTALLED)"
+)
+```
+
+Next, you need to create empty tables in the correct format for the results.
+```{r}
+resultsDataModelSettings <- Strategus::createResultsDataModelSettings(
+  resultsDatabaseSchema = "study_results",
+  resultsFolder = "INSERT PATH TO RESULTS FOLDER",
+)
+
+Strategus::createResultDataModel(
+  analysisSpecifications = analysisSpecifications,
+  resultsDataModelSettings = resultsDataModelSettings,
+  resultsConnectionDetails = resultsConnectionDetails
+)
+```
+
+Then you populate those empty tables with your results files.
+```{r}
+Strategus::uploadResults(
+  analysisSpecifications = analysisSpecifications,
+  resultsDataModelSettings = resultsDataModelSettings,
+  resultsConnectionDetails = resultsConnectionDetails
+)
+```
+
+From here, you can query your results using postgreSQL. Alternatively, you can 
+view them in an interactive web application using the RShiny package.
+```{r}
+#load the shiny packages
+library(ShinyAppBuilder)
+library(OhdsiShinyModules)
+
+# specify the modules used in your analysis specification
+shinyConfig <- initializeModuleConfig() |>
+  addModuleConfig(
+    createDefaultAboutConfig()
+  ) |>
+  addModuleConfig(
+    createDefaultDatasourcesConfig()
+  ) |>
+  addModuleConfig(
+    createDefaultCohortGeneratorConfig()
+  ) |>
+  addModuleConfig(
+    createDefaultCohortDiagnosticsConfig()
+  )
+
+# now create the shiny app and view the results
+ShinyAppBuilder::createShinyApp(
+  config = shinyConfig,
+  connectionDetails = resultsConnectionDetails,
+  resultDatabaseSettings = createDefaultResultDatabaseSettings(schema = "study_results"),
+  title = "INSERT TITLE OF STUDY",
+  studyDescription = "INSERT SHORT DESCRIPTION OF STUDY"
+)
+```
+
+An interactive RShiny application should pop up, enabling you to click through 
+the results of the different modules you ran. That's it! You designed an
+analysis specification, executed it against a dataset, and viewed the results!
+Again the purpose of this Strategus package is to make the exchange and 
+execution of study code/methods between collaborators at different institutions 
+easier and less prone to errors.

@@ -1,5 +1,5 @@
-pandoc: '3.2'
-pkgdown: 2.1.1
+pandoc: 3.1.1
+pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
   01-intro-to-ohdsilab: 01-intro-to-ohdsilab.html
@@ -12,4 +12,5 @@ articles:
   08-CohortExplorer: 08-CohortExplorer.html
   09-PatientLevelPrediction: 09-PatientLevelPrediction.html
   10-Eunomia: 10-Eunomia.html
-last_built: 2025-03-12T14:50Z
+  11-Stategus: 11-Stategus.html
+last_built: 2025-05-01T17:52Z

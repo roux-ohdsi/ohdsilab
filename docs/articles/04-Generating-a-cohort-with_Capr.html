@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Generating a cohort with Capr • ohdsilab</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -50,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/08-CohortExplorer.html">Visualizing Sample Data</a></li>
     <li><a class="dropdown-item" href="../articles/09-PatientLevelPrediction.html">Patient Level Prediction</a></li>
     <li><a class="dropdown-item" href="../articles/10-Eunomia.html">Generating a Synthetic Dataset</a></li>
+    <li><a class="dropdown-item" href="../articles/11-Stategus.html">Designing a network analysis using Strategus</a></li>
   </ul>
 </li>
       </ul>
@@ -94,7 +94,7 @@ on generating cohorts can be found here: <a href="https://ohdsi.github.io/Cohort
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ==============================================================================</span></span>
 <span><span class="co"># Packages =====================================================================</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/Capr/" class="external-link">Capr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">Capr</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/DatabaseConnector/" class="external-link">DatabaseConnector</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://roux-ohdsi.github.io/ohdsilab/" class="external-link">ohdsilab</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/DatabaseConnector/" class="external-link">DatabaseConnector</a></span><span class="op">)</span></span>
@@ -132,11 +132,11 @@ your cohort. Let’s create a concept set for type 2 diabetes using the
 concept ID 201826 and all of its descendants and a concept set for the
 drug metformin with only one concept ID 40164929.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">t2d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/Capr/reference/cs.html" class="external-link">cs</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://ohdsi.github.io/Capr/reference/cs.html" class="external-link">descendants</a></span><span class="op">(</span><span class="fl">201826</span><span class="op">)</span>,</span>
+<code class="sourceCode R"><span><span class="va">t2d</span> <span class="op">&lt;-</span> <span class="fu">cs</span><span class="op">(</span></span>
+<span>    <span class="fu">descendants</span><span class="op">(</span><span class="fl">201826</span><span class="op">)</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"Type 2 diabetes"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">metformin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/Capr/reference/cs.html" class="external-link">cs</a></span><span class="op">(</span></span>
+<span><span class="va">metformin</span> <span class="op">&lt;-</span> <span class="fu">cs</span><span class="op">(</span></span>
 <span>    <span class="fl">40164929</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"Metformin"</span><span class="op">)</span></span></code></pre></div>
 <p>Now we define our cohort using the same logic as ATLAS. The syntax
@@ -148,24 +148,24 @@ and 30 days after their type 2 diabetes diagnosis. Persons will leave
 this cohort at the end of continuous observation (default in both ATLAS
 and Capr)</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">t2dcohortDef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/Capr/reference/cohort.html" class="external-link">cohort</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">t2dcohortDef</span> <span class="op">&lt;-</span> <span class="fu">cohort</span><span class="op">(</span></span>
 <span>    entry <span class="op">=</span> </span>
-<span>        <span class="fu"><a href="https://ohdsi.github.io/Capr/reference/entry.html" class="external-link">entry</a></span><span class="op">(</span><span class="fu"><a href="https://ohdsi.github.io/Capr/reference/conditionOccurrence.html" class="external-link">conditionOccurrence</a></span><span class="op">(</span><span class="va">t2d</span><span class="op">)</span>, primaryCriteriaLimit <span class="op">=</span> <span class="st">"All"</span><span class="op">)</span>,</span>
+<span>        <span class="fu">entry</span><span class="op">(</span><span class="fu">conditionOccurrence</span><span class="op">(</span><span class="va">t2d</span><span class="op">)</span>, primaryCriteriaLimit <span class="op">=</span> <span class="st">"All"</span><span class="op">)</span>,</span>
 <span>    attrition <span class="op">=</span> </span>
-<span>        <span class="fu"><a href="https://ohdsi.github.io/Capr/reference/attrition.html" class="external-link">attrition</a></span><span class="op">(</span><span class="st">"metformin within 0-30 days"</span> <span class="op">=</span> </span>
-<span>                                <span class="fu"><a href="https://ohdsi.github.io/Capr/reference/withAll.html" class="external-link">withAll</a></span><span class="op">(</span><span class="fu"><a href="https://ohdsi.github.io/Capr/reference/atLeast.html" class="external-link">atLeast</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://ohdsi.github.io/Capr/reference/drugExposure.html" class="external-link">drugExposure</a></span><span class="op">(</span><span class="va">metformin</span><span class="op">)</span>, </span>
-<span>                                                                <span class="fu"><a href="https://ohdsi.github.io/Capr/reference/duringInterval.html" class="external-link">duringInterval</a></span><span class="op">(</span><span class="fu"><a href="https://ohdsi.github.io/Capr/reference/eventStarts.html" class="external-link">eventStarts</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">30</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>        <span class="fu">attrition</span><span class="op">(</span><span class="st">"metformin within 0-30 days"</span> <span class="op">=</span> </span>
+<span>                                <span class="fu">withAll</span><span class="op">(</span><span class="fu">atLeast</span><span class="op">(</span><span class="fl">1</span>, <span class="fu">drugExposure</span><span class="op">(</span><span class="va">metformin</span><span class="op">)</span>, </span>
+<span>                                                                <span class="fu">duringInterval</span><span class="op">(</span><span class="fu">eventStarts</span><span class="op">(</span><span class="fl">0</span>,<span class="fl">30</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Now we have to save the cohort definition as a json file, then
 convert that json into a SQL query that can be run against the
 database.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#convert cohort definition to json</span></span>
-<span><span class="va">t2dcohortDef_json</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/Capr/reference/as.json.html" class="external-link">as.json</a></span><span class="op">(</span><span class="va">t2dcohortDef</span><span class="op">)</span></span>
+<span><span class="va">t2dcohortDef_json</span> <span class="op">&lt;-</span> <span class="fu">as.json</span><span class="op">(</span><span class="va">t2dcohortDef</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#convert json to SQL query</span></span>
-<span><span class="va">sql</span> <span class="op">&lt;-</span> <span class="fu">CirceR</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/CirceR/reference/buildCohortQuery.html" class="external-link">buildCohortQuery</a></span><span class="op">(</span></span>
-<span>  expression <span class="op">=</span> <span class="fu">CirceR</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/CirceR/reference/cohortExpressionFromJson.html" class="external-link">cohortExpressionFromJson</a></span><span class="op">(</span><span class="va">t2dcohortDef_json</span><span class="op">)</span>,</span>
-<span>  options <span class="op">=</span> <span class="fu">CirceR</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/CirceR/reference/createGenerateOptions.html" class="external-link">createGenerateOptions</a></span><span class="op">(</span>generateStats <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">sql</span> <span class="op">&lt;-</span> <span class="fu">CirceR</span><span class="fu">::</span><span class="fu">buildCohortQuery</span><span class="op">(</span></span>
+<span>  expression <span class="op">=</span> <span class="fu">CirceR</span><span class="fu">::</span><span class="fu">cohortExpressionFromJson</span><span class="op">(</span><span class="va">t2dcohortDef_json</span><span class="op">)</span>,</span>
+<span>  options <span class="op">=</span> <span class="fu">CirceR</span><span class="fu">::</span><span class="fu">createGenerateOptions</span><span class="op">(</span>generateStats <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Finally, like we did for the ATLAS cohort, we have to create a cohort
 definition set, though this time we’re using our own SQL query rather
 than pulling one from ATLAS.</p>
@@ -201,13 +201,13 @@ identical ATLAS cohort “[DEMO] Type 2 diabetes patients prescribed
 metformin within 30 days after type 2 diabetes diagnosis”</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a table containing your new cohort.</span></span>
-<span><span class="va">cohort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
+<span><span class="va">cohort</span> <span class="op">&lt;-</span> <span class="fu">tbl</span><span class="op">(</span></span>
 <span>    <span class="va">con</span>,</span>
 <span>    <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="va">write_schema</span>, <span class="st">"synpuf_t2d"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span>person_id <span class="op">=</span> <span class="va">subject_id</span>, <span class="va">cohort_start_date</span>, <span class="va">cohort_end_date</span><span class="op">)</span></span>
+<span>  <span class="fu">select</span><span class="op">(</span>person_id <span class="op">=</span> <span class="va">subject_id</span>, <span class="va">cohort_start_date</span>, <span class="va">cohort_end_date</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># How many people are in the cohort?</span></span>
-<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally</a></span><span class="op">(</span><span class="va">cohort</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">tally</span><span class="op">(</span><span class="va">cohort</span><span class="op">)</span></span></code></pre></div>
   </main>
 </div>
 
@@ -218,7 +218,7 @@ metformin within 30 days after type 2 diabetes diagnosis”</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
 </div>
 
     </footer>

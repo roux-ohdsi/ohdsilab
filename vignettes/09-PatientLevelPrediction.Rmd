@@ -201,7 +201,7 @@ PatientLevelPrediction::savePlpResult(lr_results, "demo_results")
 lr_results <- PatientLevelPrediction::loadPlpResult("demo_results")
 ```
 
-Now that we have run the prediction model, let's view the results in two of
+Now that we have run the prediction model, let's view the results two
 ways. First, to launch the R Shiny application, we run the following code.
 
 ```{r}

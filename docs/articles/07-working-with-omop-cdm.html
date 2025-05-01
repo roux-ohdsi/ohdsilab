@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Working with Data from the ohdsilab database • ohdsilab</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -50,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/08-CohortExplorer.html">Visualizing Sample Data</a></li>
     <li><a class="dropdown-item" href="../articles/09-PatientLevelPrediction.html">Patient Level Prediction</a></li>
     <li><a class="dropdown-item" href="../articles/10-Eunomia.html">Generating a Synthetic Dataset</a></li>
+    <li><a class="dropdown-item" href="../articles/11-Stategus.html">Designing a network analysis using Strategus</a></li>
   </ul>
 </li>
       </ul>
@@ -121,10 +121,10 @@ I need to fix that so it matches the rest of the OMOP data. (Next time I
 will call it person_id from the get go).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get cohort that has an entry date prior to 2018</span></span>
-<span><span class="va">cohort</span> <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
+<span><span class="va">cohort</span> <span class="op">=</span> <span class="fu">tbl</span><span class="op">(</span></span>
 <span>    <span class="va">con</span>,</span>
 <span>    <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="va">write_schema</span>, <span class="st">"rc_aphasia"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span>person_id <span class="op">=</span> <span class="va">subject_id</span>, <span class="va">cohort_start_date</span>, <span class="va">cohort_end_date</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">select</span><span class="op">(</span>person_id <span class="op">=</span> <span class="va">subject_id</span>, <span class="va">cohort_start_date</span>, <span class="va">cohort_end_date</span><span class="op">)</span></span></code></pre></div>
 <p>Now I need concepts that are used for aphasia. There are actually
 quite a few of them, and I’ve already gone ahead and used ATHENA to
 limit the codes to just the ones I really care about. Based on ATLAS
@@ -144,10 +144,10 @@ pharmetrics.</p>
 get the human readable concept name. We’ll save this table for use
 later.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">concepts</span> <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">concepts</span> <span class="op">=</span> <span class="fu">tbl</span><span class="op">(</span></span>
 <span>    <span class="va">con</span>,</span>
 <span>    <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="va">cdm_schema</span>, <span class="st">"concept"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">concept_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="op">!</span><span class="op">!</span><span class="va">aphasia_concepts</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">concept_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="op">!</span><span class="op">!</span><span class="va">aphasia_concepts</span><span class="op">)</span></span></code></pre></div>
 <p>Next, I’m going to use my cohort table to limit the data from the
 condition occurrence table to just rows for the individuals AND
 timeframe that I care about. This code chunk first joins the cohort
@@ -158,7 +158,7 @@ occured within the timeframe of interest (within 365 days of the index
 date). Third, it joins the concepts table from above to get human
 readable concept names on the conditions that were found. Finally, I
 select only the columns I’m interested in.</p>
-<p>We can use the <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally()</a></code> function to check how many rows
+<p>We can use the <code>tally()</code> function to check how many rows
 would be returned by the query (this can take a hot second). If its not
 too many rows for my local system (and this one isn’t), we can go ahead
 and “collect” the data, which means bringing it into our local R
@@ -168,13 +168,13 @@ computer’s RAM/CPU but I wouldn’t recommend trying to collect more than
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cond</span> <span class="op">=</span> <span class="va">cohort</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/omop_join.html">omop_join</a></span><span class="op">(</span><span class="st">"condition_occurrence"</span>, type <span class="op">=</span> <span class="st">"inner"</span>, by <span class="op">=</span> <span class="st">"person_id"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">condition_start_date</span> <span class="op">&gt;</span> <span class="va">cohort_start_date</span> <span class="op">&amp;</span> <span class="va">condition_start_date</span> <span class="op">&lt;</span> <span class="va">cohort_end_date</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">concepts</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"condition_concept_id"</span> <span class="op">=</span> <span class="st">"concept_id"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">person_id</span>, <span class="va">cohort_start_date</span>, <span class="va">cohort_end_date</span>, <span class="va">condition_concept_id</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">condition_start_date</span> <span class="op">&gt;</span> <span class="va">cohort_start_date</span> <span class="op">&amp;</span> <span class="va">condition_start_date</span> <span class="op">&lt;</span> <span class="va">cohort_end_date</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">inner_join</span><span class="op">(</span><span class="va">concepts</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"condition_concept_id"</span> <span class="op">=</span> <span class="st">"concept_id"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">person_id</span>, <span class="va">cohort_start_date</span>, <span class="va">cohort_end_date</span>, <span class="va">condition_concept_id</span>,</span>
 <span>         <span class="va">condition_start_date</span>, <span class="va">provider_id</span>, <span class="va">visit_occurrence_id</span>, <span class="va">visit_detail_id</span>,</span>
 <span>         <span class="va">condition_source_value</span>, <span class="va">condition_source_concept_id</span>, <span class="va">concept_name</span>, <span class="va">domain_id</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">tally</a></span><span class="op">(</span><span class="va">cond</span><span class="op">)</span></span>
+<span><span class="fu">tally</span><span class="op">(</span><span class="va">cond</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cond</span> <span class="op">=</span> <span class="va">cond</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/dbi_collect.html">dbi_collect</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>I decided that I wanted there to be two separate occurances of the
@@ -189,11 +189,11 @@ final cohort of interest.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pwa_table</span> <span class="op">=</span> <span class="va">cohort</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/omop_join.html">omop_join</a></span><span class="op">(</span><span class="st">"condition_occurrence"</span>, type <span class="op">=</span> <span class="st">"inner"</span>, by <span class="op">=</span> <span class="st">"person_id"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">condition_start_date</span> <span class="op">&gt;</span> <span class="va">cohort_start_date</span> <span class="op">&amp;</span> <span class="va">condition_start_date</span> <span class="op">&lt;</span> <span class="va">cohort_end_date</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">concepts</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"condition_concept_id"</span> <span class="op">=</span> <span class="st">"concept_id"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">person_id</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">n</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">person_id</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">condition_start_date</span> <span class="op">&gt;</span> <span class="va">cohort_start_date</span> <span class="op">&amp;</span> <span class="va">condition_start_date</span> <span class="op">&lt;</span> <span class="va">cohort_end_date</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">inner_join</span><span class="op">(</span><span class="va">concepts</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"condition_concept_id"</span> <span class="op">=</span> <span class="st">"concept_id"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">count</span><span class="op">(</span><span class="va">person_id</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">n</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">person_id</span><span class="op">)</span></span></code></pre></div>
 <p>For this cohort, I’m interested in how many outpatient treatment
 sessions they receive within the first year post stroke. Since I have
 some domain expertise here, it was easy for me to look up the CPT codes
@@ -222,11 +222,11 @@ services within 1 year post stroke.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pwa_visits</span> <span class="op">&lt;-</span> <span class="va">pwa_table</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/omop_join.html">omop_join</a></span><span class="op">(</span><span class="st">"procedure_occurrence"</span>, type <span class="op">=</span> <span class="st">"left"</span>, by <span class="op">=</span> <span class="st">"person_id"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">procedure_concept_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">slp_tx</span>, <span class="va">slp_eval</span>, <span class="va">aphasia_eval</span>, <span class="va">old_eval</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">person_id</span>, <span class="va">procedure_concept_id</span>, <span class="va">procedure_date</span>, <span class="va">visit_occurrence_id</span>, <span class="va">visit_detail_id</span>, <span class="va">procedure_source_value</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">procedure_concept_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">slp_tx</span>, <span class="va">slp_eval</span>, <span class="va">aphasia_eval</span>, <span class="va">old_eval</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">person_id</span>, <span class="va">procedure_concept_id</span>, <span class="va">procedure_date</span>, <span class="va">visit_occurrence_id</span>, <span class="va">visit_detail_id</span>, <span class="va">procedure_source_value</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/omop_join.html">omop_join</a></span><span class="op">(</span><span class="st">"visit_occurrence"</span>, type <span class="op">=</span> <span class="st">"left"</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"visit_occurrence_id"</span>, <span class="st">"person_id"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/omop_join.html">omop_join</a></span><span class="op">(</span><span class="st">"concept"</span>, type <span class="op">=</span> <span class="st">"inner"</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"visit_concept_id"</span> <span class="op">=</span> <span class="st">"concept_id"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">cohort</span>, by <span class="op">=</span> <span class="st">"person_id"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">inner_join</span><span class="op">(</span><span class="va">cohort</span>, by <span class="op">=</span> <span class="st">"person_id"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/dbi_collect.html">dbi_collect</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>There was quite a bit of wrangling that occurred after this to
 synthesize the visits within episodes of care and incorporate
@@ -246,7 +246,7 @@ exactly the data you’re interested in.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
 </div>
 
     </footer>

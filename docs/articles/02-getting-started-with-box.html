@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Getting Started with the OHDSI-Lab Box • ohdsilab</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -50,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/08-CohortExplorer.html">Visualizing Sample Data</a></li>
     <li><a class="dropdown-item" href="../articles/09-PatientLevelPrediction.html">Patient Level Prediction</a></li>
     <li><a class="dropdown-item" href="../articles/10-Eunomia.html">Generating a Synthetic Dataset</a></li>
+    <li><a class="dropdown-item" href="../articles/11-Stategus.html">Designing a network analysis using Strategus</a></li>
   </ul>
 </li>
       </ul>
@@ -86,7 +86,7 @@ Wang</h4>
 </h2>
 <p>When you click connect, it will send a push to your DUO, make sure to
 click confirm on your device.</p>
-<p><img src="images%2Fvpn-connect.png" style="width:35.0%"></p>
+<p><img src="images/vpn-connect.png" style="width:35.0%"></p>
 </div>
 <div class="section level2">
 <h2 id="load-amazon-workspaces">2. Load Amazon WorkSpaces<a class="anchor" aria-label="anchor" href="#load-amazon-workspaces"></a>
@@ -94,11 +94,11 @@ click confirm on your device.</p>
 <p>Open Amazon WorkSpaces on your laptop and log in to your account. The
 registration code is included in the email.</p>
 <p>It may take some time to start the WorkSpace, please be patient.</p>
-<p><img src="images%2FAWS-log-in.png" style="width:65.0%"></p>
+<p><img src="images/AWS-log-in.png" style="width:65.0%"></p>
 <p>After you log in, you will receive an email from OHDSI.</p>
-<p><img src="images%2Femail.png" style="width:65.0%"></p>
+<p><img src="images/email.png" style="width:65.0%"></p>
 <p>After logging in, your WorkSpace should look like this.</p>
-<p><img src="images%2Fworkspace.png" style="width:65.0%"></p>
+<p><img src="images/workspace.png" style="width:65.0%"></p>
 </div>
 <div class="section level2">
 <h2 id="create-concept-sets">3. Create concept sets<a class="anchor" aria-label="anchor" href="#create-concept-sets"></a>
@@ -106,18 +106,18 @@ registration code is included in the email.</p>
 <p>Now, you can start creating your concept sets and cohort.</p>
 <p>When you try to create a concept set, it is recommended to open
 Athena on the side (<a href="https://athena.ohdsi.org/search-terms/start" class="external-link uri">https://athena.ohdsi.org/search-terms/start</a>).</p>
-<p><img src="images%2FAthena.png" style="width:65.0%"></p>
+<p><img src="images/Athena.png" style="width:65.0%"></p>
 <p>Begin your search by exploring the concept you desire using
 Athena.</p>
 <p>For example, if you want to create a concept set related to
 “aspirin”, you can begin with searching “aspirin” in Athena.</p>
-<p><img src="images%2Faspirin.png" style="width:65.0%"></p>
+<p><img src="images/aspirin.png" style="width:65.0%"></p>
 <p>We have a comprehensive list of items here, and to make the process
 more manageable, let’s start by focusing on [standard concept]. If you
 don’t find what you’re looking for within this category, we can expand
 our search to include all items later on. This approach will help
 streamline the workload and ensure we cover everything effectively.</p>
-<p><img src="images%2Faspirin-standard.png" style="width:65.0%"></p>
+<p><img src="images/aspirin-standard.png" style="width:65.0%"></p>
 <p>Now, let’s click on the first item to view its details. Additionally,
 you have the option to select ‘hierarchy’ to explore the related parent
 and children concepts. This will give you a better understanding of what
@@ -129,9 +129,9 @@ ATLAS.</p>
 </h2>
 <p>You can open OHDSI ATLAS and sign in to your account, using the user
 name and password given by the email.</p>
-<p><img src="images%2FATLAS.png" style="width:65.0%"></p>
+<p><img src="images/ATLAS.png" style="width:65.0%"></p>
 <p>You begin with clicking “New Concept Set”.</p>
-<p><img src="images%2Fnew-concept-set.png" style="width:65.0%"></p>
+<p><img src="images/new-concept-set.png" style="width:65.0%"></p>
 <p>Then you type in your concept name, and click save button.</p>
 <p>Then go to “search”, type in the item you want. Notice, when you are
 creating the concept set, the cart symbol next to the Concept Set would
@@ -140,18 +140,18 @@ be green.</p>
 the concept ID you obtained from Athena, or you can directly search for
 a term like ‘Aspirin’ in this case. It’s important to note that the
 layout and order of items may vary between Athena and ATLAS.</p>
-<p><img src="images%2Faspirin-atlas.png" style="width:65.0%"></p>
+<p><img src="images/aspirin-atlas.png" style="width:65.0%"></p>
 <p>You can also choose Standard Concept here.</p>
 <p>You can sort the results by DRC (descendant record count) or RC
 (record count). Then you click on the item, and you can see the
 hierarchy.</p>
-<p><img src="images%2Fhier.png" style="width:65.0%"></p>
+<p><img src="images/hier.png" style="width:65.0%"></p>
 <p>Then you can choose this item, and if it has children concepts, and
 you think you also need them, you can also click the Descendants option,
 then add to the concept. If there are some items you don’t want to
 include, you can choose the Exclude option.</p>
 <p>You can click the save button again.</p>
-<p><img src="images%2Ffinish.png" style="width:65.0%"></p>
+<p><img src="images/finish.png" style="width:65.0%"></p>
 <p>If there are other item you want to include, you can go back to
 search. Otherwise, you click the close button.</p>
 <p>Now, you have already successfully created a concept set.</p>
@@ -176,7 +176,7 @@ concept sets and cohort:</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
 </div>
 
     </footer>

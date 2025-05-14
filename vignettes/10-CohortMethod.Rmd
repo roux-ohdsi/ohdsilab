@@ -1,0 +1,295 @@
+---
+title: "Population Level Estimation using CohortMethod"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Population Level Estimation using CohortMethod}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+This tutorial will illustrate how to use the CohortMethod package created by the
+OHDSI community and described here: https://ohdsi.github.io/CohortMethod/.
+Researchers can use this package to calculate difference of risk of specific 
+clinical outcomes between a target cohort and a comparator cohort.
+
+The Pharmetrics dataset (containing real patient claims data) will be used in 
+this tutorial to ensure that correlation between risk of outcome and presence of outcome is consistent (Synthetic data may not produce consistent relationships between covariates). Any person-level results should not be shared with 
+individuals who are not active OHDSI Lab users.
+
+We’ll need to install one new package: CohortMethod
+```{r}
+renv::install("OHDSI/CohortMethod")
+```
+
+We’ll generate a cohort from ATLAS as we did in vignette 3, except now we need 
+three cohorts: a target cohort (i.e. the population we’re analyzing): 4862 (Metformin & insulin exposure with prior type 2 diabetes diagnosis), a comparator cohort 
+(i.e. the population we're comparing with the target population): 4859 (Insulin exposure with prior type 2 diabetes diagnosis), and an outcome cohort (i.e. the outcome we’re calculating risk for): 4861 (Hypoglycemia).
+
+```{r}
+#load the necessary packages
+library(CohortGenerator)
+library(tidyverse)
+library(keyring)
+library(CohortMethod)
+library(ROhdsiWebApi)
+library(DatabaseConnector)
+library(ohdsilab)
+
+#set path to JDBC driver
+Sys.setenv("DATABASECONNECTOR_JAR_FOLDER" = "INSERT PATH TO JDBC DRIVER")
+
+#set database connection details
+connectionDetails <- createConnectionDetails(
+	dbms = "redshift",
+	server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+	port = 5439,
+	user = keyring::key_get("db_username"),
+	password = keyring::key_get("db_password"))
+
+#set atlas url and schema names
+atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+cdm_schema = "omop_cdm_53_pmtx_202203"
+write_schema = paste0("work_", keyring::key_get("db_username"))
+
+#connect to the ohdsilab database and setting 
+con =  DatabaseConnector::connect(connectionDetails)
+
+#make it easier for some r functions to find the database and schemas
+options(con.default.value = con)
+options(schema.default.value = cdm_schema)
+options(write_schema.default.value = write_schema)
+
+#establish authorization to connect to ATLAS API
+ROhdsiWebApi::authorizeWebApi(
+  atlas_url,
+  authMethod = "db",
+  webApiUsername = keyring::key_get("atlas_username"),
+  webApiPassword = keyring::key_get("atlas_password"))
+
+#set the cohort IDs (target, comparator, and outcome)
+cohortIds <- c(4859,4861,4862)
+
+#extract the cohort definitions from ATLAS
+cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(
+  baseUrl = atlas_url,
+  cohortIds = cohortIds)
+
+#set a nameing convention for the cohort tables
+cohortTableNames <- getCohortTableNames(cohortTable = "T2D_cohortMethod")
+
+#create empty tables in your personal schema using the naming convention
+#designated in the last step.
+createCohortTables(
+  connectionDetails = connectionDetails,
+  cohortTableNames = cohortTableNames,
+  cohortDatabaseSchema = write_schema)
+
+#generate your cohorts for the pmtx database.
+cohortsGenerated <- generateCohortSet(
+  connectionDetails = connectionDetails,
+  cdmDatabaseSchema = cdm_schema,
+  cohortDatabaseSchema = write_schema,
+  cohortTableNames = cohortTableNames,
+  cohortDefinitionSet = cohortDefinitionSet)
+```
+
+Now we're ready to start desiging the CohortMethod analysis. First, we create covariates using Feature Extraction as shown in vignette 6, making sure to
+exclude the concept IDs of your study drugs (i.e. the drugs included in your
+target and comparator cohorts) and those drugs' descendant concepts.
+```{r}
+covSettings <- createDefaultCovariateSettings(
+  excludedCovariateConceptIds = c(30361,1503297,21600713,21500149,1992733),
+  addDescendantsToExclude = TRUE
+)
+```
+
+Extract the relevant data from the database. This may take a while.
+```{r}
+cohortMethodData <- getDbCohortMethodData(
+  connectionDetails = connectionDetails,
+  cdmDatabaseSchema = cdm_schema,
+  targetId = 4862,  # ID for drugA cohort
+  comparatorId = 4859,  # ID for drugB cohort
+  outcomeIds = 4861,  # ID for outcome cohort
+  exposureDatabaseSchema = write_schema,
+  exposureTable = "T2D_cohortMethod",
+  outcomeDatabaseSchema = write_schema,
+  outcomeTable = "T2D_cohortMethod",
+  covariateSettings = covSettings
+)
+```
+
+Because the extract takes so long, I recommend saving it in case you need to
+come back to the later steps during another session. Once you have saved the
+data, reload it as the same variable.
+```{r}
+saveCohortMethodData(cohortMethodData, "cohortMethodCovariates.zip")
+cohortMethodData <- loadCohortMethodData("cohortMethodCovariates.zip")
+```
+
+Create the study population with the appropriate risk windows. These can be
+changed to match the needs of your study.
+```{r}
+studyPop <- createStudyPopulation(
+  cohortMethodData = cohortMethodData,
+  outcomeId = 4861,
+  firstExposureOnly = FALSE,
+  restrictToCommonPeriod = FALSE,
+  washoutPeriod = 0,
+  removeDuplicateSubjects = "keep all",
+  removeSubjectsWithPriorOutcome = TRUE,
+  minDaysAtRisk = 1,
+  riskWindowStart = 0,
+  startAnchor = "cohort start",
+  riskWindowEnd = 30,
+  endAnchor = "cohort end"
+)
+```
+
+View attrition (how many subjects were excluded after each bit of inclusion
+criteria?):
+```{r}
+getAttritionTable(studyPop)
+```
+
+Run the propensity score model (setting cross-validation to FALSE saves a lot of time, but this will still take a while):
+```{r}
+ps <- createPs(
+  cohortMethodData = cohortMethodData,
+  population = studyPop,
+  maxCohortSizeForFitting = 150000,  # Caps the sample size for fitting
+  prior = createPrior("laplace", useCrossValidation = FALSE, exclude = c(0)),
+  control = createControl(
+    noiseLevel = "quiet",
+    tolerance = 1e-06  # Slightly looser convergence criteria
+  )
+)
+```
+
+Because the propensity score model took so long to run, save and reload it.
+```{r}
+saveRDS(ps, "propensity_scores.rds")
+ps <- readRDS("propensity_scores.rds")
+```
+
+Evaluate the propensity score model through the following 3 tests:
+1. Calculate AUC (area under the curve)
+```{r}
+computePsAuc(ps)
+```
+
+2. Plot propensity score distribution
+```{r}
+plotPs(ps, 
+       scale = "preference",
+       showCountsLabel = TRUE,
+       showAucLabel = TRUE,
+       showEquiposeLabel = TRUE
+)
+```
+
+3. Check which variables are in the model
+```{r}
+psModel <- getPsModel(ps, cohortMethodData)
+```
+
+Next, you should adjust your study population for confounding (I use the 
+stratifyByPs methodbut you could also use matchOnPs or trimByPsToEquipoise 
+depending on your study needs). Then visualize the adjusted study population.
+```{r}
+stratifiedPop <- stratifyByPs(ps, numberOfStrata = 5)
+plotPs(stratifiedPop, ps, scale = "preference")
+```
+
+The next four steps evaluate the balance of your covariates.
+1. Calculate the covariate balance
+```{r}
+balance <- computeCovariateBalance(stratifiedPop, cohortMethodData)
+```
+
+2. Visualize the covariate balance using a scatter plot and a plot of the most
+prevalent covariates.
+```{r}
+plotCovariateBalanceScatterPlot(balance, showCovariateCountLabel = TRUE, showMaxLabel = TRUE)
+
+plotCovariateBalanceOfTopVariables(balance)
+```
+
+3. Create a table 1 of covariates comparing the study population before and
+after adjustment.
+```{r}
+createCmTable1(balance)
+```
+
+4. See how different the adjusted study population is from the original study
+population by checking generalizability.
+```{r}
+getGeneralizabilityTable(balance)
+```
+
+The next two steps provide and assessment of the follow-up and the statistical power of your model.
+1. Calculate the minimum detectable relative risk:
+```{r}
+computeMdrr(
+  population = stratifiedPop,
+  modelType = "cox",
+  alpha = 0.05,
+  power = 0.8,
+  twoSided = TRUE
+)
+```
+
+2. Examine follow-up distribution:
+```{r}
+getFollowUpDistribution(population = stratifiedPop)
+plotFollowUpDistribution(population = stratifiedPop)
+```
+
+Finally, you're ready to run the outcome model to calculate the difference of
+risk between the two populations (target_ID and comparator_ID).
+```{r}
+#This is a simple outcome model (Cox regression with propensity adjustment).
+#There are also options for more complex models built into the CohortMethod
+#package.
+outcomeModel <- fitOutcomeModel(
+  population = stratifiedPop,
+  modelType = "cox",
+  stratified = TRUE  # For stratified populations
+)
+outcomeModel  #View results
+```
+
+Now that you have your CohortMethod results, you can visualize them in a variety
+of ways.
+1. Create Kaplan-Meier plot:
+```{r}
+plotKaplanMeier(stratifiedPop, includeZero = FALSE)
+```
+
+2. Create time-to-event plot:
+```{r}
+plotTimeToEvent(
+  cohortMethodData = cohortMethodData,
+  outcomeId = 4861,
+  firstExposureOnly = FALSE,
+  washoutPeriod = 0,
+  removeDuplicateSubjects = "keep all",
+  minDaysAtRisk = 1,
+  riskWindowStart = 0,
+  startAnchor = "cohort start",
+  riskWindowEnd = 30,
+  endAnchor = "cohort end"
+)
+```
+
+That's it! Obviously, many of the packages settings can be adjusted to fit your
+study needs. The above just provides an example of what a CohortMethod analysis
+might look like when run against OHDSI Lab data.

@@ -1,4 +1,4 @@
-pandoc: 3.1.1
+pandoc: '3.4'
 pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
@@ -11,9 +11,10 @@ articles:
   07-working-with-omop-cdm: 07-working-with-omop-cdm.html
   08-CohortExplorer: 08-CohortExplorer.html
   09-PatientLevelPrediction: 09-PatientLevelPrediction.html
-  10-Eunomia: 10-Eunomia.html
-  11-Stategus: 11-Stategus.html
-last_built: 2025-05-01T18:18Z
+  10-CohortMethod: 10-CohortMethod.html
+  11-Eunomia: 11-Eunomia.html
+  12-Stategus: 12-Stategus.html
+last_built: 2025-05-14T20:43Z
 urls:
   reference: https://roux-ohdsi.github.io/ohdsilab/reference
   article: https://roux-ohdsi.github.io/ohdsilab/articles

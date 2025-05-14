@@ -48,8 +48,9 @@
     <li><a class="dropdown-item" href="../articles/07-working-with-omop-cdm.html">Working with Data from the ohdsilab database</a></li>
     <li><a class="dropdown-item" href="../articles/08-CohortExplorer.html">Visualizing Sample Data</a></li>
     <li><a class="dropdown-item" href="../articles/09-PatientLevelPrediction.html">Patient Level Prediction</a></li>
-    <li><a class="dropdown-item" href="../articles/10-Eunomia.html">Generating a Synthetic Dataset</a></li>
-    <li><a class="dropdown-item" href="../articles/11-Stategus.html">Designing a network analysis using Strategus</a></li>
+    <li><a class="dropdown-item" href="../articles/10-CohortMethod.html">Population Level Estimation using CohortMethod</a></li>
+    <li><a class="dropdown-item" href="../articles/11-Eunomia.html">Generating a Synthetic Dataset</a></li>
+    <li><a class="dropdown-item" href="../articles/12-Stategus.html">Designing a network analysis using Strategus</a></li>
   </ul>
 </li>
       </ul>
@@ -131,7 +132,7 @@ congestive heart failure).</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>write_schema.default.value <span class="op">=</span> <span class="va">write_schema</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Connecting to ATLAS</span></span>
-<span><span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu">authorizeWebApi</span><span class="op">(</span></span>
+<span><span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ROhdsiWebApi/reference/authorizeWebApi.html" class="external-link">authorizeWebApi</a></span><span class="op">(</span></span>
 <span>    <span class="va">atlas_url</span>,</span>
 <span>    authMethod <span class="op">=</span> <span class="st">"db"</span>,</span>
 <span>    webApiUsername <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"atlas_username"</span><span class="op">)</span>,</span>
@@ -141,7 +142,7 @@ congestive heart failure).</p>
 <span><span class="va">cohortIds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4675</span>, <span class="fl">4681</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Pulling the cohort definition from ATLAS</span></span>
-<span><span class="va">cohortDefinitionSet</span> <span class="op">&lt;-</span> <span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu">exportCohortDefinitionSet</span><span class="op">(</span></span>
+<span><span class="va">cohortDefinitionSet</span> <span class="op">&lt;-</span> <span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ROhdsiWebApi/reference/exportCohortDefinitionSet.html" class="external-link">exportCohortDefinitionSet</a></span><span class="op">(</span></span>
 <span>    baseUrl <span class="op">=</span> <span class="va">atlas_url</span>,</span>
 <span>    cohortIds <span class="op">=</span> <span class="va">cohortIds</span><span class="op">)</span></span>
 <span></span>
@@ -180,7 +181,7 @@ vignette 6. This may take some time to run.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plpData</span> <span class="op">&lt;-</span> <span class="fu">PatientLevelPrediction</span><span class="fu">::</span><span class="fu">getPlpData</span><span class="op">(</span></span>
 <span>  databaseDetails <span class="op">=</span> <span class="va">databaseDetails</span>,</span>
-<span>  covariateSettings <span class="op">=</span> <span class="fu">FeatureExtraction</span><span class="fu">::</span><span class="fu">createDefaultCovariateSettings</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  covariateSettings <span class="op">=</span> <span class="fu">FeatureExtraction</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/FeatureExtraction/man/createDefaultCovariateSettings.html" class="external-link">createDefaultCovariateSettings</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>So we don’t have to run the above again, we save plpData as an object
 and then load it again.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">

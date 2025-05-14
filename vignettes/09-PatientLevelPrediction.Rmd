@@ -2,7 +2,7 @@
 title: "Patient Level Prediction"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Generating a cohort with Capr}
+  %\VignetteIndexEntry{Patient Level Prediction}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

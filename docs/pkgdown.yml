@@ -12,9 +12,10 @@ articles:
   08-CohortExplorer: 08-CohortExplorer.html
   09-PatientLevelPrediction: 09-PatientLevelPrediction.html
   10-CohortMethod: 10-CohortMethod.html
-  11-Eunomia: 11-Eunomia.html
-  12-Stategus: 12-Stategus.html
-last_built: 2025-05-14T20:43Z
+  11-SelfControlledCaseSeries: 11-SelfControlledCaseSeries.html
+  12-Eunomia: 12-Eunomia.html
+  13-Stategus: 13-Stategus.html
+last_built: 2025-06-05T18:23Z
 urls:
   reference: https://roux-ohdsi.github.io/ohdsilab/reference
   article: https://roux-ohdsi.github.io/ohdsilab/articles

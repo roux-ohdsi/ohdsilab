@@ -49,8 +49,9 @@
     <li><a class="dropdown-item" href="../articles/08-CohortExplorer.html">Visualizing Sample Data</a></li>
     <li><a class="dropdown-item" href="../articles/09-PatientLevelPrediction.html">Patient Level Prediction</a></li>
     <li><a class="dropdown-item" href="../articles/10-CohortMethod.html">Population Level Estimation using CohortMethod</a></li>
-    <li><a class="dropdown-item" href="../articles/11-Eunomia.html">Generating a Synthetic Dataset</a></li>
-    <li><a class="dropdown-item" href="../articles/12-Stategus.html">Designing a network analysis using Strategus</a></li>
+    <li><a class="dropdown-item" href="../articles/11-SelfControlledCaseSeries.html">Population Level Estimation using SelfControlledCaseSeries</a></li>
+    <li><a class="dropdown-item" href="../articles/12-Eunomia.html">Generating a Synthetic Dataset</a></li>
+    <li><a class="dropdown-item" href="../articles/13-Stategus.html">Designing a network analysis using Strategus</a></li>
   </ul>
 </li>
       </ul>
@@ -149,7 +150,7 @@ we’re calculating risk for): 4861 (Hypoglycemia).</p>
 <span>  baseUrl <span class="op">=</span> <span class="va">atlas_url</span>,</span>
 <span>  cohortIds <span class="op">=</span> <span class="va">cohortIds</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#set a nameing convention for the cohort tables</span></span>
+<span><span class="co">#set a naming convention for the cohort tables</span></span>
 <span><span class="va">cohortTableNames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/CohortGenerator/reference/getCohortTableNames.html" class="external-link">getCohortTableNames</a></span><span class="op">(</span>cohortTable <span class="op">=</span> <span class="st">"T2D_cohortMethod"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#create empty tables in your personal schema using the naming convention</span></span>

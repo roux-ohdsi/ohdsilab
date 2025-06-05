@@ -82,7 +82,7 @@ cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(
   baseUrl = atlas_url,
   cohortIds = cohortIds)
 
-#set a nameing convention for the cohort tables
+#set a naming convention for the cohort tables
 cohortTableNames <- getCohortTableNames(cohortTable = "T2D_cohortMethod")
 
 #create empty tables in your personal schema using the naming convention

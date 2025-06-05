@@ -1,0 +1,210 @@
+---
+title: "Population Level Estimation using SelfControlledCaseSeries"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Population Level Estimation using SelfControlledCaseSeries}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+This tutorial will illustrate how to use the SelfControlledCaseSeries package created by the
+OHDSI community and described here: https://ohdsi.github.io/SelfControlledCaseSeries/.
+Researchers can use this package to calculate of risk of specific 
+clinical outcomes given specific exposures by looking at exposed and unexposed
+periods within individual person records. This estimation method differs from the 
+estimation method used in the CohortMethod package because individual persons
+serve as their own control in SelfControlledCaseSeries rather than relying on a
+comparator population as in CohortMethod. Among other benefits, this method
+enables perfect matching by eliminating genetic, lifestyle, and disease severity
+differences between cases and controls.
+
+The Pharmetrics dataset (containing real patient claims data) will be used in 
+this tutorial to ensure that correlation between risk of outcome and presence of 
+outcome is consistent (Synthetic data may not produce consistent relationships 
+between covariates). Any person-level results should not be shared with 
+individuals who are not active OHDSI Lab users.
+
+For this tutorial, we'll be running an example estimation study on a cohort of
+persons exposed to the antiepileptic drug clonazepam. We will be 
+using SelfControlledCaseSeries to calculate risk of hypoventilation for persons 
+within our exposure cohort. Because hypoventilation is a known side effect of
+clonazepam exposure, we should expect to see increased risk in our estimation
+model.
+
+We’ll need to install one new package: SelfControlledCaseSeries
+```{r}
+renv::install("OHDSI/SelfControlledCaseSeries")
+```
+
+We’ll generate a cohort from ATLAS as we did in vignette 3 for the outcome 
+cohort (i.e. the outcome we’re calculating risk for): 4896 (Hypoventilation).
+
+```{r}
+#load the necessary packages
+library(DatabaseConnector)
+library(keyring)
+library(ROhdsiWebApi)
+library(CohortGenerator)
+library(SelfControlledCaseSeries)
+
+#set path to JDBC driver
+Sys.setenv("DATABASECONNECTOR_JAR_FOLDER" = "INSERT PATH TO JDBC DRIVER")
+
+#set database connection details
+connectionDetails <- createConnectionDetails(
+	dbms = "redshift",
+	server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+	port = 5439,
+	user = keyring::key_get("db_username"),
+	password = keyring::key_get("db_password"))
+
+#set atlas url and schema names
+atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+cdm_schema = "omop_cdm_53_pmtx_202203"
+write_schema = paste0("work_", keyring::key_get("db_username"))
+
+#connect to the ohdsilab database and setting 
+con =  DatabaseConnector::connect(connectionDetails)
+
+#make it easier for some r functions to find the database and schemas
+options(con.default.value = con)
+options(schema.default.value = cdm_schema)
+options(write_schema.default.value = write_schema)
+
+#establish authorization to connect to ATLAS API
+ROhdsiWebApi::authorizeWebApi(
+  atlas_url,
+  authMethod = "db",
+  webApiUsername = keyring::key_get("atlas_username"),
+  webApiPassword = keyring::key_get("atlas_password"))
+
+#set the cohort ID (outcome cohort)
+outcomeId <- 4896
+
+#extract the cohort definitions from ATLAS
+cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(
+  baseUrl = atlas_url,
+  cohortIds = outcomeId)
+
+#set a naming convention for the cohort tables
+cohortTableNames <- getCohortTableNames(cohortTable = "pmtxHypoventilation")
+
+#create empty tables in your personal schema using the naming convention
+#designated in the last step.
+createCohortTables(
+  connectionDetails = connectionDetails,
+  cohortTableNames = cohortTableNames,
+  cohortDatabaseSchema = write_schema)
+
+#generate your cohorts for the pmtx database.
+cohortsGenerated <- generateCohortSet(
+  connectionDetails = connectionDetails,
+  cdmDatabaseSchema = cdm_schema,
+  cohortDatabaseSchema = write_schema,
+  cohortTableNames = cohortTableNames,
+  cohortDefinitionSet = cohortDefinitionSet)
+```
+
+Before we can design our estimation study, we need to define the drug exposure
+we're calculating risk for. In this example, we are using a single concept Id,
+but alternatively we could generate a second "exposure" cohort for this drug.
+```{r}
+clonazepam <- 798874
+```
+
+Now we can tell SelfControlledCaseSeries to extract all necessary data for our 
+analysis. Note, that we're pulling the outcome cohort from the write_schema
+where it was generated, and the exposureId from the drug_era table within the
+cdm_schema. The drug_era table defines the spans of time persons are assumed to 
+be exposed to a particular active ingredient (in this case clonazepam).
+```{r}
+sccsData <- getDbSccsData(
+  connectionDetails = connectionDetails,
+  cdmDatabaseSchema = cdm_schema,
+  outcomeDatabaseSchema = write_schema,
+  outcomeTable = "pmtxEpilepsy",
+  outcomeIds = outcomeId,
+  exposureDatabaseSchema = cdm_schema,
+  exposureTable = "drug_era",
+  exposureIds = clonazepam)
+```
+
+Let's get a quick look at our new object sccsData using base R's summary() 
+function.
+```{r}
+summary(sccsData)
+```
+
+Depending on how long the extration takes, it may be wise to save the sccsData
+object in case you need to come back to the later steps during another session. 
+Once you have saved the data, reload it as the same variable.
+```{r}
+saveSccsData(sccsData, "sccsData.zip")
+sccsData <- loadSccsData("sccsData.zip")
+```
+
+Next, we need to create our study population. Remember, because 
+SelfControlledCaseSeries uses individuals as their own control, this study
+population is only drawing from one cohort (no comparator cohort).
+```{r}
+studyPop <- createStudyPopulation(sccsData = sccsData,
+                                  outcomeId = outcomeId,
+                                  firstOutcomeOnly = FALSE,
+                                  naivePeriod = 180)
+```
+
+Let's plot our sccsData and studypop objects to get an initial view of how 
+hypoventilation events change before and after clonazepam exposure 
+(top pane of the resulting graph) and how many persons have continuous 
+observation at different intervals before and after clonazepam exposure (lower 
+pane of the resulting graph). It looks like there are slightly more 
+hypoventilation events after clonazepam exposure, which makes sense according to 
+existing clinical knowledge. Once we run the estimation model, we'll know for 
+sure.
+```{r}
+plotExposureCentered(
+	sccsData = sccsData,
+	studyPopulation = studyPop)
+```
+
+Next, we need to define the covariate we're including in our model (all drug 
+eras of clonazepam).
+```{r}
+covarClonazepam <- createEraCovariateSettings(
+  label = "Exposure of interest",
+  includeEraIds = clonazepam,
+  start = 0,
+  end = 0,
+  endAnchor = "era end")
+```
+
+Now we take our covariate and use it to define our sccsIntervalData, which
+represents the data in non-overlapping time intervals, with information on the 
+outcome (hypoventilation) and covariate per interval.
+```{r}
+sccsIntervalData <- createSccsIntervalData(
+  studyPop,
+  sccsData,
+  eraCovariateSettings = covarClonazepam)
+```
+
+Finally, we use the sccsIntervalData to fit our estimation model, and then we
+run model to view the resulting risk calculations. According to the model, the 
+estimated risk of hypoventilation for persons exposed to clonazepam 
+(Incidence Rate Ratio) is 1.27 (with a 95% confidence interval between 1.08 and 
+1.49), meaning persons are 27% (with a 95% confidence interval between 8% and 
+49%) more likely to experience hypoventilation if they are exposed to 
+clonazepam. This result is expected as it aligns with existing clinical 
+knowledge about clonazepam.
+```{r}
+model <- fitSccsModel(sccsIntervalData)
+model
+```

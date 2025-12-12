@@ -1,0 +1,135 @@
+# Generating Covariates and Table 1
+
+This vignette summarizes the code that can be found here:
+[http://ohdsi.github.io/FeatureExtraction/articles/UsingFeatureExtraction.html](http://ohdsi.github.io/FeatureExtraction/articles/UsingFeatureExtraction.md)
+
+I recommending working through the full vignette for those interested.
+This vignette will show how to apply the code to the ohdsi-lab database.
+
+We’ll need to install one new package: FeatureExtraction
+
+``` r
+renv::install("OHDSI/FeatureExtraction")
+```
+
+Load the typical packages
+
+``` r
+library(ohdsilab)
+library(keyring)
+library(DatabaseConnector)
+library(ROhdsiWebApi)
+library(CohortGenerator)
+library(CohortDiagnostics)
+library(FeatureExtraction)
+```
+
+Set the connection details
+
+``` r
+atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+cdm_schema = "omop_cdm_53_pmtx_202203"
+write_schema = paste0("work_", keyring::key_get("db_username"))
+
+Sys.setenv("DATABASECONNECTOR_JAR_FOLDER" = "insert path to jdbc driver here")
+
+connectionDetails <- createConnectionDetails(
+    dbms = "redshift",
+    server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+    port = 5439,
+    user = keyring::key_get("db_username"),
+    password = keyring::key_get("db_password"))
+```
+
+This code will generate a table 1 for an established cohort of
+individuals with concepts of stroke and aphasia. This table was
+generated using CohortGenerator and ATLAS, and saved as “RC_aphasia” in
+my own schema. In the
+[`getDbCovariateData()`](https://rdrr.io/pkg/FeatureExtraction/man/getDbCovariateData.html)
+funtion, we need to provide information about the database connection
+(connectionDetails), the omop database data, the specific user schema to
+look in (`write_schema`). “subject_id” becomes the row for subject - we
+could also name the “person_id” for example. -1 says to calculate
+covariates for all cohorts in the table (there’s only 1).
+
+The `aggregated` argument defaults to FALSE, so we’ll get covariates at
+the person level here. We can aggregate them in the next step.
+
+``` r
+# This sets the covarate settings as the defaults
+covariateSettings <- createDefaultCovariateSettings()
+
+# This pulls the covariate data from the cohort table
+covariateData <- getDbCovariateData(
+    connectionDetails = connectionDetails,
+    cdmDatabaseSchema = cdm_schema,
+    cohortDatabaseSchema = write_schema,
+    cohortTable = "RC_aphasia",
+    cohortIds = -1,
+    rowIdField = "subject_id",
+    covariateSettings = covariateSettings)
+
+summary(covariateData)
+```
+
+Calculating covariates can be pretty time consuming, so it’s good to
+save it once its generated. We can do this using
+
+``` r
+# save it like this. its an andromeda sql object, only nee dto do this once. 
+saveCovariateData(covariateData, "covariates")
+
+# we can then load later if needed it like this.
+covariateData <- loadCovariateData("covariates")
+```
+
+According to the documentation, we should ‘tidy up’ the covariates. We
+can do this using the
+[`tidyCovariateData()`](https://rdrr.io/pkg/FeatureExtraction/man/tidyCovariateData.html)
+function.
+
+*Normalize covariate values by dividing by the max and/or remove
+redundant covariates and/or remove infrequent covariates. For temporal
+covariates, redundancy is evaluated per time ID.*
+
+Again, we’ll save the result since it can take a while.
+
+``` r
+#this tidies up the covariates but I'm not sure what to use it for...
+tidyCovariates <- tidyCovariateData(
+    covariateData,
+    minFraction = 0.001,
+    normalize = FALSE,
+    removeRedundancy = TRUE)
+
+# aggregates summary statistics for table 1.
+covariateData.agg <- aggregateCovariates(covariateData)
+saveCovariateData(
+    covariateData.agg,
+    "covariates_agg")
+
+# we can load it later like this:
+covariateData.agg <- loadCovariateData("covariates_agg")
+```
+
+Finally, we can use the
+[`createTable1()`](https://rdrr.io/pkg/FeatureExtraction/man/createTable1.html)
+function to put it all in a Table 1. I found that I prefer to have once
+column output. I haven’t found a terribly satisfying way of getting the
+results out in a nicely formatted table, so for now I’ve just saved it
+as a .csv file and formatted in excel.
+
+``` r
+result <- createTable1(covariateData.agg)
+print(
+    result,
+    row.names = FALSE,
+    right = FALSE)
+result <- createTable1(
+    covariateData.agg,
+    output = "one column")
+write.csv(
+    result,
+    "covariates.csv",
+    row.names = FALSE)
+```

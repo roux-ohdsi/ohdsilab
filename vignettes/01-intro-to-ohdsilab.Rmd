@@ -178,6 +178,8 @@ write_schema <- paste0("work_", keyring::key_get("db_username"))
 Sys.setenv("DATABASECONNECTOR_JAR_FOLDER" = "insert path to jdbc driver here")
 
 # Create the connection
+# if you receive an error like "Error in grepl("RedshiftJDBC42", jarPath)...", navigate to the JDBC driver folder and rename all files that begin with "redshift" to something else (EXCEPT for the actual driver, which is titled something like "RedshiftJDBC42"). The new names don't really matter, but for organizational sake, just adding the prefix "notdriver" to each file name works best.
+
 con =  DatabaseConnector::connect(
   dbms = "redshift",
   server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",

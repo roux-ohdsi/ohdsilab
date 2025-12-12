@@ -1,5 +1,5 @@
-pandoc: '3.4'
-pkgdown: 2.1.2
+pandoc: 3.6.3
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   01-intro-to-ohdsilab: 01-intro-to-ohdsilab.html
@@ -15,7 +15,7 @@ articles:
   11-SelfControlledCaseSeries: 11-SelfControlledCaseSeries.html
   12-Eunomia: 12-Eunomia.html
   13-Stategus: 13-Stategus.html
-last_built: 2025-06-05T18:23Z
+last_built: 2025-12-12T18:41Z
 urls:
   reference: https://roux-ohdsi.github.io/ohdsilab/reference
   article: https://roux-ohdsi.github.io/ohdsilab/articles

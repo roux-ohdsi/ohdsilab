@@ -209,7 +209,7 @@ person table to include only people in your cohort.</p>
 <span><span class="va">demographics</span> <span class="op">&lt;-</span> <span class="va">cohort</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/omop_join.html">omop_join</a></span><span class="op">(</span><span class="st">"person"</span>, type <span class="op">=</span> <span class="st">"inner"</span>, by <span class="op">=</span> <span class="st">"person_id"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">person_id</span>, <span class="va">cohort_start_date</span>, <span class="va">cohort_end_date</span>, <span class="va">year_of_birth</span>, gender <span class="op">=</span> <span class="va">gender_source_value</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>age_at_entry <span class="op">=</span> <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">cohort_start_date</span><span class="op">)</span> <span class="op">-</span> <span class="va">year_of_birth</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>age_at_entry <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">cohort_start_date</span><span class="op">)</span> <span class="op">-</span> <span class="va">year_of_birth</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># if the above fails you may need to set the following options again first</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>con.default.value <span class="op">=</span> <span class="va">con</span><span class="op">)</span></span>
@@ -228,7 +228,7 @@ in, as defined by our cohort, and then calculates an age at entry.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

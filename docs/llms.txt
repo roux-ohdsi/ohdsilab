@@ -1,0 +1,119 @@
+  
+
+### ohdsilab: Tools for using Roux OHDSI Lab at Northeastern University
+
+------------------------------------------------------------------------
+
+The goals of the ohdsilab R package are two fold:
+
+1.  Streamline working with the OHDSI-Lab database at the Roux Institute
+    (and other OMOP CDM databases)
+
+2.  Provide an easier on-ramp for students and researchers new to
+    working with the OMOP CDM or SQL databases.
+
+The package contains functions and template code snippets to facilitate
+easier use of the OHDSI-Lab. These functions and snippets build on
+existing OHDSI R packages like {DatabaseConnector} as well as standard R
+packages like {dplyr} and {tidyr}. The package also contains a number of
+vingettes intended for R users who are new to OHDSI-Lab, the OMOP CDM,
+or working with data in SQL databases from R.
+
+If you’re a new OHDSI-Lab user, after you’ve created your workspace and
+have successfully logged in, finish setting up your R environment by
+[completing the setup
+tutorial](https://roux-ohdsi.github.io/ohdsilab/articles/01-intro-to-ohdsilab.html)
+
+  
+
+#### An important note on storage
+
+Your OHDSI Lab Workspace is intended to be a resource for *compute*.
+***It is NOT intended to be permanent storage***. We do not recommend
+saving scripts permanently on your workspace without backing them up
+elsewhere.
+
+The best practice is to use a version control system for saving code and
+results to a location other than your workspace. We recommend using git
+and github for this purpose. Storage on your workspace should be
+considered temporary and not a location for long-term storage.
+
+Thankfully, connecting git and github to R is now quite easy. Follow the
+steps in [Happy Git with R](https://happygitwithr.com/https-pat) chapter
+9 to connect your github account to RStudio. And while using git and
+github can be complex, for a single user (you!), it’s as simple as
+knowing these four commands:
+
+    git pull
+    git add .
+    git commit -m "this is a message about the changes you made"
+    git push
+
+Information about these commands can be found in [Happy Git with
+R](https://happygitwithr.com/git-commands) chapter 21. Or, for a visual
+explanation, see the [fantastic illustrations by Allison
+Horst](https://allisonhorst.com/git-github).
+
+# Package index
+
+## All functions
+
+- [`dbi_collect()`](https://roux-ohdsi.github.io/ohdsilab/reference/dbi_collect.md)
+  : Collect using the DBI package
+- [`hello()`](https://roux-ohdsi.github.io/ohdsilab/reference/hello.md)
+  : Hello, World!
+- [`icd2omop()`](https://roux-ohdsi.github.io/ohdsilab/reference/icd2omop.md)
+  : icd2omop
+- [`icd2omop2()`](https://roux-ohdsi.github.io/ohdsilab/reference/icd2omop2.md)
+  : icd2omop2
+- [`icd_periods()`](https://roux-ohdsi.github.io/ohdsilab/reference/icd_periods.md)
+  : Add periods to icd numbers
+- [`insertTable_chunk()`](https://roux-ohdsi.github.io/ohdsilab/reference/insertTable_chunk.md)
+  : Insert a table to your user schema in chunks because speed and bugs
+- [`map2omop()`](https://roux-ohdsi.github.io/ohdsilab/reference/map2omop.md)
+  : map2omop
+- [`ohdsilab_connect()`](https://roux-ohdsi.github.io/ohdsilab/reference/ohdsilab_connect.md)
+  : Connect to the ohdsilab redshift database
+- [`omop_join()`](https://roux-ohdsi.github.io/ohdsilab/reference/omop_join.md)
+  : Join current query to another omop table
+- [`pull_concept_set()`](https://roux-ohdsi.github.io/ohdsilab/reference/pull_concept_set.md)
+  : Get occurrences of of a concept set from ATLAS for a given cohort
+- [`rb()`](https://roux-ohdsi.github.io/ohdsilab/reference/rb.md) :
+  Shortcut to rollback in the case of a redshift error
+- [`seedQuery()`](https://roux-ohdsi.github.io/ohdsilab/reference/seedQuery.md)
+  : Execute a query with a seed for reproducibility
+- [`set_seed()`](https://roux-ohdsi.github.io/ohdsilab/reference/set_seed.md)
+  : Set a seed for reproducibility
+- [`str_insert()`](https://roux-ohdsi.github.io/ohdsilab/reference/str_insert.md)
+  : Insert string
+
+# Articles
+
+### All vignettes
+
+- [Introduction to ohdsilab (start
+  here!)](https://roux-ohdsi.github.io/ohdsilab/articles/01-intro-to-ohdsilab.md):
+- [Getting Started with the OHDSI-Lab
+  Box](https://roux-ohdsi.github.io/ohdsilab/articles/02-getting-started-with-box.md):
+- [Generating a
+  cohort](https://roux-ohdsi.github.io/ohdsilab/articles/03-Generating-a-cohort.md):
+- [Generating a cohort with
+  Capr](https://roux-ohdsi.github.io/ohdsilab/articles/04-Generating-a-cohort-with_Capr.md):
+- [Generating Covariates and Table
+  1](https://roux-ohdsi.github.io/ohdsilab/articles/05-feature-extraction-covariates.md):
+- [Generating Characterization
+  Files](https://roux-ohdsi.github.io/ohdsilab/articles/06-feature-extraction-characterization.md):
+- [Working with Data from the ohdsilab
+  database](https://roux-ohdsi.github.io/ohdsilab/articles/07-working-with-omop-cdm.md):
+- [Visualizing Sample
+  Data](https://roux-ohdsi.github.io/ohdsilab/articles/08-CohortExplorer.md):
+- [Patient Level
+  Prediction](https://roux-ohdsi.github.io/ohdsilab/articles/09-PatientLevelPrediction.md):
+- [Population Level Estimation using
+  CohortMethod](https://roux-ohdsi.github.io/ohdsilab/articles/10-CohortMethod.md):
+- [Population Level Estimation using
+  SelfControlledCaseSeries](https://roux-ohdsi.github.io/ohdsilab/articles/11-SelfControlledCaseSeries.md):
+- [Generating a Synthetic
+  Dataset](https://roux-ohdsi.github.io/ohdsilab/articles/12-Eunomia.md):
+- [Designing a network analysis using
+  Strategus](https://roux-ohdsi.github.io/ohdsilab/articles/13-Stategus.md):

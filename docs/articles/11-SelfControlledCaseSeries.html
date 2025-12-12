@@ -187,7 +187,7 @@ drug_era table within the cdm_schema. The drug_era table defines the
 spans of time persons are assumed to be exposed to a particular active
 ingredient (in this case clonazepam).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sccsData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/SelfControlledCaseSeries/reference/getDbSccsData.html" class="external-link">getDbSccsData</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">sccsData</span> <span class="op">&lt;-</span> <span class="fu">getDbSccsData</span><span class="op">(</span></span>
 <span>  connectionDetails <span class="op">=</span> <span class="va">connectionDetails</span>,</span>
 <span>  cdmDatabaseSchema <span class="op">=</span> <span class="va">cdm_schema</span>,</span>
 <span>  outcomeDatabaseSchema <span class="op">=</span> <span class="va">write_schema</span>,</span>
@@ -205,14 +205,14 @@ sccsData object in case you need to come back to the later steps during
 another session. Once you have saved the data, reload it as the same
 variable.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://ohdsi.github.io/SelfControlledCaseSeries/reference/saveSccsData.html" class="external-link">saveSccsData</a></span><span class="op">(</span><span class="va">sccsData</span>, <span class="st">"sccsData.zip"</span><span class="op">)</span></span>
-<span><span class="va">sccsData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/SelfControlledCaseSeries/reference/loadSccsData.html" class="external-link">loadSccsData</a></span><span class="op">(</span><span class="st">"sccsData.zip"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">saveSccsData</span><span class="op">(</span><span class="va">sccsData</span>, <span class="st">"sccsData.zip"</span><span class="op">)</span></span>
+<span><span class="va">sccsData</span> <span class="op">&lt;-</span> <span class="fu">loadSccsData</span><span class="op">(</span><span class="st">"sccsData.zip"</span><span class="op">)</span></span></code></pre></div>
 <p>Next, we need to create our study population. Remember, because
 SelfControlledCaseSeries uses individuals as their own control, this
 study population is only drawing from one cohort (no comparator
 cohort).</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">studyPop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/SelfControlledCaseSeries/reference/createStudyPopulation.html" class="external-link">createStudyPopulation</a></span><span class="op">(</span>sccsData <span class="op">=</span> <span class="va">sccsData</span>,</span>
+<code class="sourceCode R"><span><span class="va">studyPop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/createStudyPopulation.html" class="external-link">createStudyPopulation</a></span><span class="op">(</span>sccsData <span class="op">=</span> <span class="va">sccsData</span>,</span>
 <span>                                  outcomeId <span class="op">=</span> <span class="va">outcomeId</span>,</span>
 <span>                                  firstOutcomeOnly <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                                  naivePeriod <span class="op">=</span> <span class="fl">180</span><span class="op">)</span></span></code></pre></div>
@@ -225,13 +225,13 @@ there are slightly more hypoventilation events after clonazepam
 exposure, which makes sense according to existing clinical knowledge.
 Once we run the estimation model, we’ll know for sure.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://ohdsi.github.io/SelfControlledCaseSeries/reference/plotExposureCentered.html" class="external-link">plotExposureCentered</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu">plotExposureCentered</span><span class="op">(</span></span>
 <span>    sccsData <span class="op">=</span> <span class="va">sccsData</span>,</span>
 <span>    studyPopulation <span class="op">=</span> <span class="va">studyPop</span><span class="op">)</span></span></code></pre></div>
 <p>Next, we need to define the covariate we’re including in our model
 (all drug eras of clonazepam).</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">covarClonazepam</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/SelfControlledCaseSeries/reference/createEraCovariateSettings.html" class="external-link">createEraCovariateSettings</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">covarClonazepam</span> <span class="op">&lt;-</span> <span class="fu">createEraCovariateSettings</span><span class="op">(</span></span>
 <span>  label <span class="op">=</span> <span class="st">"Exposure of interest"</span>,</span>
 <span>  includeEraIds <span class="op">=</span> <span class="va">clonazepam</span>,</span>
 <span>  start <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -242,7 +242,7 @@ which represents the data in non-overlapping time intervals, with
 information on the outcome (hypoventilation) and covariate per
 interval.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sccsIntervalData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/SelfControlledCaseSeries/reference/createSccsIntervalData.html" class="external-link">createSccsIntervalData</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">sccsIntervalData</span> <span class="op">&lt;-</span> <span class="fu">createSccsIntervalData</span><span class="op">(</span></span>
 <span>  <span class="va">studyPop</span>,</span>
 <span>  <span class="va">sccsData</span>,</span>
 <span>  eraCovariateSettings <span class="op">=</span> <span class="va">covarClonazepam</span><span class="op">)</span></span></code></pre></div>
@@ -256,7 +256,7 @@ hypoventilation if they are exposed to clonazepam. This result is
 expected as it aligns with existing clinical knowledge about
 clonazepam.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/SelfControlledCaseSeries/reference/fitSccsModel.html" class="external-link">fitSccsModel</a></span><span class="op">(</span><span class="va">sccsIntervalData</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">fitSccsModel</span><span class="op">(</span><span class="va">sccsIntervalData</span><span class="op">)</span></span>
 <span><span class="va">model</span></span></code></pre></div>
   </main>
 </div>
@@ -268,7 +268,7 @@ clonazepam.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

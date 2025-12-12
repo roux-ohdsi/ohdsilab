@@ -1,0 +1,177 @@
+# Generating a cohort
+
+This is a quick tutorial on using a cohort created using ATLAS and
+saving cohort IDs and entry/exit in your user schema. This tutorial will
+use a cohort created from the SynPuf synthetic dataset, using the cohort
+definition “\[RC\] CVA Ischemic or Hemorrhagic with admission - synpuf”.
+This cohort definition imported a phenotype for CVA from stroke ischemic
+or Hemorrhagic with admission from Phenotype library
+(<https://data.ohdsi.org/PhenotypeLibrary/>). More details on generating
+cohorts can be found here: <https://ohdsi.github.io/CohortGenerator/>
+and here: <https://ohdsi.github.io/TheBookOfOhdsi/Cohorts.html>.
+
+We’ll need to install two new packages: the OHDSI Web Api and
+cohortGenerator
+
+``` r
+remotes::install_github("OHDSI/ROhdsiWebApi")
+remotes::install_github("OHDSI/CohortGenerator")
+```
+
+We’ll use the same set up code as the intro vignette.
+
+``` r
+# ==============================================================================
+# Packages =====================================================================
+library(keyring)
+library(DatabaseConnector)
+library(tidyverse)
+library(ohdsilab)
+library(ROhdsiWebApi)
+library(CohortGenerator)
+
+# DB Connections ===============================================================
+atlas_url = "https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"
+cdm_schema = "omop_cdm_53_pmtx_202203"
+synpuf_schema = "omop_cdm_synpuf_110k_531"
+write_schema = paste0("work_", keyring::key_get("db_username"))
+```
+
+Instead of creating a database connection, we’re just going to create a
+set of connection details. Some of the OHDSI R packages use this
+connectionDetails method instead of using a connection.
+
+``` r
+# Create connection details
+
+Sys.setenv("DATABASECONNECTOR_JAR_FOLDER" = "insert path to jdbc driver here")
+
+connectionDetails <- createConnectionDetails(
+    dbms = "redshift",
+    server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+    port = 5439,
+    user = keyring::key_get("db_username"),
+    password = keyring::key_get("db_password"))
+
+# We do need to connect to the database to save the variable "con", but we can 
+# it with much less code now that we the connectionDetails saved
+con <- DatabaseConnector::connect(connectionDetails)
+
+# make it easier for some r functions to find the database
+options(con.default.value = con)
+options(schema.default.value = cdm_schema)
+options(write_schema.default.value = write_schema)
+```
+
+We’re also going to authorize the api for accessing ATLAS from R. This
+uses the atlas_url information, and your username/password which you set
+using
+[`keyring::key_set()`](https://keyring.r-lib.org/reference/key_get.html)
+in a previous vignette (“Introduction to OHDSI Lab”).
+
+``` r
+ROhdsiWebApi::authorizeWebApi(
+    atlas_url,
+    authMethod = "db",
+    webApiUsername = keyring::key_get("atlas_username"),
+    webApiPassword = keyring::key_get("atlas_password"))
+```
+
+Ok now we need to do two things. First - pick which cohort to use to
+generate a data set. This is the number for the cohort that you (or
+someone else) creates in ATLAS. Note that if you want to include
+multiple cohorts in the same table, you can provide a vector of cohort
+ID numbers.
+
+``` r
+cohortId <- 1124
+```
+
+Then we’re going to create a cohortDefinitionSet object using that ID
+and the baseUrl.
+
+``` r
+cohortDefinitionSet <- ROhdsiWebApi::exportCohortDefinitionSet(
+    baseUrl = atlas_url,
+    cohortIds = cohortId)
+
+cohortDefinitionSet
+```
+
+We’ll create a name for this cohort - this is the name that’s used for
+the tables in your user schema.
+
+``` r
+cohortTableNames <- getCohortTableNames(cohortTable = "synPuf_CVA")
+cohortTableNames
+```
+
+We’ll create empty tables to receive this data. We’re using the
+connectionDetails object, the cohortTableName object, and the mySchema
+object from above.
+
+``` r
+# create empty tables in the {mySchema}.cohort table
+createCohortTables(
+    connectionDetails = connectionDetails,
+    cohortTableNames = cohortTableNames,
+    cohortDatabaseSchema = write_schema)
+```
+
+*This function doesn’t actually currently work in Rmarkdown, see
+<https://github.com/OHDSI/CohortGenerator/issues/97> for details. If you
+need to use it in RMarkdown supposedly you can wrap it in
+`purrr:quietly()`*
+
+Finally, we’ll add everyone from the database to our cohort. Notice that
+this code references the synpuf schema. If you were working with the
+pharmetrics data, you’d reference `cdm_schema` or
+`"omop_cdm_53_pmtx_202203"`.
+
+``` r
+cohortsGenerated <- generateCohortSet(
+    connectionDetails = connectionDetails,
+    cdmDatabaseSchema = synpuf_schema,
+    cohortDatabaseSchema = write_schema,
+    cohortTableNames = cohortTableNames,
+    cohortDefinitionSet = cohortDefinitionSet)
+```
+
+If you want to visually see this new table in your schema, you can
+connect to the database and use the **Connections** pane in the top
+right of RStudio.
+
+``` r
+con =  DatabaseConnector::connect(
+  dbms = "redshift",
+  server = "ohdsi-lab-redshift-cluster-prod.clsyktjhufn7.us-east-1.redshift.amazonaws.com/ohdsi_lab",
+  port = 5439,
+  user = keyring::key_get("db_username"),
+  password = keyring::key_get("db_password"))
+```
+
+Then, you might use this table (for example) to reduce the full person
+table to include only people in your cohort.
+
+``` r
+# pull data from the new cohort table
+cohort <- tbl(
+    con,
+    inDatabaseSchema(write_schema, "synPuf_CVA")) |>
+    select(person_id = subject_id, cohort_start_date, cohort_end_date)
+
+# join to the person table to get information about demographics, calculate age at cohort entry
+demographics <- cohort |> 
+  omop_join("person", type = "inner", by = "person_id") |> 
+  select(person_id, cohort_start_date, cohort_end_date, year_of_birth, gender = gender_source_value) |> 
+  mutate(age_at_entry = year(cohort_start_date) - year_of_birth)
+
+# if the above fails you may need to set the following options again first
+options(con.default.value = con)
+options(schema.default.value = cdm_schema)
+options(write_schema.default.value = write_schema)
+```
+
+This code starts with a table made with CohortGenerator and uses it to
+limit the OMOP person table to just the people that we’re interested in,
+as defined by our cohort, and then calculates an age at entry.

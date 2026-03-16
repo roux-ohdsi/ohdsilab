@@ -44,7 +44,8 @@ pull_concept_set <- function(cohort,
 
   # consider abstracting into own function
   concept_table_local <- getConceptSetDefinition(concept_set_id, baseUrl = atlas_url) |>
-    convertConceptSetDefinitionToTable() |>
+    resolveConceptSet(baseUrl = atlas_url) |> 
+    getConcepts(baseUrl = atlas_url) |>
     select(conceptId, conceptName, domainId) |>
     filter(domainId %in% c("Condition", "Drug", "Measurement", "Observation", "Procedure"))
 

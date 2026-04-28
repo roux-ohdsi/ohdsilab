@@ -1,4 +1,4 @@
-# Patient Level Prediction
+# OMOP - Patient Level Prediction
 
 This tutorial will illustrate how to use the PatientLevelPrediction
 package created by the OHDSI community and described here:

@@ -1,4 +1,4 @@
-# Generating Covariates and Table 1
+# OMOP - Generating Covariates and Table 1
 
 This vignette summarizes the code that can be found here:
 [http://ohdsi.github.io/FeatureExtraction/articles/UsingFeatureExtraction.html](http://ohdsi.github.io/FeatureExtraction/articles/UsingFeatureExtraction.md)
@@ -44,13 +44,12 @@ connectionDetails <- createConnectionDetails(
 This code will generate a table 1 for an established cohort of
 individuals with concepts of stroke and aphasia. This table was
 generated using CohortGenerator and ATLAS, and saved as “RC_aphasia” in
-my own schema. In the
-[`getDbCovariateData()`](https://rdrr.io/pkg/FeatureExtraction/man/getDbCovariateData.html)
-funtion, we need to provide information about the database connection
-(connectionDetails), the omop database data, the specific user schema to
-look in (`write_schema`). “subject_id” becomes the row for subject - we
-could also name the “person_id” for example. -1 says to calculate
-covariates for all cohorts in the table (there’s only 1).
+my own schema. In the `getDbCovariateData()` funtion, we need to provide
+information about the database connection (connectionDetails), the omop
+database data, the specific user schema to look in (`write_schema`).
+“subject_id” becomes the row for subject - we could also name the
+“person_id” for example. -1 says to calculate covariates for all cohorts
+in the table (there’s only 1).
 
 The `aggregated` argument defaults to FALSE, so we’ll get covariates at
 the person level here. We can aggregate them in the next step.
@@ -84,9 +83,7 @@ covariateData <- loadCovariateData("covariates")
 ```
 
 According to the documentation, we should ‘tidy up’ the covariates. We
-can do this using the
-[`tidyCovariateData()`](https://rdrr.io/pkg/FeatureExtraction/man/tidyCovariateData.html)
-function.
+can do this using the `tidyCovariateData()` function.
 
 *Normalize covariate values by dividing by the max and/or remove
 redundant covariates and/or remove infrequent covariates. For temporal
@@ -112,12 +109,11 @@ saveCovariateData(
 covariateData.agg <- loadCovariateData("covariates_agg")
 ```
 
-Finally, we can use the
-[`createTable1()`](https://rdrr.io/pkg/FeatureExtraction/man/createTable1.html)
-function to put it all in a Table 1. I found that I prefer to have once
-column output. I haven’t found a terribly satisfying way of getting the
-results out in a nicely formatted table, so for now I’ve just saved it
-as a .csv file and formatted in excel.
+Finally, we can use the `createTable1()` function to put it all in a
+Table 1. I found that I prefer to have once column output. I haven’t
+found a terribly satisfying way of getting the results out in a nicely
+formatted table, so for now I’ve just saved it as a .csv file and
+formatted in excel.
 
 ``` r
 result <- createTable1(covariateData.agg)

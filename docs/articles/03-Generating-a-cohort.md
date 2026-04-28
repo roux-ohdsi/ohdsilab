@@ -1,4 +1,4 @@
-# Generating a cohort
+# OMOP - Generating a cohort
 
 This is a quick tutorial on using a cohort created using ATLAS and
 saving cohort IDs and entry/exit in your user schema. This tutorial will

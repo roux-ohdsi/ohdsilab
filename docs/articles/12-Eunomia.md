@@ -1,4 +1,4 @@
-# Generating a Synthetic Dataset
+# OMOP - Generating a Synthetic Dataset
 
 This tutorial will illustrate how to use the Eunomia package created by
 the OHDSI community and described here:

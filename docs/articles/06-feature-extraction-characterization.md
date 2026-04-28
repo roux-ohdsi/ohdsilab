@@ -1,4 +1,4 @@
-# Generating Characterization Files
+# OMOP - Generating Characterization Files
 
 This vignette summarizes the code that can be found here:
 <https://ohdsi.github.io/Characterization/> and illustrates how this

@@ -11,14 +11,14 @@
 Source:
 [`DESCRIPTION`](https://github.com/roux-ohdsi/ohdsilab/blob/HEAD/DESCRIPTION)
 
-Smith L, Cavanaugh R (2025). *ohdsilab: ohdsilab: useful R functions for
-the Roux ohdsilab at Northeastern University*.
-https://roux-ohdsi.github.io/ohdsilab/,
-https://github.com/roux-ohdsi/ohdsilab.
+Smith L, Cavanaugh R (2026). *ohdsilab: ohdsilab: useful R functions for
+the Roux ohdsilab at Northeastern University*. R package version 0.1.0,
+<https://roux-ohdsi.github.io/ohdsilab/>.
 
     @Manual{,
       title = {ohdsilab: ohdsilab: useful R functions for the Roux ohdsilab at Northeastern University},
       author = {Louisa Smith and Rob Cavanaugh},
-      year = {2025},
-      note = {https://roux-ohdsi.github.io/ohdsilab/, https://github.com/roux-ohdsi/ohdsilab},
+      year = {2026},
+      note = {R package version 0.1.0},
+      url = {https://roux-ohdsi.github.io/ohdsilab/},
     }

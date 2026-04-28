@@ -1,4 +1,4 @@
-# Generating a cohort with Capr
+# OMOP - Generating a cohort with Capr
 
 This tutorial is similar to the last except in this one we’re generating
 a cohort using the Capr package instead of ATLAS. After the cohort is

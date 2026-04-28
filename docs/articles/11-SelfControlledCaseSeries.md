@@ -1,4 +1,4 @@
-# Population Level Estimation using SelfControlledCaseSeries
+# OMOP - Population Level Estimation using SelfControlledCaseSeries
 
 This tutorial will illustrate how to use the SelfControlledCaseSeries
 package created by the OHDSI community and described here:

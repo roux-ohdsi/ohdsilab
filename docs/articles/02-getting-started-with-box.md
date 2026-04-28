@@ -1,4 +1,4 @@
-# Getting Started with the OHDSI-Lab Box
+# OMOP - Getting Started with the OHDSI-Lab Box
 
 ## 1. Connect to Northeastern VPN
 

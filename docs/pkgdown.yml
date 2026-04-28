@@ -15,7 +15,9 @@ articles:
   11-SelfControlledCaseSeries: 11-SelfControlledCaseSeries.html
   12-Eunomia: 12-Eunomia.html
   13-Stategus: 13-Stategus.html
-last_built: 2025-12-12T18:41Z
+  14-gen-connecting-to-the-database: 14-gen-connecting-to-the-database.html
+  15-krd-generating-a-cohort: 15-krd-generating-a-cohort.html
+last_built: 2026-04-28T15:24Z
 urls:
   reference: https://roux-ohdsi.github.io/ohdsilab/reference
   article: https://roux-ohdsi.github.io/ohdsilab/articles

@@ -30,3 +30,5 @@
   : Set a seed for reproducibility
 - [`str_insert()`](https://roux-ohdsi.github.io/ohdsilab/reference/str_insert.md)
   : Insert string
+- [`veradigm_table1()`](https://roux-ohdsi.github.io/ohdsilab/reference/veradigm_table1.md)
+  : Generate Table 1 for Veradigm Data

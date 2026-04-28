@@ -1,4 +1,4 @@
-# Visualizing Sample Data
+# OMOP - Visualizing Sample Data
 
 This tutorial will illustrate how to use the cohortExplorer package
 created by the OHDSI communitiy and described here:

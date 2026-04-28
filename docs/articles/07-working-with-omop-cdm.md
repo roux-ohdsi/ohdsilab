@@ -1,4 +1,4 @@
-# Working with Data from the ohdsilab database
+# OMOP - Working with Data from the ohdsilab database
 
 ``` r
 library(ohdsilab)

@@ -1,4 +1,4 @@
-# Population Level Estimation using CohortMethod
+# OMOP - Population Level Estimation using CohortMethod
 
 This tutorial will illustrate how to use the CohortMethod package
 created by the OHDSI community and described here:

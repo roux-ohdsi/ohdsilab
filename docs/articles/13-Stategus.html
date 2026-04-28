@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Designing a network analysis using Strategus • ohdsilab</title>
+<title>OMOP - Designing a network analysis using Strategus • ohdsilab</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
@@ -16,7 +16,7 @@
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
-<meta property="og:title" content="Designing a network analysis using Strategus">
+<meta property="og:title" content="OMOP - Designing a network analysis using Strategus">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -39,19 +39,21 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/01-intro-to-ohdsilab.html">Introduction to ohdsilab (start here!)</a></li>
-    <li><a class="dropdown-item" href="../articles/02-getting-started-with-box.html">Getting Started with the OHDSI-Lab Box</a></li>
-    <li><a class="dropdown-item" href="../articles/03-Generating-a-cohort.html">Generating a cohort</a></li>
-    <li><a class="dropdown-item" href="../articles/04-Generating-a-cohort-with_Capr.html">Generating a cohort with Capr</a></li>
-    <li><a class="dropdown-item" href="../articles/05-feature-extraction-covariates.html">Generating Covariates and Table 1</a></li>
-    <li><a class="dropdown-item" href="../articles/06-feature-extraction-characterization.html">Generating Characterization Files</a></li>
-    <li><a class="dropdown-item" href="../articles/07-working-with-omop-cdm.html">Working with Data from the ohdsilab database</a></li>
-    <li><a class="dropdown-item" href="../articles/08-CohortExplorer.html">Visualizing Sample Data</a></li>
-    <li><a class="dropdown-item" href="../articles/09-PatientLevelPrediction.html">Patient Level Prediction</a></li>
-    <li><a class="dropdown-item" href="../articles/10-CohortMethod.html">Population Level Estimation using CohortMethod</a></li>
-    <li><a class="dropdown-item" href="../articles/11-SelfControlledCaseSeries.html">Population Level Estimation using SelfControlledCaseSeries</a></li>
-    <li><a class="dropdown-item" href="../articles/12-Eunomia.html">Generating a Synthetic Dataset</a></li>
-    <li><a class="dropdown-item" href="../articles/13-Stategus.html">Designing a network analysis using Strategus</a></li>
+<li><a class="dropdown-item" href="../articles/01-intro-to-ohdsilab.html">OMOP - Introduction to ohdsilab (start here!)</a></li>
+    <li><a class="dropdown-item" href="../articles/02-getting-started-with-box.html">OMOP - Getting Started with the OHDSI-Lab Box</a></li>
+    <li><a class="dropdown-item" href="../articles/03-Generating-a-cohort.html">OMOP - Generating a cohort</a></li>
+    <li><a class="dropdown-item" href="../articles/04-Generating-a-cohort-with_Capr.html">OMOP - Generating a cohort with Capr</a></li>
+    <li><a class="dropdown-item" href="../articles/05-feature-extraction-covariates.html">OMOP - Generating Covariates and Table 1</a></li>
+    <li><a class="dropdown-item" href="../articles/06-feature-extraction-characterization.html">OMOP - Generating Characterization Files</a></li>
+    <li><a class="dropdown-item" href="../articles/07-working-with-omop-cdm.html">OMOP - Working with Data from the ohdsilab database</a></li>
+    <li><a class="dropdown-item" href="../articles/08-CohortExplorer.html">OMOP - Visualizing Sample Data</a></li>
+    <li><a class="dropdown-item" href="../articles/09-PatientLevelPrediction.html">OMOP - Patient Level Prediction</a></li>
+    <li><a class="dropdown-item" href="../articles/10-CohortMethod.html">OMOP - Population Level Estimation using CohortMethod</a></li>
+    <li><a class="dropdown-item" href="../articles/11-SelfControlledCaseSeries.html">OMOP - Population Level Estimation using SelfControlledCaseSeries</a></li>
+    <li><a class="dropdown-item" href="../articles/12-Eunomia.html">OMOP - Generating a Synthetic Dataset</a></li>
+    <li><a class="dropdown-item" href="../articles/13-Stategus.html">OMOP - Designing a network analysis using Strategus</a></li>
+    <li><a class="dropdown-item" href="../articles/14-gen-connecting-to-the-database.html">General - Connecting to the database</a></li>
+    <li><a class="dropdown-item" href="../articles/15-krd-generating-a-cohort.html">KRD - Generating a cohort</a></li>
   </ul>
 </li>
       </ul>
@@ -72,7 +74,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Designing a network analysis using Strategus</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>OMOP - Designing a network analysis using Strategus</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/roux-ohdsi/ohdsilab/blob/HEAD/vignettes/13-Stategus.Rmd" class="external-link"><code>vignettes/13-Stategus.Rmd</code></a></small>
@@ -113,8 +115,8 @@ Strategus.</p>
 <span>  <span class="st">"https://raw.githubusercontent.com/ohdsi-studies/StrategusStudyRepoTemplate/main/renv.lock"</span>,</span>
 <span>  <span class="st">"INSERT PATH TO R PROJECT DIRECTORY"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"renv"</span><span class="op">)</span></span>
-<span><span class="fu">renv</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/renv/reference/activate.html" class="external-link">activate</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu">renv</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/renv/reference/restore.html" class="external-link">restore</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">renv</span><span class="fu">::</span><span class="fu">activate</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">renv</span><span class="fu">::</span><span class="fu">restore</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>For the purposes of this tutorial, our analysis specification will
 include code to generate the same type 2 diabetes cohort used in other
 vignettes and run the cohort diagnostics package to return a basic
@@ -129,7 +131,7 @@ previous vignettes.</p>
 <span><span class="va">atlas_url</span> <span class="op">=</span> <span class="st">"https://atlas.roux-ohdsi-prod.aws.northeastern.edu/WebAPI"</span></span>
 <span></span>
 <span><span class="co">#connect to ATLAS</span></span>
-<span><span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ROhdsiWebApi/reference/authorizeWebApi.html" class="external-link">authorizeWebApi</a></span><span class="op">(</span></span>
+<span><span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu">authorizeWebApi</span><span class="op">(</span></span>
 <span>    <span class="va">atlas_url</span>,</span>
 <span>    authMethod <span class="op">=</span> <span class="st">"db"</span>,</span>
 <span>    webApiUsername <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"atlas_username"</span><span class="op">)</span>,</span>
@@ -139,7 +141,7 @@ previous vignettes.</p>
 <span><span class="va">cohortId</span> <span class="op">&lt;-</span> <span class="fl">4675</span></span>
 <span></span>
 <span><span class="co">#export the chosen ATLAS cohort definition from ATLAS</span></span>
-<span><span class="va">cohortDefinitionSet</span> <span class="op">&lt;-</span> <span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ROhdsiWebApi/reference/exportCohortDefinitionSet.html" class="external-link">exportCohortDefinitionSet</a></span><span class="op">(</span></span>
+<span><span class="va">cohortDefinitionSet</span> <span class="op">&lt;-</span> <span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu">exportCohortDefinitionSet</span><span class="op">(</span></span>
 <span>    baseUrl <span class="op">=</span> <span class="va">atlas_url</span>,</span>
 <span>    cohortIds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">targetId</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Now, we need to create the cohort generator module</p>
@@ -186,7 +188,7 @@ diagnostics (simple characterization) files about that cohort.</p>
 <span>  <span class="fu">Strategus</span><span class="fu">::</span><span class="fu">addModuleSpecifications</span><span class="op">(</span><span class="va">cohortDiagnosticsModuleSpecifications</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#save analysis specification to a JSON file</span></span>
-<span><span class="fu">ParallelLogger</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ParallelLogger/reference/saveSettingsToJson.html" class="external-link">saveSettingsToJson</a></span><span class="op">(</span></span>
+<span><span class="fu">ParallelLogger</span><span class="fu">::</span><span class="fu">saveSettingsToJson</span><span class="op">(</span></span>
 <span>    <span class="va">analysisSpecifications</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"INSERT PATH TO OUTPUT FOLDER"</span>, <span class="st">"analysis_settings.json"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Stage 2: Execute the analysis Once your collaborator receives the
@@ -221,7 +223,7 @@ collaborators have access to.</p>
 <span><span class="va">executionSettings</span> <span class="op">&lt;-</span> <span class="fu">createCdmExecutionSettings</span><span class="op">(</span></span>
 <span>  workDatabaseSchema <span class="op">=</span> <span class="va">write_schema</span>,</span>
 <span>  cdmDatabaseSchema <span class="op">=</span> <span class="va">cdm_schema</span>,</span>
-<span>  cohortTableNames <span class="op">=</span> <span class="fu">CohortGenerator</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/CohortGenerator/reference/getCohortTableNames.html" class="external-link">getCohortTableNames</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  cohortTableNames <span class="op">=</span> <span class="fu">CohortGenerator</span><span class="fu">::</span><span class="fu">getCohortTableNames</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  workFolder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">outputFolder</span>, <span class="st">"work_folder"</span><span class="op">)</span>,</span>
 <span>  resultsFolder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">outputFolder</span>, <span class="st">"results_folder"</span><span class="op">)</span>,</span>
 <span>  minCellCount <span class="op">=</span> <span class="fl">5</span></span>
@@ -229,7 +231,7 @@ collaborators have access to.</p>
 <span></span>
 <span><span class="co">#save the execution settings to JSON file. This file can be used for any analysis</span></span>
 <span><span class="co">#being run against the database described above</span></span>
-<span><span class="fu">ParallelLogger</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ParallelLogger/reference/saveSettingsToJson.html" class="external-link">saveSettingsToJson</a></span><span class="op">(</span></span>
+<span><span class="fu">ParallelLogger</span><span class="fu">::</span><span class="fu">saveSettingsToJson</span><span class="op">(</span></span>
 <span>  object <span class="op">=</span> <span class="va">executionSettings</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">outputFolder</span>, <span class="st">"execution_settings.json"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -238,11 +240,11 @@ This will output results files to the outputFolder indicated in the last
 step.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#load the analysis specification JSON file from stage 1</span></span>
-<span><span class="va">analysisSpecifications</span> <span class="op">&lt;-</span> <span class="fu">ParallelLogger</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ParallelLogger/reference/loadSettingsFromJson.html" class="external-link">loadSettingsFromJson</a></span><span class="op">(</span></span>
+<span><span class="va">analysisSpecifications</span> <span class="op">&lt;-</span> <span class="fu">ParallelLogger</span><span class="fu">::</span><span class="fu">loadSettingsFromJson</span><span class="op">(</span></span>
 <span>  fileName <span class="op">=</span> <span class="st">"INSERT PATH TO ANALYSIS SETTINGS JSON FILE"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#load the execution settings JSON file from the last step</span></span>
-<span><span class="va">executionSettings</span> <span class="op">&lt;-</span> <span class="fu">ParallelLogger</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ParallelLogger/reference/loadSettingsFromJson.html" class="external-link">loadSettingsFromJson</a></span><span class="op">(</span></span>
+<span><span class="va">executionSettings</span> <span class="op">&lt;-</span> <span class="fu">ParallelLogger</span><span class="fu">::</span><span class="fu">loadSettingsFromJson</span><span class="op">(</span></span>
 <span>  fileName <span class="op">=</span> <span class="st">"INSERT PATH TO EXECUTION SETTINGS JSON FILE"</span><span class="op">)</span></span>
 <span></span>
 <span></span>

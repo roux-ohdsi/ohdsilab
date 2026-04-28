@@ -1,4 +1,4 @@
-# Designing a network analysis using Strategus
+# OMOP - Designing a network analysis using Strategus
 
 Certain studies may require data elements not included in OHDSI Lab
 datasets. In these scenarios, you may want to run an OHDSI network

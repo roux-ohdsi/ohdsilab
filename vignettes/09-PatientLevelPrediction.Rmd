@@ -1,5 +1,5 @@
 ---
-title: "Patient Level Prediction"
+title: "OMOP - Patient Level Prediction"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Patient Level Prediction}

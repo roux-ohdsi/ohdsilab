@@ -1,5 +1,5 @@
 ---
-title: "Population Level Estimation using SelfControlledCaseSeries"
+title: "OMOP - Population Level Estimation using SelfControlledCaseSeries"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Population Level Estimation using SelfControlledCaseSeries}

@@ -1,5 +1,5 @@
 ---
-title: "Population Level Estimation using CohortMethod"
+title: "OMOP - Population Level Estimation using CohortMethod"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Population Level Estimation using CohortMethod}

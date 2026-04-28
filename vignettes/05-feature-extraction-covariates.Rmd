@@ -1,5 +1,5 @@
 ---
-title: "Generating Covariates and Table 1"
+title: "OMOP - Generating Covariates and Table 1"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Generating Covariates and Table 1}

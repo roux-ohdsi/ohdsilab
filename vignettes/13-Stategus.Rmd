@@ -1,5 +1,5 @@
 ---
-title: "Designing a network analysis using Strategus"
+title: "OMOP - Designing a network analysis using Strategus"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Designing a network analysis using Strategus}

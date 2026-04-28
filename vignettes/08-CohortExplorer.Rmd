@@ -1,5 +1,5 @@
 ---
-title: "Visualizing Sample Data"
+title: "OMOP - Visualizing Sample Data"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Generating a cohort with Capr}

@@ -52,4 +52,5 @@ clean_cohort <- lisinopril_patients |>
       ),
     by = "patient_id"
   )
+
 }

@@ -37,20 +37,22 @@
 #'       ),
 #'     by = "patient_id"
 #'   )
+#'
+#' @export
 
 k_get_condition_events <- function(connection,
                                    codes,
                                    komodo_schema = "komodo_ext") {
-  
+
   # --- Input validation ---
   if (length(codes) == 0) stop("codes must contain at least one ICD code")
   if (!is.character(codes)) stop("codes must be a character vector")
-  
+
   # --- Helper: conditions for single-value columns ---
   create_code_filter <- function(codes, alias, column) {
     exact <- codes[!grepl("%", codes)]
     like  <- codes[grepl("%", codes)]
-    
+
     filters <- c()
     if (length(exact) > 0) {
       filters <- c(filters,
@@ -64,7 +66,7 @@ k_get_condition_events <- function(connection,
     }
     paste(filters, collapse = " OR ")
   }
-  
+
   # --- Build SQL ---
   # Note: no DROP/CREATE — this is a lazy query, not a materialized table
   sql <- paste0("
@@ -73,15 +75,15 @@ k_get_condition_events <- function(connection,
     WHERE ", create_code_filter(codes, "i", "admission_diagnosis_code"), "
        OR ", create_code_filter(codes, "i", "primary_diagnosis_code"), "
        OR ", create_code_filter(codes, "i", "secondary_diagnosis_codes"), "
-   
+
     UNION ALL
-   
+
     SELECT patient_id, service_date AS diagnosis_date
     FROM ", komodo_schema, ".non_inpatient_events n
     WHERE ", create_code_filter(codes, "n", "diagnosis_codes"), "
        OR ", create_code_filter(codes, "n", "primary_diagnosis_code_array"), "
   ")
-  
+
   # Return as lazy table — no execution happens here
   dplyr::tbl(connection, dplyr::sql(sql))
 }

@@ -14,6 +14,14 @@
   : Add periods to icd numbers
 - [`insertTable_chunk()`](https://roux-ohdsi.github.io/ohdsilab/reference/insertTable_chunk.md)
   : Insert a table to your user schema in chunks because speed and bugs
+- [`k_get_condition_events()`](https://roux-ohdsi.github.io/ohdsilab/reference/k_get_condition_events.md)
+  : Get all diagnosis events for patients with specific condition codes
+  Returns every occurrence, not just the first, enabling timing-based
+  cohort logic
+- [`k_get_procedure_events()`](https://roux-ohdsi.github.io/ohdsilab/reference/k_get_procedure_events.md)
+  : Get all procedure events for patients with specific procedure codes
+  Returns every occurrence, not just the first, enabling timing-based
+  cohort logic
 - [`map2omop()`](https://roux-ohdsi.github.io/ohdsilab/reference/map2omop.md)
   : map2omop
 - [`ohdsilab_connect()`](https://roux-ohdsi.github.io/ohdsilab/reference/ohdsilab_connect.md)

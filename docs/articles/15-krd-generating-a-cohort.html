@@ -96,7 +96,6 @@ previous article “General - Connecting to the database”.</p>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"roux-ohdsi/ohdsilab"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org" class="external-link">lubridate</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://roux-ohdsi.github.io/ohdsilab/">ohdsilab</a></span><span class="op">)</span></span></code></pre></div>
 <p>Set Komodo Research Dataset schema and your personal write schema</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -124,7 +123,7 @@ stored in several fields within the Komodo Research Dataset. The
 k_get_condition_events function was designed to retrieve these data
 cleanly.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">t2d_events</span> <span class="op">&lt;-</span> <span class="fu">ohdsilab</span><span class="fu">::</span><span class="fu">k_get_condition_events</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">t2d_events</span> <span class="op">&lt;-</span> <span class="fu">ohdsilab</span><span class="fu">::</span><span class="fu"><a href="../reference/k_get_condition_events.html">k_get_condition_events</a></span><span class="op">(</span></span>
 <span>  <span class="va">con</span>,</span>
 <span>  codes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"E11%"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Get patient ids and procedure dates for all metabolic surgery
@@ -133,7 +132,7 @@ stored in several fields within the Komodo Research Dataset. The
 k_get_procedure_events function was designed to retrieve these data
 cleanly.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">metabolic_surgery_events</span> <span class="op">&lt;-</span> <span class="fu">ohdsilab</span><span class="fu">::</span><span class="fu">k_get_procedure_events</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">metabolic_surgery_events</span> <span class="op">&lt;-</span> <span class="fu">ohdsilab</span><span class="fu">::</span><span class="fu"><a href="../reference/k_get_procedure_events.html">k_get_procedure_events</a></span><span class="op">(</span></span>
 <span>  <span class="va">con</span>,</span>
 <span>  codes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"43644"</span>, <span class="st">"43775"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Load the the pharmacy table and filter for metformin events.
@@ -151,11 +150,11 @@ so no custom function is needed.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>index_date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">diagnosis_date</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">metformin_events</span>, by <span class="op">=</span> <span class="st">"patient_id"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date_prescription_written</span> <span class="op">&gt;=</span> <span class="va">index_date</span>,</span>
-<span>         <span class="va">date_prescription_written</span> <span class="op">&lt;=</span> <span class="va">index_date</span> <span class="op">+</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/period.html" class="external-link">days</a></span><span class="op">(</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>         <span class="va">date_prescription_written</span> <span class="op">&lt;=</span> <span class="va">index_date</span> <span class="op">+</span> <span class="fl">30L</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">patient_id</span>, <span class="va">index_date</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">metabolic_surgery_events</span>, by <span class="op">=</span> <span class="st">"patient_id"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">procedure_date</span> <span class="op">&gt;=</span> <span class="va">index_date</span>,</span>
-<span>         <span class="va">procedure_date</span> <span class="op">&lt;=</span> <span class="va">index_date</span> <span class="op">+</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/period.html" class="external-link">days</a></span><span class="op">(</span><span class="fl">180</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>         <span class="va">procedure_date</span> <span class="op">&lt;=</span> <span class="va">index_date</span> <span class="op">+</span> <span class="fl">180L</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">patient_id</span>, <span class="va">index_date</span><span class="op">)</span></span></code></pre></div>
 <p>Save the cohort to a table in your write_schema for future access.
 This step may take a while to run (e.g., this cohort took 58 minutes)

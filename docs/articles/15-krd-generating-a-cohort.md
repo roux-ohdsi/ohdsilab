@@ -14,7 +14,6 @@ install.packages(c("dplyr", "lubridate", "pak"))
 pak::pak("roux-ohdsi/ohdsilab")
 
 library(dplyr)
-library(lubridate)
 library(ohdsilab)
 ```
 
@@ -86,11 +85,11 @@ t2d_cohort <- t2d_events |>
   summarize(index_date = min(diagnosis_date)) |>
   inner_join(metformin_events, by = "patient_id") |>
   filter(date_prescription_written >= index_date,
-         date_prescription_written <= index_date + lubridate::days(30)) |>
+         date_prescription_written <= index_date + 30L) |>
   distinct(patient_id, index_date) |>
   inner_join(metabolic_surgery_events, by = "patient_id") |>
   filter(procedure_date >= index_date,
-         procedure_date <= index_date + lubridate::days(180)) |>
+         procedure_date <= index_date + 180L) |>
   distinct(patient_id, index_date)
 ```
 

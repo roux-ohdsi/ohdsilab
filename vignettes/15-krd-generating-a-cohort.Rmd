@@ -112,6 +112,11 @@ DatabaseConnector::executeSql(
   ))
 ```
 
+Access the cohort for further analysis
+```{r}
+td2_cohort <- tbl(con, inDatabaseSchema(write_schema, ".t2d_cohort"))
+```
+
 You now have a cohort of distinct patient_ids and the date when they first
 entered your cohort (index date). Your cohort can be joined to other Komodo
 Research Dataset tables for information about those patients' medical history,

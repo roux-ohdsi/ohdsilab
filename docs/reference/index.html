@@ -33,6 +33,7 @@
     <li><a class="dropdown-item" href="../articles/13-Stategus.html">OMOP - Designing a network analysis using Strategus</a></li>
     <li><a class="dropdown-item" href="../articles/14-gen-connecting-to-the-database.html">General - Connecting to the database</a></li>
     <li><a class="dropdown-item" href="../articles/15-krd-generating-a-cohort.html">KRD - Generating a cohort</a></li>
+    <li><a class="dropdown-item" href="../articles/16-krd-cohort-demographics.html">KRD - Creating a Demographic Table 1</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -104,14 +105,21 @@
           <code><a href="k_get_condition_events.html">k_get_condition_events()</a></code>
 
         </dt>
-        <dd>Get all diagnosis events for patients with specific condition codes Returns every occurrence, not just the first, enabling timing-based cohort logic</dd>
+        <dd>Get all diagnosis events for patients with specific condition codes Materializes results to a temp table for reliability on large databases</dd>
 
         <dt>
 
           <code><a href="k_get_procedure_events.html">k_get_procedure_events()</a></code>
 
         </dt>
-        <dd>Get all procedure events for patients with specific procedure codes Returns every occurrence, not just the first, enabling timing-based cohort logic</dd>
+        <dd>Get all procedure events for patients with specific procedure codes Materializes results to a temp table for reliability on large databases</dd>
+
+        <dt>
+
+          <code><a href="k_table1.html">k_table1()</a></code>
+
+        </dt>
+        <dd>Generate Table 1 for Komodo Data</dd>
 
         <dt>
 

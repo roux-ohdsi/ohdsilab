@@ -32,6 +32,7 @@
 <url><loc>https://roux-ohdsi.github.io/ohdsilab/articles/13-Stategus.html</loc></url>
 <url><loc>https://roux-ohdsi.github.io/ohdsilab/articles/14-gen-connecting-to-the-database.html</loc></url>
 <url><loc>https://roux-ohdsi.github.io/ohdsilab/articles/15-krd-generating-a-cohort.html</loc></url>
+<url><loc>https://roux-ohdsi.github.io/ohdsilab/articles/16-krd-cohort-demographics.html</loc></url>
 <url><loc>https://roux-ohdsi.github.io/ohdsilab/articles/Generating-a-cohort.html</loc></url>
 <url><loc>https://roux-ohdsi.github.io/ohdsilab/articles/feature-extraction-covariates.html</loc></url>
 <url><loc>https://roux-ohdsi.github.io/ohdsilab/articles/getting-started-with-box.html</loc></url>
@@ -61,6 +62,7 @@
 <url><loc>https://roux-ohdsi.github.io/ohdsilab/reference/insertTable_chunk.html</loc></url>
 <url><loc>https://roux-ohdsi.github.io/ohdsilab/reference/k_get_condition_events.html</loc></url>
 <url><loc>https://roux-ohdsi.github.io/ohdsilab/reference/k_get_procedure_events.html</loc></url>
+<url><loc>https://roux-ohdsi.github.io/ohdsilab/reference/k_table1.html</loc></url>
 <url><loc>https://roux-ohdsi.github.io/ohdsilab/reference/lab_project.html</loc></url>
 <url><loc>https://roux-ohdsi.github.io/ohdsilab/reference/map2omop.html</loc></url>
 <url><loc>https://roux-ohdsi.github.io/ohdsilab/reference/mat_health_icd.html</loc></url>

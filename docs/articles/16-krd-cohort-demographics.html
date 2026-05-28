@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>OMOP - Getting Started with the OHDSI-Lab Box • ohdsilab</title>
+<title>KRD - Creating a Demographic Table 1 • ohdsilab</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
@@ -16,7 +16,7 @@
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
-<meta property="og:title" content="OMOP - Getting Started with the OHDSI-Lab Box">
+<meta property="og:title" content="KRD - Creating a Demographic Table 1">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -75,103 +75,47 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>OMOP - Getting Started with the OHDSI-Lab Box</h1>
-                        <h4 data-toc-skip class="author">Wanjiang (Lucy)
-Wang</h4>
+      <img src="../logo.png" class="logo" alt=""><h1>KRD - Creating a Demographic Table 1</h1>
             
+            <h4 data-toc-skip class="date">2026-04-28</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/roux-ohdsi/ohdsilab/blob/HEAD/vignettes/02-getting-started-with-box.Rmd" class="external-link"><code>vignettes/02-getting-started-with-box.Rmd</code></a></small>
-      <div class="d-none name"><code>02-getting-started-with-box.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/roux-ohdsi/ohdsilab/blob/HEAD/vignettes/16-krd-cohort-demographics.Rmd" class="external-link"><code>vignettes/16-krd-cohort-demographics.Rmd</code></a></small>
+      <div class="d-none name"><code>16-krd-cohort-demographics.Rmd</code></div>
     </div>
 
     
     
-<div class="section level2">
-<h2 id="connect-to-northeastern-vpn">1. Connect to Northeastern VPN<a class="anchor" aria-label="anchor" href="#connect-to-northeastern-vpn"></a>
-</h2>
-<p>When you click connect, it will send a push to your DUO, make sure to
-click confirm on your device.</p>
-<p><img src="images/vpn-connect.png" style="width:35.0%"></p>
-</div>
-<div class="section level2">
-<h2 id="load-amazon-workspaces">2. Load Amazon WorkSpaces<a class="anchor" aria-label="anchor" href="#load-amazon-workspaces"></a>
-</h2>
-<p>Open Amazon WorkSpaces on your laptop and log in to your account. The
-registration code is included in the email.</p>
-<p>It may take some time to start the WorkSpace, please be patient.</p>
-<p><img src="images/AWS-log-in.png" style="width:65.0%"></p>
-<p>After you log in, you will receive an email from OHDSI.</p>
-<p><img src="images/email.png" style="width:65.0%"></p>
-<p>After logging in, your WorkSpace should look like this.</p>
-<p><img src="images/workspace.png" style="width:65.0%"></p>
-</div>
-<div class="section level2">
-<h2 id="create-concept-sets">3. Create concept sets<a class="anchor" aria-label="anchor" href="#create-concept-sets"></a>
-</h2>
-<p>Now, you can start creating your concept sets and cohort.</p>
-<p>When you try to create a concept set, it is recommended to open
-Athena on the side (<a href="https://athena.ohdsi.org/search-terms/start" class="external-link uri">https://athena.ohdsi.org/search-terms/start</a>).</p>
-<p><img src="images/Athena.png" style="width:65.0%"></p>
-<p>Begin your search by exploring the concept you desire using
-Athena.</p>
-<p>For example, if you want to create a concept set related to
-“aspirin”, you can begin with searching “aspirin” in Athena.</p>
-<p><img src="images/aspirin.png" style="width:65.0%"></p>
-<p>We have a comprehensive list of items here, and to make the process
-more manageable, let’s start by focusing on [standard concept]. If you
-don’t find what you’re looking for within this category, we can expand
-our search to include all items later on. This approach will help
-streamline the workload and ensure we cover everything effectively.</p>
-<p><img src="images/aspirin-standard.png" style="width:65.0%"></p>
-<p>Now, let’s click on the first item to view its details. Additionally,
-you have the option to select ‘hierarchy’ to explore the related parent
-and children concepts. This will give you a better understanding of what
-you may want to include. Once you have a brief idea, you can proceed to
-ATLAS.</p>
-</div>
-<div class="section level2">
-<h2 id="move-on-to-atlas">4. Move on to ATLAS<a class="anchor" aria-label="anchor" href="#move-on-to-atlas"></a>
-</h2>
-<p>You can open OHDSI ATLAS and sign in to your account, using the user
-name and password given by the email.</p>
-<p><img src="images/ATLAS.png" style="width:65.0%"></p>
-<p>You begin with clicking “New Concept Set”.</p>
-<p><img src="images/new-concept-set.png" style="width:65.0%"></p>
-<p>Then you type in your concept name, and click save button.</p>
-<p>Then go to “search”, type in the item you want. Notice, when you are
-creating the concept set, the cart symbol next to the Concept Set would
-be green.</p>
-<p>In ATLAS, you have two search options: you can either search using
-the concept ID you obtained from Athena, or you can directly search for
-a term like ‘Aspirin’ in this case. It’s important to note that the
-layout and order of items may vary between Athena and ATLAS.</p>
-<p><img src="images/aspirin-atlas.png" style="width:65.0%"></p>
-<p>You can also choose Standard Concept here.</p>
-<p>You can sort the results by DRC (descendant record count) or RC
-(record count). Then you click on the item, and you can see the
-hierarchy.</p>
-<p><img src="images/hier.png" style="width:65.0%"></p>
-<p>Then you can choose this item, and if it has children concepts, and
-you think you also need them, you can also click the Descendants option,
-then add to the concept. If there are some items you don’t want to
-include, you can choose the Exclude option.</p>
-<p>You can click the save button again.</p>
-<p><img src="images/finish.png" style="width:65.0%"></p>
-<p>If there are other item you want to include, you can go back to
-search. Otherwise, you click the close button.</p>
-<p>Now, you have already successfully created a concept set.</p>
-</div>
-<div class="section level2">
-<h2 id="other-resources">Other Resources<a class="anchor" aria-label="anchor" href="#other-resources"></a>
-</h2>
-<p>I recommend you to watch following videos for more details about
-concept sets and cohort:</p>
-<p><a href="https://youtu.be/mfjxNwn3KkM" class="external-link uri">https://youtu.be/mfjxNwn3KkM</a></p>
-<p><a href="https://youtu.be/2_JsAAFExMU" class="external-link uri">https://youtu.be/2_JsAAFExMU</a></p>
-<p><a href="https://youtu.be/JQFGedOaNiw" class="external-link uri">https://youtu.be/JQFGedOaNiw</a></p>
-</div>
-  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
-    </nav></aside>
+<p>This tutorial outlines the process of creating a demographic table 1
+from the Komodo Research Dataset stored within the OHDSI Lab. For the
+following code to function, you must be logged into an OHDSI Lab
+workspace. This tutorial assumes you have already successfully connected
+to the OHDSI Lab’s Amazon Redshift database according to the
+instructions in the previous article “General - Connecting to the
+database” and generated a cohort according the the instructions in the
+previous article “KRD - Generating a Cohort”.</p>
+<p>Load the additional necessary packages.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://roux-ohdsi.github.io/ohdsilab/">ohdsilab</a></span><span class="op">)</span></span></code></pre></div>
+<p>Generate your table 1. Most of the argument values (con,
+“.t2_cohort”, write_schema, and komodo_schema) were created in the last
+article. A min_count value of 20 will only return demographic covariates
+representing 20 or more patients.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">t2d_table1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/k_table1.html">k_table1</a></span><span class="op">(</span></span>
+<span>  con <span class="op">=</span> <span class="va">con</span>,</span>
+<span>  cohort_table <span class="op">=</span> <span class="st">"t2d_cohort"</span>,</span>
+<span>  write_schema <span class="op">=</span> <span class="va">write_schema</span>,</span>
+<span>  komodo_schema <span class="op">=</span> <span class="va">komodo_schema</span>,</span>
+<span>  min_count <span class="op">=</span> <span class="fl">20</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>View your table 1.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/View.html" class="external-link">View</a></span><span class="op">(</span><span class="va">t2d_table1</span><span class="op">)</span></span></code></pre></div>
+<p>Download your table 1 as a .csv file.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">t2d_table1</span>, <span class="st">"t2d_demographics"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+  </main>
 </div>
 
 

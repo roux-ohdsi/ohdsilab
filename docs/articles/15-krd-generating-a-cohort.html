@@ -54,6 +54,7 @@
     <li><a class="dropdown-item" href="../articles/13-Stategus.html">OMOP - Designing a network analysis using Strategus</a></li>
     <li><a class="dropdown-item" href="../articles/14-gen-connecting-to-the-database.html">General - Connecting to the database</a></li>
     <li><a class="dropdown-item" href="../articles/15-krd-generating-a-cohort.html">KRD - Generating a cohort</a></li>
+    <li><a class="dropdown-item" href="../articles/16-krd-cohort-demographics.html">KRD - Creating a Demographic Table 1</a></li>
   </ul>
 </li>
       </ul>
@@ -124,8 +125,10 @@ k_get_condition_events function was designed to retrieve these data
 cleanly.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">t2d_events</span> <span class="op">&lt;-</span> <span class="fu">ohdsilab</span><span class="fu">::</span><span class="fu"><a href="../reference/k_get_condition_events.html">k_get_condition_events</a></span><span class="op">(</span></span>
-<span>  <span class="va">con</span>,</span>
-<span>  codes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"E11%"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  con <span class="op">=</span> <span class="va">con</span>,</span>
+<span>  codes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"E11%"</span><span class="op">)</span>,</span>
+<span>  write_schema <span class="op">=</span> <span class="va">write_schema</span>,</span>
+<span>  table_name <span class="op">=</span> <span class="st">"t2d_events"</span><span class="op">)</span></span></code></pre></div>
 <p>Get patient ids and procedure dates for all metabolic surgery
 episodes (using the CPT codes 43644 and 43775). Procedure data are
 stored in several fields within the Komodo Research Dataset. The
@@ -133,8 +136,10 @@ k_get_procedure_events function was designed to retrieve these data
 cleanly.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">metabolic_surgery_events</span> <span class="op">&lt;-</span> <span class="fu">ohdsilab</span><span class="fu">::</span><span class="fu"><a href="../reference/k_get_procedure_events.html">k_get_procedure_events</a></span><span class="op">(</span></span>
-<span>  <span class="va">con</span>,</span>
-<span>  codes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"43644"</span>, <span class="st">"43775"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  con <span class="op">=</span> <span class="va">con</span>,</span>
+<span>  codes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"43644"</span>, <span class="st">"43775"</span><span class="op">)</span>,</span>
+<span>  write_schema <span class="op">=</span> <span class="va">write_schema</span>,</span>
+<span>  table_name <span class="op">=</span> <span class="st">"metabolic_surgery_events"</span><span class="op">)</span></span></code></pre></div>
 <p>Load the the pharmacy table and filter for metformin events.
 Medication data are stored in several fields within the Komodo Research
 Dataset, however, “generic_name” covers nearly all medication records,
@@ -171,6 +176,9 @@ when running this step for additional cohorts.</p>
 <span><span class="st">   CREATE TABLE "</span>, <span class="va">write_schema</span>, <span class="st">".t2d_cohort AS "</span>,</span>
 <span>    <span class="fu">dbplyr</span><span class="fu">::</span><span class="fu"><a href="https://dbplyr.tidyverse.org/reference/sql_build.html" class="external-link">sql_render</a></span><span class="op">(</span><span class="va">t2d_cohort</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Access the cohort for further analysis</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">td2_cohort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con</span>, <span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/inDatabaseSchema.html" class="external-link">inDatabaseSchema</a></span><span class="op">(</span><span class="va">write_schema</span>, <span class="st">".t2d_cohort"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>You now have a cohort of distinct patient_ids and the date when they
 first entered your cohort (index date). Your cohort can be joined to
 other Komodo Research Dataset tables for information about those

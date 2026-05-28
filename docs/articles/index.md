@@ -32,3 +32,5 @@
   database](https://roux-ohdsi.github.io/ohdsilab/articles/14-gen-connecting-to-the-database.md):
 - [KRD - Generating a
   cohort](https://roux-ohdsi.github.io/ohdsilab/articles/15-krd-generating-a-cohort.md):
+- [KRD - Creating a Demographic Table
+  1](https://roux-ohdsi.github.io/ohdsilab/articles/16-krd-cohort-demographics.md):

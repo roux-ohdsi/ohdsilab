@@ -50,8 +50,10 @@ cleanly.
 
 ``` r
 t2d_events <- ohdsilab::k_get_condition_events(
-  con,
-  codes = c("E11%"))
+  con = con,
+  codes = c("E11%"),
+  write_schema = write_schema,
+  table_name = "t2d_events")
 ```
 
 Get patient ids and procedure dates for all metabolic surgery episodes
@@ -62,8 +64,10 @@ cleanly.
 
 ``` r
 metabolic_surgery_events <- ohdsilab::k_get_procedure_events(
-  con,
-  codes = c("43644", "43775"))
+  con = con,
+  codes = c("43644", "43775"),
+  write_schema = write_schema,
+  table_name = "metabolic_surgery_events")
 ```
 
 Load the the pharmacy table and filter for metformin events. Medication
@@ -109,6 +113,12 @@ DatabaseConnector::executeSql(
    CREATE TABLE ", write_schema, ".t2d_cohort AS ",
     dbplyr::sql_render(t2d_cohort)
   ))
+```
+
+Access the cohort for further analysis
+
+``` r
+td2_cohort <- tbl(con, inDatabaseSchema(write_schema, ".t2d_cohort"))
 ```
 
 You now have a cohort of distinct patient_ids and the date when they

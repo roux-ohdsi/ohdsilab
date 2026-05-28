@@ -1,0 +1,44 @@
+# KRD - Creating a Demographic Table 1
+
+This tutorial outlines the process of creating a demographic table 1
+from the Komodo Research Dataset stored within the OHDSI Lab. For the
+following code to function, you must be logged into an OHDSI Lab
+workspace. This tutorial assumes you have already successfully connected
+to the OHDSI Lab’s Amazon Redshift database according to the
+instructions in the previous article “General - Connecting to the
+database” and generated a cohort according the the instructions in the
+previous article “KRD - Generating a Cohort”.
+
+Load the additional necessary packages.
+
+``` r
+library(dplyr)
+library(ohdsilab)
+```
+
+Generate your table 1. Most of the argument values (con, “.t2_cohort”,
+write_schema, and komodo_schema) were created in the last article. A
+min_count value of 20 will only return demographic covariates
+representing 20 or more patients.
+
+``` r
+t2d_table1 <- k_table1(
+  con = con,
+  cohort_table = "t2d_cohort",
+  write_schema = write_schema,
+  komodo_schema = komodo_schema,
+  min_count = 20
+)
+```
+
+View your table 1.
+
+``` r
+View(t2d_table1)
+```
+
+Download your table 1 as a .csv file.
+
+``` r
+write.csv(t2d_table1, "t2d_demographics", row.names = FALSE)
+```

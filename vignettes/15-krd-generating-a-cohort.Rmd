@@ -29,9 +29,11 @@ library(dplyr)
 library(ohdsilab)
 ```
 
-Set Komodo Research Dataset schema and your personal write schema
+Set Komodo Research Dataset schema and your personal write schema. Keep in mind,
+komodo_schema string should be updated to match current version of Komodo 
+Research Dataset.
 ```{r}
-komodo_schema <- "komodo_ext"
+komodo_schema <- "komodo_202606"
 write_schema <- paste0(
   "work_",
   keyring::key_get("db_username"))

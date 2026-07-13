@@ -29,22 +29,22 @@ k_table1 <- function(
     con,
     cohort_table,
     write_schema = paste0("work_", keyring::key_get("db_username")),
-    komodo_schema = "komodo",
+    komodo_schema,
     min_count = NULL) {
-  
+
   # Load cohort (requires columns: patient_id, index_date)
   cohort <- tbl(con, inDatabaseSchema(write_schema, cohort_table))
-  
+
   # Calculate total patients
   total_patients <- cohort |>
     summarize(n = n_distinct(patient_id)) |>
     collect() |>
     pull(n)
-  
+
   # Load demographic tables
   patient <- tbl(con, inDatabaseSchema(komodo_schema, "patient_demographics"))
   patient_race_ethnicity <- tbl(con, inDatabaseSchema(komodo_schema, "patient_race_ethnicity"))
-  
+
   # Join and compute age groups
   demographics <- cohort |>
     inner_join(patient, by = "patient_id") |>
@@ -74,7 +74,7 @@ k_table1 <- function(
         TRUE               ~ "> 89"
       )
     )
-  
+
   # Helper to build each summary block
   summarize_covariate <- function(data, group_var, label_prefix, category = "Demographics") {
     data |>
@@ -89,18 +89,18 @@ k_table1 <- function(
       select(category, covariate, n_persons, percent) |>
       arrange(desc(n_persons))
   }
-  
+
   result <- bind_rows(
     summarize_covariate(demographics, patient_gender,         "Gender: "),
     summarize_covariate(demographics, patient_race_ethnicity, "Race/Ethnicity: "),
     summarize_covariate(demographics, age_group,              "Age Group: ")
   )
-  
+
   cat(sprintf("Table 1: Baseline Characteristics (N = %s)\n", format(total_patients, big.mark = ",")))
-  
+
   if (!is.null(min_count)) {
     result <- result |> filter(n_persons >= min_count)
   }
-  
+
   return(result)
 }

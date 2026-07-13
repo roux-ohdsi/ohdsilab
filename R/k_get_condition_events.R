@@ -12,7 +12,7 @@
 #' @export
 k_get_condition_events <- function(con,
 																	 codes,
-																	 komodo_schema = "komodo_ext",
+																	 komodo_schema,
 																	 write_schema,
 																	 table_name,
 																	 overwrite = TRUE) {

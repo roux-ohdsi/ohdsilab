@@ -18,8 +18,8 @@ library(ohdsilab)
 ```
 
 Set Komodo Research Dataset schema and your personal write schema. Keep
-in mind that the komodo string should be updated with the current
-version of the Komodo research dataset.
+in mind, komodo_schema string should be updated to match current version
+of Komodo Research Dataset.
 
 ``` r
 komodo_schema <- "komodo_202606"
@@ -120,7 +120,7 @@ DatabaseConnector::executeSql(
 Access the cohort for further analysis
 
 ``` r
-td2_cohort <- tbl(con, inDatabaseSchema(write_schema, "t2d_cohort"))
+td2_cohort <- tbl(con, inDatabaseSchema(write_schema, ".t2d_cohort"))
 ```
 
 You now have a cohort of distinct patient_ids and the date when they

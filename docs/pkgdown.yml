@@ -1,5 +1,5 @@
 pandoc: 3.6.3
-pkgdown: 2.2.1
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   01-intro-to-ohdsilab: 01-intro-to-ohdsilab.html
@@ -18,8 +18,7 @@ articles:
   14-gen-connecting-to-the-database: 14-gen-connecting-to-the-database.html
   15-krd-generating-a-cohort: 15-krd-generating-a-cohort.html
   16-krd-cohort-demographics: 16-krd-cohort-demographics.html
-  17-krd-cohort-covariates: 17-krd-cohort-covariates.html
-last_built: 2026-07-14T15:58Z
+last_built: 2026-07-13T13:01Z
 urls:
   reference: https://roux-ohdsi.github.io/ohdsilab/reference
   article: https://roux-ohdsi.github.io/ohdsilab/articles

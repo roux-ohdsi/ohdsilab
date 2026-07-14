@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="OMOP - Population Level Estimation using CohortMethod">
@@ -55,6 +55,7 @@
     <li><a class="dropdown-item" href="../articles/14-gen-connecting-to-the-database.html">General - Connecting to the database</a></li>
     <li><a class="dropdown-item" href="../articles/15-krd-generating-a-cohort.html">KRD - Generating a cohort</a></li>
     <li><a class="dropdown-item" href="../articles/16-krd-cohort-demographics.html">KRD - Creating a Demographic Table 1</a></li>
+    <li><a class="dropdown-item" href="../articles/17-krd-cohort-covariates.html">KRD - Generating Covariates</a></li>
   </ul>
 </li>
       </ul>
@@ -96,7 +97,7 @@ should not be shared with individuals who are not active OHDSI Lab
 users.</p>
 <p>We’ll need to install one new package: CohortMethod</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">renv</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="st">"OHDSI/CohortMethod"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">renv</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/renv/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"OHDSI/CohortMethod"</span><span class="op">)</span></span></code></pre></div>
 <p>We’ll generate a cohort from ATLAS as we did in vignette 3, except
 now we need three cohorts: a target cohort (i.e. the population we’re
 analyzing): 4862 (Metformin &amp; insulin exposure with prior type 2
@@ -109,8 +110,8 @@ we’re calculating risk for): 4861 (Hypoglycemia).</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/CohortGenerator/" class="external-link">CohortGenerator</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://keyring.r-lib.org/" class="external-link">keyring</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/CohortMethod/" class="external-link">CohortMethod</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ROhdsiWebApi</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/CohortMethod" class="external-link">CohortMethod</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/ROhdsiWebApi/" class="external-link">ROhdsiWebApi</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/DatabaseConnector/" class="external-link">DatabaseConnector</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://roux-ohdsi.github.io/ohdsilab/">ohdsilab</a></span><span class="op">)</span></span>
 <span></span>
@@ -139,7 +140,7 @@ we’re calculating risk for): 4861 (Hypoglycemia).</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>write_schema.default.value <span class="op">=</span> <span class="va">write_schema</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#establish authorization to connect to ATLAS API</span></span>
-<span><span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu">authorizeWebApi</span><span class="op">(</span></span>
+<span><span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ROhdsiWebApi/reference/authorizeWebApi.html" class="external-link">authorizeWebApi</a></span><span class="op">(</span></span>
 <span>  <span class="va">atlas_url</span>,</span>
 <span>  authMethod <span class="op">=</span> <span class="st">"db"</span>,</span>
 <span>  webApiUsername <span class="op">=</span> <span class="fu">keyring</span><span class="fu">::</span><span class="fu"><a href="https://keyring.r-lib.org/reference/key_get.html" class="external-link">key_get</a></span><span class="op">(</span><span class="st">"atlas_username"</span><span class="op">)</span>,</span>
@@ -149,22 +150,22 @@ we’re calculating risk for): 4861 (Hypoglycemia).</p>
 <span><span class="va">cohortIds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4859</span>,<span class="fl">4861</span>,<span class="fl">4862</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#extract the cohort definitions from ATLAS</span></span>
-<span><span class="va">cohortDefinitionSet</span> <span class="op">&lt;-</span> <span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu">exportCohortDefinitionSet</span><span class="op">(</span></span>
+<span><span class="va">cohortDefinitionSet</span> <span class="op">&lt;-</span> <span class="fu">ROhdsiWebApi</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/ROhdsiWebApi/reference/exportCohortDefinitionSet.html" class="external-link">exportCohortDefinitionSet</a></span><span class="op">(</span></span>
 <span>  baseUrl <span class="op">=</span> <span class="va">atlas_url</span>,</span>
 <span>  cohortIds <span class="op">=</span> <span class="va">cohortIds</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#set a naming convention for the cohort tables</span></span>
-<span><span class="va">cohortTableNames</span> <span class="op">&lt;-</span> <span class="fu">getCohortTableNames</span><span class="op">(</span>cohortTable <span class="op">=</span> <span class="st">"T2D_cohortMethod"</span><span class="op">)</span></span>
+<span><span class="va">cohortTableNames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/CohortGenerator/reference/getCohortTableNames.html" class="external-link">getCohortTableNames</a></span><span class="op">(</span>cohortTable <span class="op">=</span> <span class="st">"T2D_cohortMethod"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#create empty tables in your personal schema using the naming convention</span></span>
 <span><span class="co">#designated in the last step.</span></span>
-<span><span class="fu">createCohortTables</span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://ohdsi.github.io/CohortGenerator/reference/createCohortTables.html" class="external-link">createCohortTables</a></span><span class="op">(</span></span>
 <span>  connectionDetails <span class="op">=</span> <span class="va">connectionDetails</span>,</span>
 <span>  cohortTableNames <span class="op">=</span> <span class="va">cohortTableNames</span>,</span>
 <span>  cohortDatabaseSchema <span class="op">=</span> <span class="va">write_schema</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#generate your cohorts for the pmtx database.</span></span>
-<span><span class="va">cohortsGenerated</span> <span class="op">&lt;-</span> <span class="fu">generateCohortSet</span><span class="op">(</span></span>
+<span><span class="va">cohortsGenerated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/CohortGenerator/reference/generateCohortSet.html" class="external-link">generateCohortSet</a></span><span class="op">(</span></span>
 <span>  connectionDetails <span class="op">=</span> <span class="va">connectionDetails</span>,</span>
 <span>  cdmDatabaseSchema <span class="op">=</span> <span class="va">cdm_schema</span>,</span>
 <span>  cohortDatabaseSchema <span class="op">=</span> <span class="va">write_schema</span>,</span>
@@ -176,14 +177,14 @@ making sure to exclude the concept IDs of your study drugs (i.e. the
 drugs included in your target and comparator cohorts) and those drugs’
 descendant concepts.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">covSettings</span> <span class="op">&lt;-</span> <span class="fu">createDefaultCovariateSettings</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">covSettings</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/FeatureExtraction/man/createDefaultCovariateSettings.html" class="external-link">createDefaultCovariateSettings</a></span><span class="op">(</span></span>
 <span>  excludedCovariateConceptIds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30361</span>,<span class="fl">1503297</span>,<span class="fl">21600713</span>,<span class="fl">21500149</span>,<span class="fl">1992733</span><span class="op">)</span>,</span>
 <span>  addDescendantsToExclude <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Extract the relevant data from the database. This may take a
 while.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cohortMethodData</span> <span class="op">&lt;-</span> <span class="fu">getDbCohortMethodData</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">cohortMethodData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/getDbCohortMethodData.html" class="external-link">getDbCohortMethodData</a></span><span class="op">(</span></span>
 <span>  connectionDetails <span class="op">=</span> <span class="va">connectionDetails</span>,</span>
 <span>  cdmDatabaseSchema <span class="op">=</span> <span class="va">cdm_schema</span>,</span>
 <span>  targetId <span class="op">=</span> <span class="fl">4862</span>,  <span class="co"># ID for drugA cohort</span></span>
@@ -199,12 +200,12 @@ while.</p>
 need to come back to the later steps during another session. Once you
 have saved the data, reload it as the same variable.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">saveCohortMethodData</span><span class="op">(</span><span class="va">cohortMethodData</span>, <span class="st">"cohortMethodCovariates.zip"</span><span class="op">)</span></span>
-<span><span class="va">cohortMethodData</span> <span class="op">&lt;-</span> <span class="fu">loadCohortMethodData</span><span class="op">(</span><span class="st">"cohortMethodCovariates.zip"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/saveCohortMethodData.html" class="external-link">saveCohortMethodData</a></span><span class="op">(</span><span class="va">cohortMethodData</span>, <span class="st">"cohortMethodCovariates.zip"</span><span class="op">)</span></span>
+<span><span class="va">cohortMethodData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/loadCohortMethodData.html" class="external-link">loadCohortMethodData</a></span><span class="op">(</span><span class="st">"cohortMethodCovariates.zip"</span><span class="op">)</span></span></code></pre></div>
 <p>Create the study population with the appropriate risk windows. These
 can be changed to match the needs of your study.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">studyPop</span> <span class="op">&lt;-</span> <span class="fu">createStudyPopulation</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">studyPop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/createStudyPopulation.html" class="external-link">createStudyPopulation</a></span><span class="op">(</span></span>
 <span>  cohortMethodData <span class="op">=</span> <span class="va">cohortMethodData</span>,</span>
 <span>  outcomeId <span class="op">=</span> <span class="fl">4861</span>,</span>
 <span>  firstExposureOnly <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -221,16 +222,16 @@ can be changed to match the needs of your study.</p>
 <p>View attrition (how many subjects were excluded after each bit of
 inclusion criteria?):</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">getAttritionTable</span><span class="op">(</span><span class="va">studyPop</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/getAttritionTable.html" class="external-link">getAttritionTable</a></span><span class="op">(</span><span class="va">studyPop</span><span class="op">)</span></span></code></pre></div>
 <p>Run the propensity score model (setting cross-validation to FALSE
 saves a lot of time, but this will still take a while):</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu">createPs</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/createPs.html" class="external-link">createPs</a></span><span class="op">(</span></span>
 <span>  cohortMethodData <span class="op">=</span> <span class="va">cohortMethodData</span>,</span>
 <span>  population <span class="op">=</span> <span class="va">studyPop</span>,</span>
 <span>  maxCohortSizeForFitting <span class="op">=</span> <span class="fl">150000</span>,  <span class="co"># Caps the sample size for fitting</span></span>
-<span>  prior <span class="op">=</span> <span class="fu">createPrior</span><span class="op">(</span><span class="st">"laplace"</span>, useCrossValidation <span class="op">=</span> <span class="cn">FALSE</span>, exclude <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  control <span class="op">=</span> <span class="fu">createControl</span><span class="op">(</span></span>
+<span>  prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Cyclops/man/createPrior.html" class="external-link">createPrior</a></span><span class="op">(</span><span class="st">"laplace"</span>, useCrossValidation <span class="op">=</span> <span class="cn">FALSE</span>, exclude <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Cyclops/man/createControl.html" class="external-link">createControl</a></span><span class="op">(</span></span>
 <span>    noiseLevel <span class="op">=</span> <span class="st">"quiet"</span>,</span>
 <span>    tolerance <span class="op">=</span> <span class="fl">1e-06</span>  <span class="co"># Slightly looser convergence criteria</span></span>
 <span>  <span class="op">)</span></span>
@@ -243,12 +244,12 @@ reload it.</p>
 <p>Evaluate the propensity score model through the following 3 tests: 1.
 Calculate AUC (area under the curve)</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">computePsAuc</span><span class="op">(</span><span class="va">ps</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/computePsAuc.html" class="external-link">computePsAuc</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Plot propensity score distribution</li>
 </ol>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">plotPs</span><span class="op">(</span><span class="va">ps</span>, </span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/plotPs.html" class="external-link">plotPs</a></span><span class="op">(</span><span class="va">ps</span>, </span>
 <span>       scale <span class="op">=</span> <span class="st">"preference"</span>,</span>
 <span>       showCountsLabel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>       showAucLabel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -258,43 +259,43 @@ Calculate AUC (area under the curve)</p>
 <li>Check which variables are in the model</li>
 </ol>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">psModel</span> <span class="op">&lt;-</span> <span class="fu">getPsModel</span><span class="op">(</span><span class="va">ps</span>, <span class="va">cohortMethodData</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">psModel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/getPsModel.html" class="external-link">getPsModel</a></span><span class="op">(</span><span class="va">ps</span>, <span class="va">cohortMethodData</span><span class="op">)</span></span></code></pre></div>
 <p>Next, you should adjust your study population for confounding (I use
 the stratifyByPs methodbut you could also use matchOnPs or
 trimByPsToEquipoise depending on your study needs). Then visualize the
 adjusted study population.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">stratifiedPop</span> <span class="op">&lt;-</span> <span class="fu">stratifyByPs</span><span class="op">(</span><span class="va">ps</span>, numberOfStrata <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="fu">plotPs</span><span class="op">(</span><span class="va">stratifiedPop</span>, <span class="va">ps</span>, scale <span class="op">=</span> <span class="st">"preference"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">stratifiedPop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/stratifyByPs.html" class="external-link">stratifyByPs</a></span><span class="op">(</span><span class="va">ps</span>, numberOfStrata <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/plotPs.html" class="external-link">plotPs</a></span><span class="op">(</span><span class="va">stratifiedPop</span>, <span class="va">ps</span>, scale <span class="op">=</span> <span class="st">"preference"</span><span class="op">)</span></span></code></pre></div>
 <p>The next four steps evaluate the balance of your covariates. 1.
 Calculate the covariate balance</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">balance</span> <span class="op">&lt;-</span> <span class="fu">computeCovariateBalance</span><span class="op">(</span><span class="va">stratifiedPop</span>, <span class="va">cohortMethodData</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">balance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/computeCovariateBalance.html" class="external-link">computeCovariateBalance</a></span><span class="op">(</span><span class="va">stratifiedPop</span>, <span class="va">cohortMethodData</span><span class="op">)</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Visualize the covariate balance using a scatter plot and a plot of
 the most prevalent covariates.</li>
 </ol>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">plotCovariateBalanceScatterPlot</span><span class="op">(</span><span class="va">balance</span>, showCovariateCountLabel <span class="op">=</span> <span class="cn">TRUE</span>, showMaxLabel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/plotCovariateBalanceScatterPlot.html" class="external-link">plotCovariateBalanceScatterPlot</a></span><span class="op">(</span><span class="va">balance</span>, showCovariateCountLabel <span class="op">=</span> <span class="cn">TRUE</span>, showMaxLabel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plotCovariateBalanceOfTopVariables</span><span class="op">(</span><span class="va">balance</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/plotCovariateBalanceOfTopVariables.html" class="external-link">plotCovariateBalanceOfTopVariables</a></span><span class="op">(</span><span class="va">balance</span><span class="op">)</span></span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Create a table 1 of covariates comparing the study population before
 and after adjustment.</li>
 </ol>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">createCmTable1</span><span class="op">(</span><span class="va">balance</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/createCmTable1.html" class="external-link">createCmTable1</a></span><span class="op">(</span><span class="va">balance</span><span class="op">)</span></span></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>See how different the adjusted study population is from the original
 study population by checking generalizability.</li>
 </ol>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">getGeneralizabilityTable</span><span class="op">(</span><span class="va">balance</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/getGeneralizabilityTable.html" class="external-link">getGeneralizabilityTable</a></span><span class="op">(</span><span class="va">balance</span><span class="op">)</span></span></code></pre></div>
 <p>The next two steps provide and assessment of the follow-up and the
 statistical power of your model. 1. Calculate the minimum detectable
 relative risk:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">computeMdrr</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/computeMdrr.html" class="external-link">computeMdrr</a></span><span class="op">(</span></span>
 <span>  population <span class="op">=</span> <span class="va">stratifiedPop</span>,</span>
 <span>  modelType <span class="op">=</span> <span class="st">"cox"</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
@@ -305,8 +306,8 @@ relative risk:</p>
 <li>Examine follow-up distribution:</li>
 </ol>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">getFollowUpDistribution</span><span class="op">(</span>population <span class="op">=</span> <span class="va">stratifiedPop</span><span class="op">)</span></span>
-<span><span class="fu">plotFollowUpDistribution</span><span class="op">(</span>population <span class="op">=</span> <span class="va">stratifiedPop</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/getFollowUpDistribution.html" class="external-link">getFollowUpDistribution</a></span><span class="op">(</span>population <span class="op">=</span> <span class="va">stratifiedPop</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/plotFollowUpDistribution.html" class="external-link">plotFollowUpDistribution</a></span><span class="op">(</span>population <span class="op">=</span> <span class="va">stratifiedPop</span><span class="op">)</span></span></code></pre></div>
 <p>Finally, you’re ready to run the outcome model to calculate the
 difference of risk between the two populations (target_ID and
 comparator_ID).</p>
@@ -314,7 +315,7 @@ comparator_ID).</p>
 <code class="sourceCode R"><span><span class="co">#This is a simple outcome model (Cox regression with propensity adjustment).</span></span>
 <span><span class="co">#There are also options for more complex models built into the CohortMethod</span></span>
 <span><span class="co">#package.</span></span>
-<span><span class="va">outcomeModel</span> <span class="op">&lt;-</span> <span class="fu">fitOutcomeModel</span><span class="op">(</span></span>
+<span><span class="va">outcomeModel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/fitOutcomeModel.html" class="external-link">fitOutcomeModel</a></span><span class="op">(</span></span>
 <span>  population <span class="op">=</span> <span class="va">stratifiedPop</span>,</span>
 <span>  modelType <span class="op">=</span> <span class="st">"cox"</span>,</span>
 <span>  stratified <span class="op">=</span> <span class="cn">TRUE</span>  <span class="co"># For stratified populations</span></span>
@@ -323,12 +324,12 @@ comparator_ID).</p>
 <p>Now that you have your CohortMethod results, you can visualize them
 in a variety of ways. 1. Create Kaplan-Meier plot:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">plotKaplanMeier</span><span class="op">(</span><span class="va">stratifiedPop</span>, includeZero <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/plotKaplanMeier.html" class="external-link">plotKaplanMeier</a></span><span class="op">(</span><span class="va">stratifiedPop</span>, includeZero <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Create time-to-event plot:</li>
 </ol>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">plotTimeToEvent</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ohdsi.github.io/CohortMethod/reference/plotTimeToEvent.html" class="external-link">plotTimeToEvent</a></span><span class="op">(</span></span>
 <span>  cohortMethodData <span class="op">=</span> <span class="va">cohortMethodData</span>,</span>
 <span>  outcomeId <span class="op">=</span> <span class="fl">4861</span>,</span>
 <span>  firstExposureOnly <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -354,7 +355,7 @@ data.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="OMOP - Introduction to ohdsilab (start here!)">
@@ -55,6 +55,7 @@
     <li><a class="dropdown-item" href="../articles/14-gen-connecting-to-the-database.html">General - Connecting to the database</a></li>
     <li><a class="dropdown-item" href="../articles/15-krd-generating-a-cohort.html">KRD - Generating a cohort</a></li>
     <li><a class="dropdown-item" href="../articles/16-krd-cohort-demographics.html">KRD - Creating a Demographic Table 1</a></li>
+    <li><a class="dropdown-item" href="../articles/17-krd-cohort-covariates.html">KRD - Generating Covariates</a></li>
   </ul>
 </li>
       </ul>
@@ -116,7 +117,7 @@ that you are using these two steps.</p>
 preferred location using the <code>browse</code> button. Make sure to
 check the box that says <code>Use renv with this project</code>. No
 problem if you accidentally skip this step, you can still activate
-{renv} by running <code>renv::activate()</code> as the first thing you
+{renv} by running <code><a href="https://rstudio.github.io/renv/reference/activate.html" class="external-link">renv::activate()</a></code> as the first thing you
 do in your new project.</p>
 </div>
 <div class="section level2">
@@ -130,20 +131,20 @@ restrictions.</em></strong></p>
 <p>The first thing you should do is update renv. To do this, run the
 following code in your console.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">renv</span><span class="fu">::</span><span class="fu">upgrade</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">renv</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/renv/reference/upgrade.html" class="external-link">upgrade</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Then, you can install the ohdsilab package from Github like this:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">renv</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="st">"roux-ohdsi/ohdsilab"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">renv</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/renv/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"roux-ohdsi/ohdsilab"</span><span class="op">)</span></span></code></pre></div>
 <p>If you want to also install OHDSI packages (e.g., DatabaseConnector),
 set dependencies = “Suggests”. This is recommended unless you are
 working on the AllofUs Researcher workbench as these packages take a
 while to install and are not terribly useful with the AllofUs database
 setup.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">renv</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="st">"roux-ohdsi/ohdsilab"</span>, dependencies <span class="op">=</span> <span class="st">"Suggests"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">renv</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/renv/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"roux-ohdsi/ohdsilab"</span>, dependencies <span class="op">=</span> <span class="st">"Suggests"</span><span class="op">)</span></span></code></pre></div>
 <p>You can also install and update regular packages from CRAN:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">renv</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="st">"dplyr"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">renv</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/renv/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"dplyr"</span><span class="op">)</span></span></code></pre></div>
 <p>You may notice that trying to install packages without using {renv}
 results in errors that indicate that you don’t have permission to
 install R packages. This is not the case - you are free to install R
@@ -417,7 +418,7 @@ videos on using the OMOP CDM on youtube (<a href="https://www.youtube.com/@OHDSI
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

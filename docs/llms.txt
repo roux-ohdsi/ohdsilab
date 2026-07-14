@@ -135,3 +135,5 @@ Horst](https://allisonhorst.com/git-github).
   cohort](https://roux-ohdsi.github.io/ohdsilab/articles/15-krd-generating-a-cohort.md):
 - [KRD - Creating a Demographic Table
   1](https://roux-ohdsi.github.io/ohdsilab/articles/16-krd-cohort-demographics.md):
+- [KRD - Generating
+  Covariates](https://roux-ohdsi.github.io/ohdsilab/articles/17-krd-cohort-covariates.md):

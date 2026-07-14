@@ -17,10 +17,12 @@ library(dplyr)
 library(ohdsilab)
 ```
 
-Set Komodo Research Dataset schema and your personal write schema
+Set Komodo Research Dataset schema and your personal write schema. Keep
+in mind that the komodo string should be updated with the current
+version of the Komodo research dataset.
 
 ``` r
-komodo_schema <- "komodo_ext"
+komodo_schema <- "komodo_202606"
 write_schema <- paste0(
   "work_",
   keyring::key_get("db_username"))
@@ -118,7 +120,7 @@ DatabaseConnector::executeSql(
 Access the cohort for further analysis
 
 ``` r
-td2_cohort <- tbl(con, inDatabaseSchema(write_schema, ".t2d_cohort"))
+td2_cohort <- tbl(con, inDatabaseSchema(write_schema, "t2d_cohort"))
 ```
 
 You now have a cohort of distinct patient_ids and the date when they

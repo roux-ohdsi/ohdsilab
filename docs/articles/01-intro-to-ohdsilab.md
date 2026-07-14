@@ -32,8 +32,9 @@ After opening RStudio, begin by going to `File` and select
 `New Project`. Give the project a name and select in your preferred
 location using the `browse` button. Make sure to check the box that says
 `Use renv with this project`. No problem if you accidentally skip this
-step, you can still activate {renv} by running `renv::activate()` as the
-first thing you do in your new project.
+step, you can still activate {renv} by running
+[`renv::activate()`](https://rstudio.github.io/renv/reference/activate.html)
+as the first thing you do in your new project.
 
 ## Installing Packages
 

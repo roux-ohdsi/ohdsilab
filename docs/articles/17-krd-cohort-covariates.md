@@ -106,9 +106,7 @@ t2d_covariates <- tbl(
 )
 ```
 
-================================================================================
-END OF METHOD 1
-================================================================================
+## END OF METHOD 1
 
 Method 2: Using a pre-made list of covariates such as Elixhauser. In the
 below example, I use the Elixhauser commorbidity categories, a standard
